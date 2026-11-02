@@ -244,10 +244,18 @@ class Client:
             return done(out, "soft_404")
         return done(out, None, keep=True)
 
-    def get_text(self, url: str) -> tuple[int | None, str]:
+    def get_text(self, url: str) -> tuple[int | None, str, str | None]:
+        """GET a small text resource, returning (status, text, error).
+
+        error is None, "blocked", "host_abandoned", "too_large", "timeout" or "transport".
+        Whenever error is set, text is "" and status is the HTTP status if one was
+        received, else None. A non-200 response without an error gives (status, "", None).
+        """
         if self.abandoned(url):
-            return None, ""
+            return None, "", "host_abandoned"
         out = self._run(url, {}, None, SMALL_LIMIT)
-        if out.status is None or out.error in ("transport", "timeout"):
-            return None, ""
-        return out.status, out.body.decode("utf-8", errors="replace")
+        if out.error is not None:
+            return out.status, "", out.error
+        if out.status != 200:
+            return out.status, "", None
+        return 200, out.body.decode("utf-8", errors="replace"), None

@@ -199,10 +199,37 @@ def test_is_block(status, headers, head, expected):
 
 def test_get_text():
     c, _ = mock_client(lambda r: httpx.Response(200, content=b"382865\n"))
-    assert c.get_text("https://a.gov/v") == (200, "382865\n")
+    assert c.get_text("https://a.gov/v") == (200, "382865\n", None)
 
+
+def test_get_text_transport_error():
     def h(r):
         raise httpx.ConnectError("nope")
 
-    c2, _ = mock_client(h)
-    assert c2.get_text("https://a.gov/v") == (None, "")
+    c, _ = mock_client(h)
+    assert c.get_text("https://a.gov/v") == (None, "", "transport")
+
+
+def test_get_text_404():
+    c, _ = mock_client(lambda r: httpx.Response(404, content=b"gone"))
+    assert c.get_text("https://a.gov/v") == (404, "", None)
+
+
+def test_get_text_block_page_is_not_content():
+    c, _ = mock_client(
+        lambda r: httpx.Response(200, content=b"Request unsuccessful. Incapsula incident ID: 1")
+    )
+    assert c.get_text("https://a.gov/v") == (200, "", "blocked")
+
+
+def test_get_text_abandoned_host():
+    c, _ = mock_client(lambda r: httpx.Response(429))
+    c.get_text("https://a.gov/1")
+    c.get_text("https://a.gov/2")
+    assert c.get_text("https://a.gov/3") == (None, "", "host_abandoned")
+
+
+def test_get_text_too_large(monkeypatch):
+    monkeypatch.setattr("us_voting.http.SMALL_LIMIT", 10)
+    c, _ = mock_client(lambda r: httpx.Response(200, content=b"x" * 50))
+    assert c.get_text("https://a.gov/v") == (200, "", "too_large")
