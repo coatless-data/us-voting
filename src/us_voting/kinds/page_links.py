@@ -37,17 +37,26 @@ class PageLinksKind:
         if error is not None or status != 200:
             return KindResult([_page_outcome(page, status, error)])
         pattern = _pattern(run.source)
-        links = sorted({urljoin(page, h) for h in LINK.findall(text) if pattern.search(h)})
-        links = links[: int(run.source.params.get("max_links", DEFAULT_MAX_LINKS))]
-        if not links:
+        matched = sorted({urljoin(page, h) for h in LINK.findall(text) if pattern.search(h)})
+        if not matched:
             return KindResult([], note="no_links")
-        outcomes, failure = fetch_in_turn(
+        max_links = int(run.source.params.get("max_links", DEFAULT_MAX_LINKS))
+        links = matched[:max_links]
+        outcomes, cut_off = fetch_in_turn(
             run,
             links,
             lambda url: fetch_file(
                 run, url, safe_name(unquote(urlsplit(url).path.rsplit("/", 1)[-1])) or "file"
             ),
         )
+        # Links past max_links are never fetched, so the source fails until the config
+        # is fixed rather than silently missing new files.
+        truncated = (
+            f"{len(matched)} links matched; max_links is {max_links}"
+            if len(matched) > max_links
+            else None
+        )
+        failure = "; ".join(m for m in (truncated, cut_off) if m) or None
         return KindResult(outcomes, failure=failure)
 
     def owns(self, source: Source, url: str) -> bool:
