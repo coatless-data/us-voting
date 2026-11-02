@@ -37,7 +37,7 @@ class Fetched:
 def is_block(status: int | None, headers: Mapping[str, str], head: bytes) -> bool:
     if status == 429:
         return True
-    if any(k.lower() == "cf-mitigated" for k in headers):
+    if any(k.lower() in ("cf-mitigated", "x-amzn-waf-action") for k in headers):
         return True
     text = head.lower()
     if any(m in text for m in (b"just a moment...", b"cf-chl", b"_incapsula_resource")):
