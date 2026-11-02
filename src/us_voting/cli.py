@@ -9,7 +9,9 @@ from pathlib import Path
 from us_voting import __version__
 from us_voting import capture as capture_mod
 from us_voting.config import ConfigError, load_config
+from us_voting.publish import PublishConflict, PublishRefused, publish_dir
 from us_voting.status import load_status
+from us_voting.store import StorageError, open_configured, open_store
 
 
 def _check_config(args: argparse.Namespace) -> int:
@@ -54,6 +56,27 @@ def _capture(args: argparse.Namespace) -> int:
     return 0
 
 
+def _publish(args: argparse.Namespace) -> int:
+    try:
+        cfg = load_config(Path(args.config))
+        overrides = {"public": args.public_store, "private": args.private_store}
+        opened = {}
+        for key, spec in overrides.items():
+            sc = cfg.stores[key]
+            if spec:
+                token = os.environ.get(sc.token_env) or None
+                opened[key] = open_store(spec, token=token, private=sc.private)
+            else:
+                opened[key] = open_configured(sc)
+        result = publish_dir(Path(args.dir), cfg, opened["public"], opened["private"])
+    except (PublishConflict, PublishRefused, StorageError, ConfigError) as exc:
+        print(exc, file=sys.stderr)
+        return 1
+    for verb, name, tag in result.events:
+        print(f"{verb} {name} ({tag})")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="us-voting", description=__doc__)
     parser.add_argument("--version", action="version", version=f"us-voting {__version__}")
@@ -67,6 +90,12 @@ def build_parser() -> argparse.ArgumentParser:
     cap.add_argument("--status", default="status/latest.json", help="status file to start from")
     cap.add_argument("--config", default="config", help="config directory (default: config)")
     cap.set_defaults(func=_capture)
+    pub = sub.add_parser("publish", help="upload bundles to the release stores")
+    pub.add_argument("dir", help="directory holding public/ and private/ bundles")
+    pub.add_argument("--public-store", default="", help="store spec overriding the config")
+    pub.add_argument("--private-store", default="", help="store spec overriding the config")
+    pub.add_argument("--config", default="config", help="config directory (default: config)")
+    pub.set_defaults(func=_publish)
     return parser
 
 
