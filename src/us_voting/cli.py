@@ -8,7 +8,9 @@ from pathlib import Path
 
 from us_voting import __version__
 from us_voting import capture as capture_mod
+from us_voting.alerts import run_alerts
 from us_voting.config import ConfigError, load_config
+from us_voting.issues import Issues
 from us_voting.publish import PublishConflict, PublishRefused, publish_dir
 from us_voting.status import load_status
 from us_voting.store import StorageError, open_configured, open_store
@@ -77,6 +79,18 @@ def _publish(args: argparse.Namespace) -> int:
     return 0
 
 
+def _alerts(args: argparse.Namespace) -> int:
+    """Alerting never fails the workflow, so every path returns 0."""
+    try:
+        issues = Issues(os.environ.get("GITHUB_REPOSITORY"), os.environ.get("GITHUB_TOKEN"))
+        run_alerts(
+            load_status(Path(args.status_json)), issues, publish_outcome=args.publish_outcome
+        )
+    except Exception as exc:
+        print(f"::warning::alerts failed: {type(exc).__name__}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="us-voting", description=__doc__)
     parser.add_argument("--version", action="version", version=f"us-voting {__version__}")
@@ -96,6 +110,10 @@ def build_parser() -> argparse.ArgumentParser:
     pub.add_argument("--private-store", default="", help="store spec overriding the config")
     pub.add_argument("--config", default="config", help="config directory (default: config)")
     pub.set_defaults(func=_publish)
+    alerts = sub.add_parser("alerts", help="open, refresh and close GitHub issue alerts")
+    alerts.add_argument("status_json", help="status file written by capture")
+    alerts.add_argument("--publish-outcome", default="", help="publish step outcome, any string")
+    alerts.set_defaults(func=_alerts)
     return parser
 
 
