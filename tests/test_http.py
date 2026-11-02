@@ -187,6 +187,9 @@ def test_too_large(tmp_path, monkeypatch):
     [
         (429, {}, b"", True),
         (403, {"cf-mitigated": "challenge"}, b"", True),
+        (202, {"x-amzn-waf-action": "challenge"}, b"", True),
+        (405, {"X-Amzn-Waf-Action": "captcha"}, b"", True),
+        (202, {}, b"", False),
         (403, {}, b"<title>Just a moment...</title>", True),
         (200, {}, b"Request unsuccessful. Incapsula incident ID", True),
         (403, {}, b"Access Denied ... Reference #18.2", True),
