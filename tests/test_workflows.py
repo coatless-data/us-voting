@@ -30,6 +30,22 @@ def unwrapped_if_expressions(name: str) -> list[str]:
     return bad
 
 
+def step(name: str, workflow: str = "capture.yml") -> str:
+    """The text of one step, from its `- name:` line up to the next step."""
+    lines = read(workflow).splitlines(keepends=True)
+    start = lines.index(f"      - name: {name}\n")
+    end = next(
+        (i for i in range(start + 1, len(lines)) if lines[i].startswith("      - name: ")),
+        len(lines),
+    )
+    return "".join(lines[start:end])
+
+
+def step_names(workflow: str = "capture.yml") -> list[str]:
+    prefix = "      - name: "
+    return [line[len(prefix) :] for line in read(workflow).splitlines() if line.startswith(prefix)]
+
+
 def test_no_artifacts_anywhere():
     assert all("upload-artifact" not in read(p.name) for p in WORKFLOWS.glob("*.yml"))
 
@@ -98,3 +114,33 @@ def test_cli_calls_match_parser():
         text = re.sub(r'"\$[A-Z_]+"', "X", text)
         tokens = shlex.split(text)
         parser.parse_args(tokens)
+
+
+def test_capture_keeps_its_step_timeout():
+    assert step("Capture") == (
+        "      - name: Capture\n"
+        "        id: capture\n"
+        "        timeout-minutes: 60\n"
+        '        run: uv run us-voting capture --out out --only "$ONLY"\n'
+        "\n"
+    )
+
+
+def test_capture_failure_opens_an_issue():
+    text = step("Report a capture failure")
+    assert (
+        "        if: ${{ !cancelled() && inputs.dry_run != true"
+        " && steps.capture.outcome == 'failure' }}\n"
+    ) in text
+    assert "        run: uv run us-voting alerts --capture-outcome failure\n" in text
+    names = step_names()
+    assert names.index("Capture") + 1 == names.index("Report a capture failure")
+
+
+def test_alerts_close_the_capture_issue_after_a_good_capture():
+    text = step("Alerts")
+    assert (
+        "        if: ${{ !cancelled() && inputs.dry_run != true"
+        " && steps.capture.outcome == 'success' }}\n"
+    ) in text
+    assert '--capture-outcome "${{ steps.capture.outcome }}"' in text

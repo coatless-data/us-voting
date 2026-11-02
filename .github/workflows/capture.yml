@@ -51,6 +51,12 @@ jobs:
         timeout-minutes: 60
         run: uv run us-voting capture --out out --only "$ONLY"
 
+      - name: Report a capture failure
+        if: ${{ !cancelled() && inputs.dry_run != true && steps.capture.outcome == 'failure' }}
+        continue-on-error: true
+        timeout-minutes: 5
+        run: uv run us-voting alerts --capture-outcome failure
+
       - name: Publish
         id: publish
         if: ${{ inputs.dry_run != true && steps.capture.outputs.files != '0' }}
@@ -64,7 +70,7 @@ jobs:
         if: ${{ !cancelled() && inputs.dry_run != true && steps.capture.outcome == 'success' }}
         continue-on-error: true
         timeout-minutes: 5
-        run: uv run us-voting alerts out/capture/status.json --publish-outcome "${{ steps.publish.outcome }}"
+        run: uv run us-voting alerts out/capture/status.json --publish-outcome "${{ steps.publish.outcome }}" --capture-outcome "${{ steps.capture.outcome }}"
 
       - name: Commit status/latest.json
         if: ${{ !cancelled() && inputs.dry_run != true && steps.capture.outcome == 'success' && steps.publish.outcome != 'failure' }}

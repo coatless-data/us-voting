@@ -1,6 +1,8 @@
 from datetime import UTC, datetime
 
-from us_voting.alerts import FAILING_AFTER, run_alerts
+import pytest
+
+from us_voting.alerts import CAPTURE_TITLE, FAILING_AFTER, capture_alert, run_alerts
 from us_voting.cli import main
 from us_voting.status import SourceStatus, Status
 
@@ -114,3 +116,43 @@ def test_cli_swallows_unexpected_errors(tmp_path, capsys):
     path.write_text("not json", encoding="utf-8")
     assert main(["alerts", str(path)]) == 0
     assert capsys.readouterr().out.startswith("::warning::")
+
+
+def test_capture_failing_opens_with_the_run_and_success_closes(monkeypatch):
+    monkeypatch.setenv("GITHUB_SERVER_URL", "https://github.com")
+    monkeypatch.setenv("GITHUB_REPOSITORY", "coatless-data/us-voting")
+    monkeypatch.setenv("GITHUB_RUN_ID", "42")
+    fake = FakeIssues()
+    capture_alert(fake, "failure")
+    ((title, body, labels),) = fake.opened
+    assert CAPTURE_TITLE == "Capture failing" == title and labels == ["alert"]
+    assert "https://github.com/coatless-data/us-voting/actions/runs/42" in body
+    capture_alert(fake, "success")
+    assert [t for t, _ in fake.closed] == ["Capture failing"]
+    assert "Recovered" in fake.closed[0][1]
+
+
+@pytest.mark.parametrize("outcome", ["skipped", "cancelled", ""])
+def test_capture_alert_ignores_other_outcomes(outcome):
+    fake = FakeIssues()
+    capture_alert(fake, outcome)
+    assert fake.opened == [] and fake.closed == []
+
+
+def test_cli_capture_failure_needs_no_status_file(monkeypatch, capsys):
+    monkeypatch.delenv("GITHUB_REPOSITORY", raising=False)
+    monkeypatch.delenv("GITHUB_TOKEN", raising=False)
+    assert main(["alerts", "--capture-outcome", "failure"]) == 0
+    out = capsys.readouterr().out
+    assert "ensure_open: Capture failing" in out and "::warning::" not in out
+
+
+def test_cli_capture_success_closes_the_issue(tmp_path, monkeypatch, capsys):
+    monkeypatch.delenv("GITHUB_REPOSITORY", raising=False)
+    monkeypatch.delenv("GITHUB_TOKEN", raising=False)
+    path = tmp_path / "s.json"
+    path.write_text('{"capture_id": "c", "sources": {}}', encoding="utf-8")
+    argv = ["alerts", str(path), "--publish-outcome", "success", "--capture-outcome", "success"]
+    assert main(argv) == 0
+    out = capsys.readouterr().out
+    assert "close: Capture failing" in out and "close: Publish failing" in out

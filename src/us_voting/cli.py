@@ -8,7 +8,7 @@ from pathlib import Path
 
 from us_voting import __version__
 from us_voting import capture as capture_mod
-from us_voting.alerts import run_alerts
+from us_voting.alerts import capture_alert, run_alerts
 from us_voting.config import ConfigError, load_config
 from us_voting.importer import import_archive
 from us_voting.issues import Issues
@@ -84,9 +84,12 @@ def _alerts(args: argparse.Namespace) -> int:
     """Alerting never fails the workflow, so every path returns 0."""
     try:
         issues = Issues(os.environ.get("GITHUB_REPOSITORY"), os.environ.get("GITHUB_TOKEN"))
-        run_alerts(
-            load_status(Path(args.status_json)), issues, publish_outcome=args.publish_outcome
-        )
+        if args.capture_outcome:
+            capture_alert(issues, args.capture_outcome)
+        if args.status_json:
+            run_alerts(
+                load_status(Path(args.status_json)), issues, publish_outcome=args.publish_outcome
+            )
     except Exception as exc:
         print(f"::warning::alerts failed: {type(exc).__name__}")
     return 0
@@ -154,8 +157,11 @@ def build_parser() -> argparse.ArgumentParser:
     pub.add_argument("--config", default="config", help="config directory (default: config)")
     pub.set_defaults(func=_publish)
     alerts = sub.add_parser("alerts", help="open, refresh and close GitHub issue alerts")
-    alerts.add_argument("status_json", help="status file written by capture")
+    alerts.add_argument(
+        "status_json", nargs="?", default="", help="status file written by capture, if any"
+    )
     alerts.add_argument("--publish-outcome", default="", help="publish step outcome, any string")
+    alerts.add_argument("--capture-outcome", default="", help="capture step outcome, any string")
     alerts.set_defaults(func=_alerts)
     imp = sub.add_parser("import-archive", help="import a local archive of raw captures")
     imp.add_argument("archive", help="archive directory holding _log.jsonl")

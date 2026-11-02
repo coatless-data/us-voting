@@ -24,8 +24,9 @@ counts derived from them are published.
 
 - `us-voting alerts STATUS_JSON --publish-outcome X` opens, refreshes and closes GitHub issues from
   a status file: one per failing or blocked source, one per public source with voter-level files,
-  and one for publish failures. It reads `GITHUB_REPOSITORY` and `GITHUB_TOKEN`; without both it
-  prints what it would do. It always exits 0.
+  and one for publish failures. `--capture-outcome X` also opens or closes one for a capture step
+  that failed or timed out; with it, `STATUS_JSON` may be left out. It reads `GITHUB_REPOSITORY`
+  and `GITHUB_TOKEN`; without both it prints what it would do. It always exits 0.
 - `us-voting import-archive ARCHIVE --out DIR` imports a local archive of raw captures into
   deterministic `DIR/public` and `DIR/private` bundles, one per privacy class per UTC day, ready for
   `publish`. `--through YYYY-MM-DD` is the last day imported (default: yesterday, UTC). A file that
