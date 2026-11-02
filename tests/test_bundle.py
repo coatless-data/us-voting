@@ -1,4 +1,5 @@
 import hashlib
+import os
 import tarfile
 from datetime import UTC, datetime
 from pathlib import Path
@@ -135,3 +136,37 @@ def test_tar_headers_are_normalized(tmp_path):
         for m in t.getmembers():
             assert (m.uid, m.gid, m.uname, m.gname, m.mode) == (0, 0, "", "", 0o644)
             assert m.mtime == int(datetime(2026, 11, 3, 23, 23, tzinfo=UTC).timestamp())
+
+
+def _collision_items(tmp_path, dirname):
+    return [
+        make_item(tmp_path, "a.csv", b"1", f"{dirname}1"),
+        make_item(tmp_path, "a.csv", b"2", f"{dirname}2"),
+        make_item(tmp_path, "b.csv", b"3" * 6, f"{dirname}3"),
+        make_item(tmp_path, "c.csv", b"4" * 6, f"{dirname}4"),
+    ]
+
+
+def test_input_order_does_not_change_bundles(tmp_path):
+    items = _collision_items(tmp_path, "d")
+    fwd = write_bundles("X", "capture", "public", items, tmp_path / "f", max_bytes=8)
+    rev = write_bundles("X", "capture", "public", items[::-1], tmp_path / "r", max_bytes=8)
+    assert [p.name for p in fwd] == [p.name for p in rev]
+    assert len(fwd) == 2
+    assert [sha256_file(p) for p in fwd] == [sha256_file(p) for p in rev]
+    entries = read_info(tmp_path / "f" / "capture-X.json").files
+    plain = next(e for e in entries if e.member.endswith("__a.csv"))
+    suffixed = next(e for e in entries if e.member.endswith("__a-2.csv"))
+    first, second = sorted(items[:2], key=lambda i: i[0].sha256)
+    assert plain.sha256 == first[0].sha256
+    assert suffixed.sha256 == second[0].sha256
+
+
+def test_paths_and_mtimes_do_not_change_bundles(tmp_path):
+    items = _collision_items(tmp_path, "p")
+    copies = _collision_items(tmp_path, "q")
+    for i, (f, _) in enumerate(copies):
+        os.utime(f.path, (1_000_000 + i, 1_000_000 + i))
+    a = write_bundles("X", "capture", "public", items, tmp_path / "1", max_bytes=99)
+    b = write_bundles("X", "capture", "public", copies, tmp_path / "2", max_bytes=99)
+    assert [sha256_file(p) for p in a] == [sha256_file(p) for p in b]
