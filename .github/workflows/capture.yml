@@ -29,8 +29,9 @@ jobs:
     name: Capture
     runs-on: ubuntu-latest
     timeout-minutes: 120
+    # The workflow token goes only to the steps that call the GitHub API. The git push in
+    # the commit step uses the credentials that actions/checkout persists.
     env:
-      GITHUB_TOKEN: ${{ github.token }}
       ONLY: ${{ inputs.only || '' }}
     steps:
       - name: Check out the default branch
@@ -55,6 +56,8 @@ jobs:
         if: ${{ !cancelled() && inputs.dry_run != true && steps.capture.outcome == 'failure' }}
         continue-on-error: true
         timeout-minutes: 5
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: uv run us-voting alerts --capture-outcome failure
 
       - name: Publish
@@ -62,6 +65,7 @@ jobs:
         if: ${{ inputs.dry_run != true && steps.capture.outputs.files != '0' }}
         timeout-minutes: 45
         env:
+          GITHUB_TOKEN: ${{ github.token }}
           RAW_PRIVATE_TOKEN: ${{ secrets.RAW_PRIVATE_TOKEN }}
           US_VOTING_WRITER: "1"
         run: uv run us-voting publish out/capture
@@ -70,6 +74,8 @@ jobs:
         if: ${{ !cancelled() && inputs.dry_run != true && steps.capture.outcome == 'success' }}
         continue-on-error: true
         timeout-minutes: 5
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: uv run us-voting alerts out/capture/status.json --publish-outcome "${{ steps.publish.outcome }}" --capture-outcome "${{ steps.capture.outcome }}"
 
       # Schedule state is committed whatever publish did, so an outage does not make every

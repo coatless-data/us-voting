@@ -167,3 +167,12 @@ def test_alerts_close_the_capture_issue_after_a_good_capture():
         " && steps.capture.outcome == 'success' }}\n"
     ) in text
     assert '--capture-outcome "${{ steps.capture.outcome }}"' in text
+
+
+def test_github_token_only_in_steps_that_call_the_api():
+    text = read("capture.yml")
+    assert "    env:\n      ONLY: ${{ inputs.only || '' }}\n    steps:\n" in text
+    token = "          GITHUB_TOKEN: ${{ github.token }}\n"
+    users = ["Report a capture failure", "Publish", "Alerts"]
+    assert [name for name in step_names() if token in step(name)] == users
+    assert text.count("GITHUB_TOKEN") == len(users)
