@@ -4,7 +4,9 @@ from datetime import UTC, datetime, time, timedelta
 
 from us_voting.config import Source
 
-TOLERANCE = timedelta(minutes=15)
+# Half the hourly cron period, so drift between consecutive runs neither skips an
+# interval nor runs one twice.
+TOLERANCE = timedelta(minutes=30)
 
 
 def is_due(source: Source, last_run: datetime | None, now: datetime) -> bool:
