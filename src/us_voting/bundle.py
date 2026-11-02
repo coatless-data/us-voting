@@ -171,7 +171,8 @@ def write_bundles(
 ) -> list[Path]:
     if not items:
         return []
-    groups = _split(_unique(items), max_bytes)
+    ordered = sorted(items, key=lambda i: (member_name(i[0]), i[0].sha256, i[0].url))
+    groups = _split(_unique(ordered), max_bytes)
     out_dir.mkdir(parents=True, exist_ok=True)
     base = f"{origin}-{ident}"
     return [
