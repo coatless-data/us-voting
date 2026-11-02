@@ -1,0 +1,8 @@
+[public]
+store = "github:coatless-data/us-voting"
+token_env = "GITHUB_TOKEN"
+
+[private]
+store = "github:coatless-data/us-voting-raw"
+token_env = "RAW_PRIVATE_TOKEN"
+private = true

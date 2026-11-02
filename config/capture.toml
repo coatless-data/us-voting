@@ -1,0 +1,5 @@
+workers = 6
+# No new source starts after this many seconds; the rest stay due for the next run.
+max_seconds = 3000
+# GitHub caps a release asset at 2 GiB; bundles are split below this.
+max_bundle_bytes = 1800000000
