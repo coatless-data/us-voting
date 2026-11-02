@@ -9,7 +9,14 @@ from us_voting.config import Source
 TOLERANCE = timedelta(minutes=30)
 
 
-def is_due(source: Source, last_run: datetime | None, now: datetime) -> bool:
+def is_due(
+    source: Source, last_run: datetime | None, now: datetime, last_result: str | None = None
+) -> bool:
+    """Whether to run the source now.
+
+    A source whose last run failed is retried on every run inside its start and end
+    bounds; a blocked one is not, so a host that blocks us is not asked again early.
+    """
     schedule = source.schedule
     e0 = datetime.combine(source.election.date, time(0), tzinfo=UTC)
 
@@ -24,7 +31,7 @@ def is_due(source: Source, last_run: datetime | None, now: datetime) -> bool:
             every = window.every_hours
             break
 
-    if last_run is None:
+    if last_run is None or last_result == "failed":
         return True
 
     anchor_hour = source.daily_at_utc if source.daily_at_utc is not None else schedule.daily_at_utc
