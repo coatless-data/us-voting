@@ -167,19 +167,68 @@ def test_html_entry_with_missing_file_is_skipped(tmp_path):
     build(tmp_path, [ok, html])
     out = tmp_path / "out"
     r = import_archive(arch, cfg_for(tmp_path), out, through=date(2026, 10, 31))
-    assert r.skipped_html == 1 and r.bad_hash == [] and r.unmatched == []
+    assert r.skipped_html == ["https://a.gov/p.csv?x=1"]
+    assert r.bad_hash == [] and r.unmatched == []
     assert r.files == 1 and len(r.bundles) == 1
 
 
-def test_html_entry_with_file_present_is_skipped(tmp_path):
+@pytest.mark.parametrize("body", [b"<html>", b"\xef\xbb\xbf \r\n\t<!DOCTYPE html><html>"])
+def test_html_entry_with_an_html_body_is_skipped(tmp_path, body):
     arch = tmp_path / "arch"
     arch.mkdir()
     ok = add(arch, "2026-10-30T14:00:00+00:00", PUB, CSV)
-    html = add(arch, "2026-10-30T14:01:00+00:00", "https://zzz.gov/gone", b"<html>")
+    html = add(arch, "2026-10-30T14:01:00+00:00", "https://zzz.gov/gone", body)
     html["content_type"] = "text/html"
     build(tmp_path, [ok, html])
     r = import_archive(arch, cfg_for(tmp_path), tmp_path / "out", through=date(2026, 10, 31))
-    assert r.skipped_html == 1 and r.unmatched == [] and r.files == 1
+    assert r.skipped_html == ["https://zzz.gov/gone"] and r.unmatched == [] and r.files == 1
+
+
+def test_html_typed_entry_holding_csv_is_imported(tmp_path):
+    arch = tmp_path / "arch"
+    arch.mkdir()
+    e = add(arch, "2026-10-30T14:00:00+00:00", PUB, CSV, content_type="TEXT/HTML; charset=utf-8")
+    build(tmp_path, [e])
+    out = tmp_path / "out"
+    r = import_archive(arch, cfg_for(tmp_path), out, through=date(2026, 10, 31))
+    assert r.skipped_html == [] and r.files == 1 and r.bad_hash == []
+    info = read_info(out / "public/import-2026-10-30.json")
+    assert info.files[0].headers["content-type"] == "TEXT/HTML; charset=utf-8"
+
+
+def test_html_typed_entry_outside_the_archive_is_not_read(tmp_path):
+    arch = tmp_path / "arch"
+    arch.mkdir()
+    outside = tmp_path / "outside.gz"
+    outside.write_bytes(gzip.compress(b"<html>", mtime=0))
+    e = add(arch, "2026-10-30T14:00:00+00:00", PUB, b"<html>", content_type="text/html")
+    e["file"] = "../outside.gz"
+    build(tmp_path, [e])
+    r = run(arch, tmp_path)
+    assert r.skipped_html == [] and r.bad_hash == ["../outside.gz"]
+
+
+def test_cli_lists_html_skips(tmp_path, capsys):
+    arch = tmp_path / "arch"
+    arch.mkdir()
+    ok = add(arch, "2026-10-30T14:00:00+00:00", PUB, CSV)
+    pages = [
+        add(
+            arch,
+            f"2026-10-30T14:0{n}:00+00:00",
+            "https://zzz.gov/gone",
+            b"<p>",
+            content_type="text/html",
+        )
+        for n in (1, 2)
+    ]
+    build(tmp_path, [ok, *pages])
+    root = write_config(tmp_path, SOURCES)
+    argv = ["import-archive", str(arch), "--out", str(tmp_path / "out"), "--config", str(root)]
+    assert cli.main([*argv, "--through", "2026-10-31"]) == 0
+    out = capsys.readouterr().out
+    assert "2 skipped as html" in out
+    assert out.count("skipped as html: https://zzz.gov/gone") == 1
 
 
 def test_rerouted_to_private(tmp_path):

@@ -49,6 +49,15 @@ def is_block(status: int | None, headers: Mapping[str, str], head: bytes) -> boo
     return b"radware" in text and b"captcha" in text
 
 
+def looks_like_markup(head: bytes) -> bool:
+    """Whether a body starts with `<` once a UTF-8 BOM and whitespace are skipped.
+
+    With a text/html content type this is the soft-404 rule: the server answered a
+    data URL with an HTML page.
+    """
+    return head.lstrip(b"\xef\xbb\xbf").strip().startswith(b"<")
+
+
 def _host(url: str) -> str:
     return (urlsplit(url).hostname or "").lower()
 
@@ -288,11 +297,7 @@ class Client:
         if out.size == 0:
             return done(out, "empty")
         ctype = out.headers.get("content-type", "").lower()
-        if (
-            data_expected
-            and ctype.startswith("text/html")
-            and out.head.lstrip(b"\xef\xbb\xbf").strip().startswith(b"<")
-        ):
+        if data_expected and ctype.startswith("text/html") and looks_like_markup(out.head):
             return done(out, "soft_404")
         return done(out, None, keep=True)
 
