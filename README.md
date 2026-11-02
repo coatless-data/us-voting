@@ -26,5 +26,8 @@ counts derived from them are published.
   a status file: one per failing or blocked source, one per public source with voter-level files,
   and one for publish failures. It reads `GITHUB_REPOSITORY` and `GITHUB_TOKEN`; without both it
   prints what it would do. It always exits 0.
-
-Later releases add a command for importing an archive.
+- `us-voting import-archive ARCHIVE --out DIR` imports a local archive of raw captures into
+  deterministic `DIR/public` and `DIR/private` bundles, one per privacy class per UTC day, ready for
+  `publish`. `--through YYYY-MM-DD` is the last day imported (default: yesterday, UTC). A file that
+  no single source owns or whose hash does not verify stops the import with nothing written, and
+  an existing non-empty `DIR/public` or `DIR/private` is never overwritten.
