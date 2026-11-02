@@ -9,6 +9,7 @@ from pathlib import Path
 import pytest
 
 from us_voting.guard import voter_level_reason
+from us_voting.kinds.base import safe_name
 
 NC_VOTERS = (
     '"county_desc","voter_reg_num","ncid","voter_last_name","voter_first_name"\n'
@@ -429,3 +430,26 @@ def test_cut_public_json_string_is_not_flagged(tmp_path, monkeypatch):
     monkeypatch.setattr("us_voting.guard.HEAD_BYTES", 4096)
     raw = json.dumps({"note": "a\\b/c é " * 2000, "total": 5})
     assert voter_level_reason(_wrapper_path(tmp_path, raw)) is None
+
+
+EVIL = "x\n<script>alert(1)</script>" + "a" * 200 + ".csv"
+
+
+def test_member_name_in_a_reason_is_made_safe_and_short(tmp_path):
+    reason = voter_level_reason(zip_of(tmp_path, {EVIL: NC_VOTERS}))
+    member, rest = reason.split(": ", 1)
+    assert rest == "column 'voter_reg_num'"
+    assert member == safe_name(EVIL)[:80] and len(member) == 80
+    assert member.startswith("x__script_alert_1___script_aaa")
+    assert "\n" not in reason and "<" not in reason
+
+
+def test_nested_member_names_are_made_safe(tmp_path):
+    inner = _zip_bytes({"v<1>\n.csv": NC_VOTERS.encode()})
+    p = tmp_path / "outer.zip"
+    p.write_bytes(_zip_bytes({"in<b>ner.zip": inner}))
+    assert voter_level_reason(p) == "in_b_ner.zip: v_1__.csv: column 'voter_reg_num'"
+    deep = tmp_path / "deep.zip"
+    deep.write_bytes(_zip_bytes({EVIL + ".zip": _zip_bytes({"m.zip": inner})}))
+    reason = voter_level_reason(deep)
+    assert reason == f"{safe_name(EVIL + '.zip')[:80]}: m.zip: nested archive too deep"

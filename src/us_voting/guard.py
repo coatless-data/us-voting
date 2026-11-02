@@ -18,8 +18,11 @@ import zlib
 from collections.abc import Iterable
 from pathlib import Path
 
+from us_voting.kinds.base import safe_name
+
 HEAD_BYTES = 262_144
 MAX_MEMBERS = 50
+MEMBER_NAME_LIMIT = 80
 NESTED_ZIP_CAP = 64 * 1024 * 1024
 NAME_SAMPLE_LINES = 20
 NAME_SHARE = 0.6
@@ -249,6 +252,11 @@ def _check_xlsx(z: zipfile.ZipFile, allow: frozenset[str]) -> str | None:
     return _first_flagged(strings, allow)
 
 
+def _member(name: str) -> str:
+    """A zip member name as it may appear in a reason, which reaches public status and issues."""
+    return safe_name(name)[:MEMBER_NAME_LIMIT]
+
+
 def _check_zip(source, allow: frozenset[str], depth: int) -> str | None:
     try:
         with zipfile.ZipFile(source) as z:
@@ -262,11 +270,11 @@ def _check_zip(source, allow: frozenset[str], depth: int) -> str | None:
                     head = f.read(HEAD_BYTES)
                     if head.startswith(b"PK"):
                         if depth >= 1:
-                            return f"{info.filename}: nested archive too deep"
+                            return f"{_member(info.filename)}: nested archive too deep"
                         head += f.read(NESTED_ZIP_CAP)
                 reason = _check_bytes(head, allow, depth + 1)
                 if reason:
-                    return f"{info.filename}: {reason}"
+                    return f"{_member(info.filename)}: {reason}"
             if len(infos) > MAX_MEMBERS:
                 return f"{len(infos) - MAX_MEMBERS} members not checked"
     except (zipfile.BadZipFile, OSError, EOFError, zlib.error, NotImplementedError, RuntimeError):
