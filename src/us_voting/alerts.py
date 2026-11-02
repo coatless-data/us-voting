@@ -13,6 +13,7 @@ from us_voting.status import TIME_FORMAT, SourceStatus, Status
 FAILING_AFTER = 3
 LABELS = ["alert"]
 PUBLISH_TITLE = "Publish failing"
+CAPTURE_TITLE = "Capture failing"
 
 
 class IssueSink(Protocol):
@@ -54,6 +55,21 @@ def _reroute_body(source_id: str, entries: list[dict[str, str]]) -> str:
     lines.append(_run_line())
     lines.append("Review the source and move it to the private class if this is expected.")
     return "\n".join(lines) + "\n"
+
+
+def capture_alert(issues: IssueSink, capture_outcome: str) -> None:
+    """Open an issue when the capture step failed or timed out; close it after a success."""
+    if capture_outcome == "failure":
+        body = (
+            "The capture step failed or timed out. Nothing from this run was published and "
+            "the status file was not committed, so the sources due on this run are due "
+            "again on the next one.\n\n"
+            f"Workflow run: {run_url() or 'unknown'}\n"
+            "\nThis issue closes itself when a capture succeeds.\n"
+        )
+        issues.ensure_open(CAPTURE_TITLE, body, LABELS)
+    elif capture_outcome == "success":
+        issues.close(CAPTURE_TITLE, f"Recovered: the capture step succeeded.\n{_run_line()}")
 
 
 def run_alerts(status: Status, issues: IssueSink, *, publish_outcome: str) -> None:
