@@ -126,7 +126,7 @@ def fetch_file(
     if status != 200 or fetched.path is None or fetched.sha256 is None:
         if fetched.path is not None:
             fetched.path.unlink(missing_ok=True)
-        result = "missing" if status in (403, 404, 410) else "http_error"
+        result = "missing" if status in (401, 403, 404, 410) else "http_error"
         return UrlOutcome(url, result, status)
     unchanged = fetched.sha256 == state.sha256
     state.checked = checked
@@ -158,6 +158,8 @@ def source_result(source: Source, kr: KindResult, now: datetime) -> tuple[str, s
         if o.result == "blocked":
             return "blocked", o.url
     ignored = {"missing"} if source.kind == "dated" else set()
+    if source.kind == "page_links" and any(o.result in GOOD for o in kr.outcomes):
+        ignored = {"missing", "soft_404"}
     failures = [o for o in kr.outcomes if o.result not in GOOD and o.result not in ignored]
     if failures:
         if source.expect_missing_until is not None and now < source.expect_missing_until:
@@ -181,7 +183,7 @@ def text_failure(url: str, status: int | None, error: str | None) -> UrlOutcome:
         return UrlOutcome(url, "blocked", status, error)
     if error is not None:
         return UrlOutcome(url, "error", status, error)
-    return UrlOutcome(url, "missing" if status in (403, 404, 410) else "http_error", status)
+    return UrlOutcome(url, "missing" if status in (401, 403, 404, 410) else "http_error", status)
 
 
 def unparseable(url: str) -> UrlOutcome:
