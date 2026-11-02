@@ -1134,10 +1134,10 @@ def recovery_tags(store: ReleaseStore) -> list[str]:
 def recover_temporaries(store: ReleaseStore, tag: str) -> list[str]:
     """Finish or unwind every interrupted replace in one release.
 
-    Runs at the start of publish, over the tags `recovery_tags` returns. All
-    release writes share one workflow concurrency group, so this never races
-    another writer. Returns one action string per asset it touched, base name by base
-    name in sorted order.
+    Publish calls it once per bundle, on that bundle's release tag, before it
+    reads the release's manifest. All release writes share one workflow
+    concurrency group, so this never races another writer. Returns one action
+    string per asset it touched, base name by base name in sorted order.
     """
     groups: dict[str, list[Asset]] = {}
     for asset in store.list_assets(tag):
