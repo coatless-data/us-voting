@@ -401,3 +401,31 @@ def test_compact_json_keys(tmp_path, text, expected):
     p = tmp_path / f"k{next(_counter)}.json"
     p.write_text(text)
     assert voter_level_reason(p) == f"column '{expected}'"
+
+
+def _escaped_wrapper(style: str, pad: int) -> str:
+    data = NC_VOTERS.encode() + b"\xff\xff\xfe" * 9000
+    blob = base64.b64encode(data).decode()
+    if style == "newline":
+        blob = "\n".join(blob[i : i + 76] for i in range(0, len(blob), 76))
+    raw = json.dumps({"pad": "x" * pad, "upload": blob})
+    if style == "plus":
+        raw = raw.replace("+", "\\u002B")
+    if style == "slash":
+        raw = raw.replace("/", "\\/")
+    return raw
+
+
+@pytest.mark.parametrize("style", ["plus", "newline", "slash"])
+@pytest.mark.parametrize("pad", range(12))
+def test_wrapper_cut_inside_escape_is_flagged(tmp_path, monkeypatch, style, pad):
+    monkeypatch.setattr("us_voting.guard.HEAD_BYTES", 4096)
+    raw = _escaped_wrapper(style, pad)
+    assert len(raw) > 4 * 4096
+    assert voter_level_reason(_wrapper_path(tmp_path, raw)) == "column 'voter_reg_num'"
+
+
+def test_cut_public_json_string_is_not_flagged(tmp_path, monkeypatch):
+    monkeypatch.setattr("us_voting.guard.HEAD_BYTES", 4096)
+    raw = json.dumps({"note": "a\\b/c é " * 2000, "total": 5})
+    assert voter_level_reason(_wrapper_path(tmp_path, raw)) is None

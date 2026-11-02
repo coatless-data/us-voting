@@ -67,7 +67,8 @@ PERSON_NAME = re.compile(
 JSON_KEY = re.compile(r'"([^"]{1,40})"\s*:')
 XML_TEXT = re.compile(r"<t(?:\s[^>]*)?>([^<]*)</t>")
 DELIMITERS = (",", "\t", "|", ";")
-JSON_STRING = re.compile(r'"((?:[^"\\]|\\.)*)("|$)')
+JSON_STRING = re.compile(r'"((?:[^"\\]|\\.)*\\?)("|$)')
+PARTIAL_ESCAPE = re.compile(r"(\\+)(u[0-9A-Fa-f]{0,3})?$")
 BASE64_TEXT = re.compile(r"[A-Za-z0-9+/=]{64,}")
 BASE64_MAX_DEPTH = 2
 OLE2_MAGIC = b"\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1"
@@ -201,10 +202,15 @@ def _base64_candidates(text: str) -> Iterable[str]:
         body = match.group(1)
         if len(body) < 64:
             continue
+        if not match.group(2):
+            # Cut off at the end of the head: drop a trailing partial escape.
+            partial = PARTIAL_ESCAPE.search(body)
+            if partial and len(partial.group(1)) % 2 == 1:
+                body = body[: partial.start(1) + len(partial.group(1)) - 1]
         try:
             value = json.loads('"' + body + '"')
         except ValueError:
-            value = body.replace("\\/", "/")
+            value = re.sub(r"\\[nrt]", "", body.replace("\\/", "/"))
         value = "".join(value.split())
         if BASE64_TEXT.fullmatch(value):
             yield value
