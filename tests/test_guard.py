@@ -329,3 +329,75 @@ def test_utf16_without_bom(tmp_path, codec):
     p = tmp_path / "nobom.txt"
     p.write_bytes("county_id\tvoter_reg_num\tfull_name\r\n1\t1\tJANE DOE\r\n".encode(codec))
     assert voter_level_reason(p) == "column 'voter_reg_num'"
+
+
+def _wrapper_path(tmp_path, raw_json: str) -> Path:
+    p = tmp_path / f"wrap{next(_counter)}.json"
+    p.write_text(raw_json)
+    return p
+
+
+def _blob(count: int = 3) -> str:
+    return base64.b64encode((NC_VOTERS * count).encode()).decode()
+
+
+def test_escaped_slash_wrapper_with_slashes(tmp_path):
+    # Bytes chosen so the base64 text contains "/" and "+".
+    data = b"#" + b"\xfb\xef\xbf" * 20 + b"\n" + NC_VOTERS.encode()
+    blob = base64.b64encode(data).decode()
+    assert "/" in blob
+    raw = json.dumps({"upload": blob}).replace("/", "\\/")
+    assert "\\/" in raw
+    reason = voter_level_reason(_wrapper_path(tmp_path, raw))
+    assert reason == "column 'voter_reg_num'"
+
+
+def test_unicode_escaped_plus_wrapper_flagged(tmp_path):
+    data = b"\xfb\xef\xbe" * 30 + b"\n" + NC_VOTERS.encode()
+    blob = base64.b64encode(data).decode()
+    assert "+" in blob
+    raw = json.dumps({"upload": blob}).replace("+", "\\u002B")
+    assert voter_level_reason(_wrapper_path(tmp_path, raw)) == "column 'voter_reg_num'"
+
+
+def test_mime_line_break_wrapper_flagged(tmp_path):
+    blob = _blob()
+    wrapped = "\n".join(blob[i : i + 76] for i in range(0, len(blob), 76))
+    raw = json.dumps({"upload": wrapped})
+    assert "\\n" in raw
+    assert voter_level_reason(_wrapper_path(tmp_path, raw)) == "column 'voter_reg_num'"
+
+
+def test_zip_with_wrapper_member_flagged(tmp_path):
+    raw = json.dumps({"upload": _blob()})
+    reason = voter_level_reason(zip_of(tmp_path, {"data.json": raw}))
+    assert reason == "data.json: column 'voter_reg_num'"
+
+
+def test_counts_wrapper_in_zip_passes(tmp_path):
+    inner = json.dumps({"turnout_by_county": [{"name": "ANDERSON", "total": 5}]})
+    raw = json.dumps({"upload": base64.b64encode(inner.encode()).decode()})
+    assert voter_level_reason(zip_of(tmp_path, {"data.json": raw})) is None
+
+
+@pytest.mark.parametrize(
+    ("header", "expected"),
+    [
+        ("fName,lName,precinct", "column 'fname'"),
+        ("idNumber,party", "column 'idnumber'"),
+        ("ncId,county", "column 'ncid'"),
+        ("DoB,county", "column 'dob'"),
+        ("CountyName,Total", None),
+    ],
+)
+def test_compact_column_names(tmp_path, header, expected):
+    assert voter_level_reason(write(tmp_path, header + "\n")) == expected
+
+
+@pytest.mark.parametrize(
+    ("text", "expected"), [('{"fName": 1}', "fname"), ('{"idNumber": 1}', "idnumber")]
+)
+def test_compact_json_keys(tmp_path, text, expected):
+    p = tmp_path / f"k{next(_counter)}.json"
+    p.write_text(text)
+    assert voter_level_reason(p) == f"column '{expected}'"
