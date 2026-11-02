@@ -116,6 +116,45 @@ def test_publish_to_both_stores(tmp_path):
     assert "pub" not in {f["source_id"] for b in pm["bundles"] for f in b["files"]}
 
 
+class RecordingStore(LocalReleaseStore):
+    def __init__(self, root, log, label, *, fail=False):
+        super().__init__(root)
+        self.log, self.label, self.fail = log, label, fail
+
+    def upload_new(self, tag, path, name, label=None):
+        if name.endswith(".tar.gz"):
+            self.log.append(self.label)
+            if self.fail:
+                raise StorageError("upload failed", status=500)
+        return super().upload_new(tag, path, name, label)
+
+
+def test_private_bundles_are_uploaded_first(tmp_path):
+    cfg = cfg_for(tmp_path)
+    cap = build(tmp_path, cfg, "cap")
+    log = []
+    publish_dir(
+        cap,
+        cfg,
+        RecordingStore(tmp_path / "pub-store", log, "public"),
+        RecordingStore(tmp_path / "prv-store", log, "private"),
+    )
+    assert log == ["private", "public"]
+
+
+def test_failed_private_upload_uploads_no_public_bundle(tmp_path):
+    cfg = cfg_for(tmp_path)
+    cap = build(tmp_path, cfg, "cap")
+    log = []
+    pub_store = RecordingStore(tmp_path / "pub-store", log, "public")
+    with pytest.raises(StorageError):
+        publish_dir(
+            cap, cfg, pub_store, RecordingStore(tmp_path / "prv", log, "private", fail=True)
+        )
+    assert log == ["private"]
+    assert pub_store.get_release(TAG) is None or names(pub_store, TAG) == []
+
+
 def test_republish_skips(tmp_path):
     cfg = cfg_for(tmp_path)
     cap = build(tmp_path, cfg, "cap")

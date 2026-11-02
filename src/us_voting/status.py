@@ -1,5 +1,6 @@
 """Per-source status and fetch state, saved as one JSON file per capture."""
 
+import copy
 import json
 import os
 import tempfile
@@ -54,6 +55,20 @@ def record_run(st: SourceStatus, result: str, error: str | None, now: datetime) 
         st.consecutive_failures = 0
     if result == "ok":
         st.last_ok = now
+
+
+def hold_fetch_state(previous: Status, current: Status) -> None:
+    """Give every source in `current` the fetch state it had in `previous`.
+
+    Used when publish failed: the captured files never reached a store, so their URLs
+    must be fetched again, but the schedule state (last_run, last_ok, result,
+    consecutive_failures, error) still advances. A source absent from `previous`
+    gets empty fetch state.
+    """
+    for source_id, st in current.sources.items():
+        before = previous.sources.get(source_id)
+        st.urls = copy.deepcopy(before.urls) if before is not None else {}
+        st.version = before.version if before is not None else None
 
 
 def load_status(path: Path) -> Status:

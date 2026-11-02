@@ -1,7 +1,7 @@
 import dataclasses
 import re
 import tarfile
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import httpx
@@ -20,7 +20,7 @@ from us_voting.capture import (
 from us_voting.config import load_config
 from us_voting.kinds import KINDS
 from us_voting.kinds.base import CapturedFile
-from us_voting.status import Status, UrlState, load_status
+from us_voting.status import Status, UrlState, hold_fetch_state, load_status
 
 SOURCES = """
 [[source]]
@@ -279,3 +279,30 @@ def test_stalled_host_costs_three_requests_and_is_not_blocked(tmp_path):
     assert r.results == {"dated": "failed"}
     assert "timeout" in status.sources["dated"].error
     assert status.sources["dated"].urls == {}
+
+
+DAILY = """
+[[source]]
+id = "daily"
+state = "NC"
+kind = "url"
+raw = "public"
+schedule = "daily"
+provides = ["results"]
+url = "https://a.gov/p.csv"
+"""
+
+
+def test_source_captured_in_a_failed_publish_run_waits_for_its_next_slot(tmp_path):
+    cfg = load_config(write_config(tmp_path, DAILY))
+    client, _ = mock_client(handler_for(), http=cfg.http)
+    now = datetime(2026, 11, 6, 14, 23, tzinfo=UTC)
+    committed = Status()
+    run_capture(cfg, load_status(tmp_path / "none.json"), tmp_path / "out", now, client)
+    current = load_status(tmp_path / "out/capture/status.json")
+    hold_fetch_state(committed, current)
+    st = current.sources["daily"]
+    assert st.urls == {} and st.result == "ok" and st.last_run == now
+    for hours in (1, 12, 23):
+        assert due_sources(cfg, current, now + timedelta(hours=hours), None) == [], hours
+    assert [s.id for s in due_sources(cfg, current, now + timedelta(days=1), None)] == ["daily"]

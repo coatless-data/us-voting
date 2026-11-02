@@ -72,15 +72,21 @@ jobs:
         timeout-minutes: 5
         run: uv run us-voting alerts out/capture/status.json --publish-outcome "${{ steps.publish.outcome }}" --capture-outcome "${{ steps.capture.outcome }}"
 
+      # Schedule state is committed whatever publish did, so an outage does not make every
+      # source due every hour. After a failed publish the fetch state is put back first,
+      # so the files that were not published are fetched again.
       - name: Commit status/latest.json
-        if: ${{ !cancelled() && inputs.dry_run != true && steps.capture.outcome == 'success' && steps.publish.outcome != 'failure' }}
-        continue-on-error: true
+        if: ${{ !cancelled() && inputs.dry_run != true && steps.capture.outcome == 'success' }}
         timeout-minutes: 5
         env:
           BRANCH: ${{ github.event.repository.default_branch || github.ref_name }}
           CAPTURE_ID: ${{ steps.capture.outputs.capture_id }}
+          PUBLISH_OUTCOME: ${{ steps.publish.outcome }}
         run: |
           set -euo pipefail
+          if [ "$PUBLISH_OUTCOME" = "failure" ]; then
+            uv run us-voting hold-fetch-state status/latest.json out/capture/status.json
+          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           for attempt in 1 2 3; do
@@ -99,10 +105,11 @@ jobs:
             git fetch --quiet origin "$BRANCH"
             git reset --quiet --hard FETCH_HEAD
           done
-          echo "::warning::could not push status/latest.json after 3 attempts"
+          echo "::error::could not push status/latest.json after 3 attempts"
+          exit 1
 
       - name: Gate
         if: ${{ failure() && steps.publish.outcome == 'failure' }}
         run: |
-          echo "::error::captured files were not published; status was not advanced"
+          echo "::error::captured files were not published; fetch state was not advanced"
           exit 1
