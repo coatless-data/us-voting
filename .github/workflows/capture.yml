@@ -2,6 +2,7 @@ name: Capture
 
 on:
   schedule:
+    # Off the hour, away from the top-of-hour scheduling backlog.
     - cron: "23 * * * *"
   workflow_dispatch:
     inputs:
