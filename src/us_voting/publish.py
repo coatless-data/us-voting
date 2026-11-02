@@ -40,19 +40,34 @@ class PublishResult:
 
 
 def _check_public(tar_path: Path, info: BundleInfo, cfg: Config) -> None:
+    if info.privacy != "public":
+        raise PublishRefused(
+            f"{info.name}: marked {info.privacy!r} but found in the public folder; "
+            "nothing was uploaded for this bundle"
+        )
     entries = {f.member: f for f in info.files}
+    for entry in info.files:
+        source = cfg.sources.get(entry.source_id)
+        if source is not None and source.raw == "private":
+            raise PublishRefused(
+                f"{info.name}: {entry.member} comes from private source {entry.source_id}; "
+                "nothing was uploaded for this bundle"
+            )
     with tarfile.open(tar_path) as tar:
         for member in tar.getmembers():
-            if member.name == INFO_NAME or not member.isfile():
+            if member.name == INFO_NAME:
                 continue
+            src = tar.extractfile(member) if member.isfile() else None
+            if src is None:
+                raise PublishRefused(
+                    f"{info.name}: {member.name} is not a regular file; "
+                    "nothing was uploaded for this bundle"
+                )
             entry = entries.get(member.name)
             source = cfg.sources.get(entry.source_id) if entry else None
             allow = source.guard_allow if source else ()
             with tempfile.TemporaryDirectory() as tmp:
                 dest = Path(tmp) / "member"
-                src = tar.extractfile(member)
-                if src is None:
-                    continue
                 with src, dest.open("wb") as out:
                     while chunk := src.read(1 << 20):
                         out.write(chunk)
@@ -79,7 +94,15 @@ def _upload(store: ReleaseStore, tag: str, tar_path: Path, name: str, digest: st
         if exc.status != 422:
             raise
         existing = next((a for a in store.list_assets(tag) if a.name == name), None)
-        if existing is None or existing.digest != f"sha256:{digest}":
+        if existing is None:
+            raise
+        if existing.digest is not None:
+            if existing.digest != f"sha256:{digest}":
+                raise
+            return
+        with tempfile.TemporaryDirectory() as tmp:
+            got = sha256_file(store.download(tag, name, Path(tmp) / "asset"))
+        if got != digest:
             raise
 
 
@@ -114,6 +137,8 @@ def _publish_one(store: ReleaseStore, sidecar: Path, cfg: Config, public: bool) 
 def publish_dir(
     capture_dir: Path, cfg: Config, public: ReleaseStore, private: ReleaseStore
 ) -> PublishResult:
+    if not capture_dir.is_dir():
+        raise FileNotFoundError(f"not a directory: {capture_dir}")
     result = PublishResult()
     for sub, store, is_public in (("public", public, True), ("private", private, False)):
         folder = capture_dir / sub

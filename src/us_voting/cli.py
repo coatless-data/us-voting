@@ -69,7 +69,7 @@ def _publish(args: argparse.Namespace) -> int:
             else:
                 opened[key] = open_configured(sc)
         result = publish_dir(Path(args.dir), cfg, opened["public"], opened["private"])
-    except (PublishConflict, PublishRefused, StorageError, ConfigError) as exc:
+    except (PublishConflict, PublishRefused, StorageError, ConfigError, FileNotFoundError) as exc:
         print(exc, file=sys.stderr)
         return 1
     for verb, name, tag in result.events:
