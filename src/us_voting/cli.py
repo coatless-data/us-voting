@@ -9,7 +9,7 @@ from pathlib import Path
 from us_voting import __version__
 from us_voting import capture as capture_mod
 from us_voting.alerts import capture_alert, run_alerts
-from us_voting.config import ConfigError, load_config
+from us_voting.config import ConfigError, check_stores_distinct, load_config
 from us_voting.importer import import_archive
 from us_voting.issues import Issues
 from us_voting.publish import PublishConflict, PublishRefused, publish_dir
@@ -63,6 +63,10 @@ def _publish(args: argparse.Namespace) -> int:
     try:
         cfg = load_config(Path(args.config))
         overrides = {"public": args.public_store, "private": args.private_store}
+        check_stores_distinct(
+            args.public_store or cfg.stores["public"].spec,
+            args.private_store or cfg.stores["private"].spec,
+        )
         opened = {}
         for key, spec in overrides.items():
             sc = cfg.stores[key]
@@ -116,6 +120,7 @@ def _today() -> date:
 def _import_archive(args: argparse.Namespace) -> int:
     try:
         cfg = load_config(Path(args.config))
+        check_stores_distinct(cfg.stores["public"].spec, cfg.stores["private"].spec)
         today = _today()
         through = date.fromisoformat(args.through) if args.through else today - timedelta(days=1)
         if through >= today:

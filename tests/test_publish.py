@@ -370,3 +370,41 @@ def test_cli_exit_codes(tmp_path, capsys):
     assert capsys.readouterr().err
     bad = [*argv[:-1], "bogus:x"]
     assert cli.main(bad) == 1
+
+
+@pytest.mark.parametrize(
+    "flags",
+    [
+        ["--public-store", "github:Coatless-Data/US-Voting-Raw"],
+        ["--private-store", "github:COATLESS-DATA/us-voting"],
+        ["--public-store", "local:{d}/same", "--private-store", "local:{d}/same"],
+    ],
+)
+def test_cli_refuses_one_repo_for_both_stores(tmp_path, capsys, monkeypatch, flags):
+    def never(*args, **kwargs):
+        raise AssertionError("a store was opened")
+
+    monkeypatch.setattr(cli, "open_store", never)
+    monkeypatch.setattr(cli, "open_configured", never)
+    config = write_config(tmp_path, SOURCES)
+    cap = build(tmp_path, cfg_for(tmp_path / "c2"), "cap")
+    argv = ["publish", str(cap), "--config", str(config)]
+    argv += [f.format(d=tmp_path) for f in flags]
+    assert cli.main(argv) == 1
+    assert "same" in capsys.readouterr().err
+    assert not (tmp_path / "same").exists()
+
+
+def test_import_refuses_one_repo_for_both_stores(tmp_path, capsys):
+    config = write_config(tmp_path, SOURCES)
+    text = (config / "stores.toml").read_text(encoding="utf-8")
+    (config / "stores.toml").write_text(
+        text.replace("coatless-data/us-voting-raw", "coatless-data/US-voting"), encoding="utf-8"
+    )
+    (tmp_path / "arch").mkdir()
+    (tmp_path / "arch" / "_log.jsonl").write_text("", encoding="utf-8")
+    argv = ["import-archive", str(tmp_path / "arch"), "--out", str(tmp_path / "out")]
+    argv += ["--config", str(config), "--through", "2026-10-31"]
+    assert cli.main(argv) == 1
+    assert "same" in capsys.readouterr().err
+    assert not (tmp_path / "out").exists()

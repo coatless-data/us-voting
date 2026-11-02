@@ -4,7 +4,13 @@ import pytest
 
 from conftest import CONFIG_DIR, one_source, write_config
 from us_voting.cli import main
-from us_voting.config import ConfigError, StoreConfig, Window, load_config
+from us_voting.config import (
+    ConfigError,
+    StoreConfig,
+    Window,
+    check_stores_distinct,
+    load_config,
+)
 
 VALID = {
     "id": '"nc-x"',
@@ -119,3 +125,50 @@ def test_check_config_cli(tmp_path, capsys):
 
 def test_no_command_returns_usage_error(capsys):
     assert main([]) == 2
+
+
+PUBLIC_TABLE = '[public]\nstore = "github:o/pub"\ntoken_env = "GITHUB_TOKEN"\n'
+
+
+@pytest.mark.parametrize(
+    "private_table",
+    [
+        '[private]\nstore = "github:o/raw"\ntoken_env = "RAW_PRIVATE_TOKEN"\n',
+        '[private]\nstore = "github:o/raw"\ntoken_env = "RAW_PRIVATE_TOKEN"\nprivate = false\n',
+        '[private]\nstore = "github:o/raw"\ntoken_env = "RAW_PRIVATE_TOKEN"\nprivate = "true"\n',
+        '[private]\nstore = "github:o/raw"\ntoken_env = "RAW_PRIVATE_TOKEN"\nprivate = 1\n',
+        "",
+    ],
+)
+def test_private_store_must_say_private_true(tmp_path, private_table):
+    root = write_config(tmp_path, "")
+    (root / "stores.toml").write_text(PUBLIC_TABLE + private_table, encoding="utf-8")
+    with pytest.raises(ConfigError, match=r"stores\.toml.*private"):
+        load_config(root)
+
+
+def test_public_store_table_is_required(tmp_path):
+    root = write_config(tmp_path, "")
+    (root / "stores.toml").write_text(
+        '[private]\nstore = "github:o/raw"\ntoken_env = "T"\nprivate = true\n', encoding="utf-8"
+    )
+    with pytest.raises(ConfigError, match=r"stores\.toml.*public"):
+        load_config(root)
+
+
+@pytest.mark.parametrize(
+    ("public", "private"),
+    [
+        ("github:coatless-data/us-voting", "github:coatless-data/us-voting"),
+        ("github:Coatless-Data/US-Voting", "github:coatless-data/us-voting"),
+        ("GITHUB:coatless-data/us-voting", "coatless-data/us-voting"),
+        ("local:/tmp/stores/x", "local:/tmp/stores/x"),
+    ],
+)
+def test_same_store_for_public_and_private_is_refused(public, private):
+    with pytest.raises(ConfigError, match="same"):
+        check_stores_distinct(public, private)
+
+
+def test_distinct_stores_pass():
+    check_stores_distinct("github:coatless-data/us-voting", "github:coatless-data/us-voting-raw")
