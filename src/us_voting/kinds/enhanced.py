@@ -8,6 +8,7 @@ from us_voting.kinds.base import (
     KindResult,
     SourceRun,
     fetch_file,
+    fetch_in_turn,
     safe_name,
     text_failure,
     unparseable,
@@ -65,17 +66,23 @@ class EnhancedKind:
             return KindResult([], note="same_version")
         stamp = run.now.strftime("%Y%m%dT%H%M%SZ")
         tag = safe_name(str(md.get("publishVersionId") or stamp))[:12]
-        outcomes = [
-            fetch_file(
-                run, url, f"{election}_{tag}__{label}.json", conditional=False, version=version
-            )
-            for url, label in (
-                (meta_url, "meta"),
-                (f"{host}/cdn/results/{short}/export-{election}.json", "export"),
-            )
+        targets = [
+            (meta_url, "meta"),
+            (f"{host}/cdn/results/{short}/export-{election}.json", "export"),
         ]
-        good = all(o.result in GOOD for o in outcomes)
-        return KindResult(outcomes, version=version if good else None)
+        outcomes, failure = fetch_in_turn(
+            run,
+            targets,
+            lambda target: fetch_file(
+                run,
+                target[0],
+                f"{election}_{tag}__{target[1]}.json",
+                conditional=False,
+                version=version,
+            ),
+        )
+        good = failure is None and all(o.result in GOOD for o in outcomes)
+        return KindResult(outcomes, version=version if good else None, failure=failure)
 
     def owns(self, source: Source, url: str) -> bool:
         if not url.startswith(_host(source) + "/"):

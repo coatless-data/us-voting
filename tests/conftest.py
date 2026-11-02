@@ -34,7 +34,10 @@ def one_source(tmp_path: Path, body: str) -> Source:
 
 
 def mock_client(
-    handler: Callable[[httpx.Request], httpx.Response], *, http: HttpConfig | None = None
+    handler: Callable[[httpx.Request], httpx.Response],
+    *,
+    http: HttpConfig | None = None,
+    monotonic: Callable[[], float] | None = None,
 ) -> tuple[Client, list[float]]:
     sleeps: list[float] = []
     cfg = http if http is not None else load_config(CONFIG_DIR).http
@@ -42,9 +45,31 @@ def mock_client(
         cfg,
         transport=httpx.MockTransport(handler),
         sleep=sleeps.append,
-        monotonic=lambda: 1000.0,
+        monotonic=monotonic if monotonic is not None else lambda: 1000.0,
     )
     return client, sleeps
+
+
+class Clock:
+    """A monotonic clock that moves only when a test moves it."""
+
+    def __init__(self, start: float = 0.0) -> None:
+        self.now = start
+
+    def __call__(self) -> float:
+        return self.now
+
+
+def ticking(
+    handler: Callable[[httpx.Request], httpx.Response], clock: Clock, step: float
+) -> Callable[[httpx.Request], httpx.Response]:
+    """Wrap a handler so that each request it answers takes `step` seconds."""
+
+    def h(request: httpx.Request) -> httpx.Response:
+        clock.now += step
+        return handler(request)
+
+    return h
 
 
 def make_run(
@@ -53,6 +78,7 @@ def make_run(
     *,
     body: str | None = None,
     now: datetime = NOW,
+    monotonic: Callable[[], float] | None = None,
 ) -> SourceRun:
     if body is None:
         body = (
@@ -60,7 +86,7 @@ def make_run(
             'schedule = "results"\nprovides = ["results"]\nurl = "https://a.gov/f.csv"\n'
         )
     source = one_source(tmp_path, body)
-    client, _ = mock_client(handler)
+    client, _ = mock_client(handler, monotonic=monotonic)
     work_dir = tmp_path / "work"
     work_dir.mkdir(exist_ok=True)
     return SourceRun(

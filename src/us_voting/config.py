@@ -27,6 +27,7 @@ class HttpConfig:
     backoff_seconds: tuple[float, ...]
     min_interval_seconds: float
     signals_before_abandon: int
+    timeouts_before_abandon: int
 
     def user_agent_for(self, host: str) -> str:
         host = host.lower()
@@ -162,6 +163,7 @@ def _load_http(root: Path) -> HttpConfig:
         backoff_seconds=tuple(float(x) for x in _get(retry, "backoff_seconds", list, w)),
         min_interval_seconds=float(_get(pacing, "min_interval_seconds", num, w)),
         signals_before_abandon=_get(blocks, "signals_before_abandon", int, w),
+        timeouts_before_abandon=_get(blocks, "timeouts_before_abandon", int, w),
     )
 
 

@@ -2,7 +2,7 @@ from datetime import UTC, datetime
 
 import httpx
 
-from conftest import make_run
+from conftest import Clock, make_run, ticking
 from us_voting.kinds import KINDS
 from us_voting.kinds.base import source_result
 from us_voting.kinds.dated import DatedKind
@@ -198,3 +198,40 @@ def test_page_links_blocked_page_is_blocked_not_waiting(tmp_path):
     result, error = source_result(run.source, kr, run.now)
     assert kr.outcomes[0].result == "blocked"
     assert result == "blocked" and error == "https://x.gov/press/index.html"
+
+
+def test_dated_stops_starting_urls_at_the_deadline(tmp_path):
+    body = HEAD + 'kind = "dated"\ntemplate = "https://a.gov/{n}.csv"\nn_range = [1, 4]\n'
+    clock, requested = Clock(), []
+    run = make_run(tmp_path, ticking(recorder(requested), clock, 10), body=body, monotonic=clock)
+    run.client.set_deadline(30)
+    kr = DatedKind().fetch(run)
+    assert requested == [f"https://a.gov/{n}.csv" for n in (1, 2, 3)]
+    assert [o.result for o in kr.outcomes] == ["saved"] * 3
+    assert kr.failure == "capture deadline reached after 3 of 4 URLs"
+    assert source_result(run.source, kr, run.now) == ("failed", kr.failure)
+
+
+def test_url_with_several_urls_stops_at_the_deadline(tmp_path):
+    urls = ", ".join(f'"https://a.gov/{n}.csv"' for n in (1, 2, 3))
+    body = HEAD + f'kind = "url"\nurls = [{urls}]\n'
+    clock, requested = Clock(), []
+    run = make_run(tmp_path, ticking(recorder(requested), clock, 10), body=body, monotonic=clock)
+    run.client.set_deadline(20)
+    kr = UrlKind().fetch(run)
+    assert len(requested) == 2 and len(kr.files) == 2
+    assert kr.failure == "capture deadline reached after 2 of 3 URLs"
+
+
+def test_url_kind_without_a_deadline_has_no_failure(tmp_path):
+    kr = UrlKind().fetch(make_run(tmp_path, recorder([])))
+    assert kr.failure is None and len(kr.files) == 1
+
+
+def test_page_links_stops_at_the_deadline(tmp_path):
+    clock, requested = Clock(), []
+    run = make_run(tmp_path, ticking(page_handler(requested), clock, 10), body=PL, monotonic=clock)
+    run.client.set_deadline(20)
+    kr = PageLinksKind().fetch(run)
+    assert len(requested) == 2 and [f.name for f in kr.files] == ["c.xlsx"]
+    assert kr.failure == "capture deadline reached after 1 of 2 URLs"

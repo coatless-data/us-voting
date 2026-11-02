@@ -99,6 +99,7 @@ def run_capture(
         shutil.rmtree(work)
     work.mkdir(parents=True)
     start = monotonic()
+    client.set_deadline(cfg.max_seconds)
     statuses: dict[str, SourceStatus] = {s.id: status.source(s.id) for s in due}
 
     def worker(source: Source):

@@ -2,7 +2,7 @@ import json
 
 import httpx
 
-from conftest import make_run
+from conftest import Clock, make_run, ticking
 from us_voting.kinds import KINDS
 from us_voting.kinds.base import source_result
 from us_voting.kinds.clarity import ClarityKind
@@ -227,3 +227,25 @@ def test_enhanced_owns(tmp_path):
     assert k.owns(run.source, EXPORT)
     assert not k.owns(run.source, "https://enr.elections.other.gov/cdn/results/VA/export-x.json")
     assert not k.owns(run.source, f"{HOST}/other/page")
+
+
+def test_clarity_cut_off_by_the_deadline_records_no_version(tmp_path):
+    clock, requested = Clock(), []
+    handler = ticking(clarity_handler(requested), clock, 10)
+    run = make_run(tmp_path, handler, body=CLARITY_EID, monotonic=clock)
+    run.client.set_deadline(20)
+    kr = ClarityKind().fetch(run)
+    assert len(requested) == 2 and len(kr.files) == 1
+    assert kr.version is None
+    assert kr.failure == "capture deadline reached after 1 of 2 URLs"
+
+
+def test_enhanced_cut_off_by_the_deadline_records_no_version(tmp_path):
+    clock, requested = Clock(), []
+    handler = ticking(enhanced_handler(requested), clock, 10)
+    run = make_run(tmp_path, handler, body=ENH_EL, monotonic=clock)
+    run.client.set_deadline(30)
+    kr = EnhancedKind().fetch(run)
+    assert urls(requested) == [JUR, META, META]
+    assert kr.version is None
+    assert kr.failure == "capture deadline reached after 1 of 2 URLs"

@@ -4,8 +4,15 @@ from datetime import UTC, datetime
 import httpx
 import pytest
 
-from conftest import NOW, make_run, one_source
-from us_voting.kinds.base import KindResult, UrlOutcome, fetch_file, safe_name, source_result
+from conftest import NOW, Clock, make_run, one_source
+from us_voting.kinds.base import (
+    KindResult,
+    UrlOutcome,
+    fetch_file,
+    safe_name,
+    source_result,
+    text_failure,
+)
 from us_voting.status import UrlState
 
 URL = "https://a.gov/f.csv"
@@ -149,3 +156,57 @@ def test_source_result(tmp_path, kind, results, note, now, expected):
         assert error is None
     else:
         assert error.startswith(expected[1]) and len(error) <= 300
+
+
+@pytest.mark.parametrize("error", ["host_unresponsive", "deadline"])
+def test_unresponsive_and_deadline_are_errors_not_blocks(error):
+    assert text_failure(URL, None, error).result == "error"
+    assert text_failure(URL, None, "host_abandoned").result == "blocked"
+
+
+def test_fetch_after_the_deadline_is_an_error_and_touches_no_fetch_state(tmp_path):
+    clock = Clock()
+    run = make_run(tmp_path, lambda r: httpx.Response(200, content=b"x"), monotonic=clock)
+    run.status.urls[URL] = UrlState(etag='"old"', sha256="ab")
+    run.client.set_deadline(0)
+    out = fetch_file(run, URL, "f.csv")
+    assert (out.result, out.error, out.file) == ("error", "deadline", None)
+    assert run.status.urls == {URL: UrlState(etag='"old"', sha256="ab")}
+    other = fetch_file(run, "https://a.gov/new.csv", "new.csv")
+    assert other.result == "error" and "https://a.gov/new.csv" not in run.status.urls
+
+
+def test_unresponsive_host_is_an_error(tmp_path):
+    def h(r):
+        raise httpx.ReadTimeout("stalled", request=r)
+
+    run = make_run(tmp_path, h)
+    assert fetch_file(run, URL, "f.csv").error == "timeout"
+    out = fetch_file(run, "https://a.gov/g.csv", "g.csv")
+    assert (out.result, out.error) == ("error", "host_unresponsive")
+    assert run.status.urls == {}
+
+
+def _url_source(tmp_path, extra=""):
+    body = (
+        'id = "s"\nstate = "NC"\nraw = "public"\nschedule = "results"\nprovides = ["results"]\n'
+        'kind = "url"\nurl = "https://a.gov/f"\n' + extra
+    )
+    return one_source(tmp_path, body)
+
+
+def test_source_level_failure_makes_the_source_failed(tmp_path):
+    source = _url_source(tmp_path, "expect_missing_until = 2026-11-04T00:00:00Z\n")
+    kr = KindResult(
+        [UrlOutcome(URL, "saved")], failure="capture deadline reached after 1 of 3 URLs"
+    )
+    assert source_result(source, kr, BEFORE_EXPECTED) == (
+        "failed",
+        "capture deadline reached after 1 of 3 URLs",
+    )
+
+
+def test_blocked_wins_over_a_source_level_failure(tmp_path):
+    source = _url_source(tmp_path)
+    kr = KindResult([UrlOutcome(URL, "blocked")], failure="capture deadline reached after 1 of 3")
+    assert source_result(source, kr, NOW) == ("blocked", URL)
