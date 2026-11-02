@@ -1,6 +1,6 @@
 {
- "capture_id": "2026-11-02T1500Z",
- "generated_at": "2026-11-02T15:00:22Z",
+ "capture_id": "2026-11-02T1815Z",
+ "generated_at": "2026-11-02T18:15:17Z",
  "rerouted": [],
  "sources": {
   "ca-2026-11-03-ballots": {
@@ -32,10 +32,10 @@
    "version": null
   },
   "co-2026-11-03-results": {
-   "consecutive_failures": 1,
+   "consecutive_failures": 2,
    "error": "1 of 1 URLs failed: https://results.enr.clarityelections.com/CO/elections.json 202",
    "last_ok": null,
-   "last_run": "2026-11-02T15:00:22Z",
+   "last_run": "2026-11-02T18:15:17Z",
    "result": "failed",
    "urls": {},
    "version": null
@@ -152,10 +152,10 @@
    "version": null
   },
   "ia-2026-11-03-results": {
-   "consecutive_failures": 1,
+   "consecutive_failures": 2,
    "error": "1 of 1 URLs failed: https://electionresults.iowa.gov/IA/127077/current_ver.txt 202",
    "last_ok": null,
-   "last_run": "2026-11-02T15:00:22Z",
+   "last_run": "2026-11-02T18:15:17Z",
    "result": "failed",
    "urls": {},
    "version": null
@@ -775,10 +775,10 @@
    "version": null
   },
   "sc-2026-11-03-results": {
-   "consecutive_failures": 1,
+   "consecutive_failures": 2,
    "error": "1 of 1 URLs failed: https://www.enr-scvotes.org/SC/127300/current_ver.txt 202",
    "last_ok": null,
-   "last_run": "2026-11-02T15:00:22Z",
+   "last_run": "2026-11-02T18:15:17Z",
    "result": "failed",
    "urls": {},
    "version": null
@@ -1162,10 +1162,10 @@
    "version": "d1abb935-6491-4694-ba26-2b8a1287c697|2026-10-21T21:03:09.308386Z|2026-10-22T15:55:34.6947355Z"
   },
   "wv-2026-11-03-results": {
-   "consecutive_failures": 1,
+   "consecutive_failures": 2,
    "error": "1 of 1 URLs failed: https://results.enr.clarityelections.com/WV/elections.json 202",
    "last_ok": null,
-   "last_run": "2026-11-02T15:00:22Z",
+   "last_run": "2026-11-02T18:15:17Z",
    "result": "failed",
    "urls": {},
    "version": null
