@@ -1,0 +1,101 @@
+name: Capture
+
+on:
+  schedule:
+    - cron: "23 * * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Capture only; publish nothing and commit nothing
+        type: boolean
+        default: false
+      only:
+        description: Source ids to capture now regardless of schedule, comma separated
+        type: string
+        default: ""
+
+run-name: ${{ inputs.dry_run && 'Capture (dry run)' || 'Capture' }}
+
+concurrency:
+  group: us-voting-capture
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  capture:
+    name: Capture
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+      RAW_PRIVATE_TOKEN: ${{ secrets.RAW_PRIVATE_TOKEN }}
+      US_VOTING_WRITER: "1"
+      ONLY: ${{ inputs.only || '' }}
+    steps:
+      - name: Check out the default branch
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.repository.default_branch || github.ref_name }}
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          enable-cache: true
+
+      - name: Install the project
+        run: uv sync --locked
+
+      - name: Capture
+        id: capture
+        timeout-minutes: 60
+        run: uv run us-voting capture --out out --only "$ONLY"
+
+      - name: Publish
+        id: publish
+        if: ${{ inputs.dry_run != true && steps.capture.outputs.files != '0' }}
+        timeout-minutes: 45
+        run: uv run us-voting publish out/capture
+
+      - name: Alerts
+        if: ${{ !cancelled() && inputs.dry_run != true && steps.capture.outcome == 'success' }}
+        continue-on-error: true
+        timeout-minutes: 5
+        run: uv run us-voting alerts out/capture/status.json --publish-outcome "${{ steps.publish.outcome }}"
+
+      - name: Commit status/latest.json
+        if: ${{ !cancelled() && inputs.dry_run != true && steps.capture.outcome == 'success' && steps.publish.outcome != 'failure' }}
+        continue-on-error: true
+        timeout-minutes: 5
+        env:
+          BRANCH: ${{ github.event.repository.default_branch || github.ref_name }}
+          CAPTURE_ID: ${{ steps.capture.outputs.capture_id }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for attempt in 1 2 3; do
+            mkdir -p status
+            cp out/capture/status.json status/latest.json
+            git add status/latest.json
+            if git diff --cached --quiet; then
+              echo "status/latest.json is unchanged"
+              exit 0
+            fi
+            git commit --quiet -m "capture ${CAPTURE_ID}"
+            if git push --quiet origin "HEAD:${BRANCH}"; then
+              exit 0
+            fi
+            echo "push attempt ${attempt} was rejected; resetting to origin/${BRANCH}"
+            git fetch --quiet origin "$BRANCH"
+            git reset --quiet --hard FETCH_HEAD
+          done
+          echo "::warning::could not push status/latest.json after 3 attempts"
+
+      - name: Gate
+        if: ${{ steps.publish.outcome == 'failure' }}
+        run: |
+          echo "::error::captured files were not published; status was not advanced"
+          exit 1
