@@ -48,7 +48,8 @@ def due_sources(cfg: Config, status: Status, now: datetime, only: list[str] | No
     due = []
     for source in cfg.sources.values():
         known = status.sources.get(source.id)
-        if is_due(source, known.last_run if known else None, now):
+        last_run, last_result = (known.last_run, known.result) if known else (None, None)
+        if is_due(source, last_run, now, last_result):
             due.append(source)
     return due
 

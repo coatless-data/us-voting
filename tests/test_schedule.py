@@ -81,3 +81,23 @@ def test_late_run_then_on_time_run_is_due(src):
 
 def test_six_hour_profile_gap_of_five_and_a_half_hours_is_due(ovw):
     assert is_due(ovw, dt("2026-10-30T06:23Z"), dt("2026-10-30T11:53Z"))
+
+
+@pytest.fixture
+def daily(tmp_path):  # anchored at 14:00 UTC, no start or end
+    return one_source(tmp_path, BODY.replace('schedule = "results"', 'schedule = "daily"'))
+
+
+def test_failed_daily_source_is_due_on_the_next_hourly_run(daily):
+    assert not is_due(daily, dt("2026-11-06T14:23Z"), dt("2026-11-06T15:23Z"), "ok")
+    assert is_due(daily, dt("2026-11-06T14:23Z"), dt("2026-11-06T15:23Z"), "failed")
+
+
+def test_blocked_daily_source_keeps_its_cadence(daily):
+    assert not is_due(daily, dt("2026-11-06T14:23Z"), dt("2026-11-06T15:23Z"), "blocked")
+    assert is_due(daily, dt("2026-11-06T14:23Z"), dt("2026-11-07T14:23Z"), "blocked")
+
+
+def test_failed_source_still_respects_start_and_end(src):
+    assert not is_due(src, dt("2027-01-01T23:23Z"), dt("2027-01-02T00:23Z"), "failed")
+    assert not is_due(src, dt("2026-10-03T22:23Z"), dt("2026-10-03T23:23Z"), "failed")

@@ -89,6 +89,15 @@ def test_due_and_only(tmp_path):
         due_sources(cfg, status, NOW, ["pub", "nope"])
 
 
+def test_failed_source_is_due_again_but_blocked_is_not(tmp_path):
+    cfg, status, _ = setup(tmp_path)
+    for source_id, result in (("pub", "failed"), ("priv", "blocked")):
+        status.source(source_id).last_run = NOW
+        status.source(source_id).result = result
+    later = NOW.replace(minute=50)
+    assert [s.id for s in due_sources(cfg, status, later, None)] == ["pub"]
+
+
 def test_route(tmp_path):
     cfg, _, _ = setup(tmp_path)
     f = tmp_path / "x.csv"
