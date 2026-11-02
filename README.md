@@ -27,6 +27,10 @@ counts derived from them are published.
   and one for publish failures. `--capture-outcome X` also opens or closes one for a capture step
   that failed or timed out; with it, `STATUS_JSON` may be left out. It reads `GITHUB_REPOSITORY`
   and `GITHUB_TOKEN`; without both it prints what it would do. It always exits 0.
+- `us-voting hold-fetch-state PREVIOUS CURRENT` runs after a failed publish. It gives each source
+  in the status file `CURRENT` the fetch state (validators, hashes, version) it had in `PREVIOUS`
+  and keeps `CURRENT`'s schedule state, so unpublished files are fetched again when their sources
+  are next due.
 - `us-voting import-archive ARCHIVE --out DIR` imports a local archive of raw captures into
   deterministic `DIR/public` and `DIR/private` bundles, one per privacy class per UTC day, ready for
   `publish`. `--through YYYY-MM-DD` is the last day imported (default: yesterday, UTC). A file that

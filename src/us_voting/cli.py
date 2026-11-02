@@ -13,7 +13,7 @@ from us_voting.config import ConfigError, load_config
 from us_voting.importer import import_archive
 from us_voting.issues import Issues
 from us_voting.publish import PublishConflict, PublishRefused, publish_dir
-from us_voting.status import load_status
+from us_voting.status import hold_fetch_state, load_status, save_status
 from us_voting.store import StorageError, open_configured, open_store
 
 
@@ -95,6 +95,20 @@ def _alerts(args: argparse.Namespace) -> int:
     return 0
 
 
+def _hold_fetch_state(args: argparse.Namespace) -> int:
+    current = Path(args.current)
+    try:
+        if not current.is_file():
+            raise FileNotFoundError(f"{current} does not exist")
+        status = load_status(current)
+        hold_fetch_state(load_status(Path(args.previous)), status)
+        save_status(status, current)
+    except (ValueError, TypeError, OSError) as exc:
+        print(exc, file=sys.stderr)
+        return 1
+    return 0
+
+
 def _today() -> date:
     return datetime.now(UTC).date()
 
@@ -163,6 +177,12 @@ def build_parser() -> argparse.ArgumentParser:
     alerts.add_argument("--publish-outcome", default="", help="publish step outcome, any string")
     alerts.add_argument("--capture-outcome", default="", help="capture step outcome, any string")
     alerts.set_defaults(func=_alerts)
+    hold = sub.add_parser(
+        "hold-fetch-state", help="restore fetch state after a failed publish, keep the schedule"
+    )
+    hold.add_argument("previous", help="status file of the last published capture, if any")
+    hold.add_argument("current", help="status file written by capture, rewritten in place")
+    hold.set_defaults(func=_hold_fetch_state)
     imp = sub.add_parser("import-archive", help="import a local archive of raw captures")
     imp.add_argument("archive", help="archive directory holding _log.jsonl")
     imp.add_argument("--out", required=True, help="output directory")

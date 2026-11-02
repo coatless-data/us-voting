@@ -66,9 +66,13 @@ def test_private_token_scoped_to_publish():
 
 
 def test_gate_runs_after_publish_failure():
-    assert "        if: ${{ failure() && steps.publish.outcome == 'failure' }}\n" in read(
-        "capture.yml"
-    )
+    text = step("Gate")
+    assert "        if: ${{ failure() && steps.publish.outcome == 'failure' }}\n" in text
+    assert (
+        '          echo "::error::captured files were not published; '
+        'fetch state was not advanced"\n'
+        "          exit 1\n"
+    ) in text
 
 
 def test_hourly_cron_and_serial_concurrency():
@@ -84,13 +88,32 @@ def test_publish_runs_only_with_files():
 
 
 def test_status_commit_waits_for_publish():
-    line = next(
-        line
-        for line in read("capture.yml").splitlines()
-        if "steps.publish.outcome != 'failure'" in line
+    """Schedule state is committed whatever publish did; fetch state only after a publish."""
+    text = step("Commit status/latest.json")
+    assert (
+        "        if: ${{ !cancelled() && inputs.dry_run != true"
+        " && steps.capture.outcome == 'success' }}\n"
+    ) in text
+    assert "          PUBLISH_OUTCOME: ${{ steps.publish.outcome }}\n" in text
+    hold = (
+        '          if [ "$PUBLISH_OUTCOME" = "failure" ]; then\n'
+        "            uv run us-voting hold-fetch-state status/latest.json out/capture/status.json\n"
+        "          fi\n"
     )
-    assert "inputs.dry_run != true" in line
-    assert "steps.capture.outcome == 'success'" in line
+    assert hold in text
+    assert text.index("set -euo pipefail") < text.index(hold)
+    assert text.index(hold) < text.index("cp out/capture/status.json status/latest.json")
+
+
+def test_status_commit_fails_when_every_push_is_rejected():
+    text = step("Commit status/latest.json")
+    assert "continue-on-error" not in text
+    assert "::warning::" not in text
+    assert text.endswith(
+        '          echo "::error::could not push status/latest.json after 3 attempts"\n'
+        "          exit 1\n"
+        "\n"
+    )
 
 
 def test_no_bare_bang_if():

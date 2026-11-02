@@ -98,7 +98,8 @@ def run_alerts(status: Status, issues: IssueSink, *, publish_outcome: str) -> No
     if publish_outcome == "failure":
         body = (
             f"Publishing the capture {status.capture_id or ''} failed. The fetch state was not "
-            f"advanced, so the next run fetches those files again.\n{_run_line()}"
+            "advanced, so those files are fetched again the next time their sources are due."
+            f"\n{_run_line()}"
         )
         issues.ensure_open(PUBLISH_TITLE, body, LABELS)
     elif publish_outcome == "success":

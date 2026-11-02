@@ -140,7 +140,9 @@ def publish_dir(
     if not capture_dir.is_dir():
         raise FileNotFoundError(f"not a directory: {capture_dir}")
     result = PublishResult()
-    for sub, store, is_public in (("public", public, True), ("private", private, False)):
+    # Private bundles go first: if any of them fails, no public bundle goes up on this run,
+    # so a broken private store cannot leave a new public bundle behind every hour.
+    for sub, store, is_public in (("private", private, False), ("public", public, True)):
         folder = capture_dir / sub
         if not folder.is_dir():
             continue
