@@ -102,6 +102,37 @@ def test_dated_owns(tmp_path):
     )
 
 
+def test_dated_owns_exact_urls_only(tmp_path):
+    clark = "https://c.gov/EVMB/ev_{d:%Y%m%d}.zip"
+    src = make_run(
+        tmp_path,
+        recorder([]),
+        body=HEAD
+        + f'kind = "dated"\ntemplate = "{clark}"\nstart = "2026-10-17"\nend = "2026-10-30"\n',
+        now=datetime(2026, 10, 20, 12, tzinfo=UTC),
+    ).source
+    assert DatedKind().owns(src, "https://c.gov/EVMB/ev_20261017.zip")
+    assert DatedKind().owns(src, "https://c.gov/EVMB/ev_20261030.zip")
+    assert not DatedKind().owns(src, "https://c.gov/EVMB/ev_26GE.zip")
+    assert not DatedKind().owns(src, "https://c.gov/EVMB/ev_20261016.zip")
+    assert not DatedKind().owns(src, "https://c.gov/EVMB/ev_20261031.zip")
+
+
+def test_dated_owns_counter_range(tmp_path):
+    src = make_run(
+        tmp_path,
+        recorder([]),
+        body=HEAD
+        + 'kind = "dated"\ntemplates = ["https://a.gov/a{n}.csv", "https://a.gov/b{n}.csv"]\n'
+        + "n_range = [1, 3]\n",
+    ).source
+    assert DatedKind().owns(src, "https://a.gov/a1.csv")
+    assert DatedKind().owns(src, "https://a.gov/b3.csv")
+    assert not DatedKind().owns(src, "https://a.gov/a4.csv")
+    assert not DatedKind().owns(src, "https://a.gov/a0.csv")
+    assert not DatedKind().owns(src, "https://a.gov/ax.csv")
+
+
 PAGE = (
     '<a href="/press_room/2026_stats/GG26/a.csv">a</a> <a href="b.xlsx">b</a> '
     "<img src='https://x.gov/2026_stats/GG26/c.xlsx'>"

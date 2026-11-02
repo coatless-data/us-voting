@@ -31,6 +31,7 @@ class ImportResult:
     ambiguous: list[str]
     bad_hash: list[str]
     skipped_after: int
+    skipped_html: int
     rerouted: list[str]
 
 
@@ -112,6 +113,7 @@ def import_archive(archive: Path, cfg: Config, out: Path, *, through: date) -> I
     ambiguous: list[str] = []
     bad_hash: list[str] = []
     skipped_after = 0
+    skipped_html = 0
     rerouted: list[str] = []
     groups: dict[tuple[str, date], list[tuple[CapturedFile, Source]]] = defaultdict(list)
     count = 0
@@ -128,6 +130,9 @@ def import_archive(archive: Path, cfg: Config, out: Path, *, through: date) -> I
                 continue
             if received.date() > through:
                 skipped_after += 1
+                continue
+            if str(entry.get("content_type") or "").lower().startswith("text/html"):
+                skipped_html += 1
                 continue
             url, rel = entry["url"], entry["file"]
             owners = [s for s in cfg.sources.values() if KINDS[s.kind].owns(s, url)]
@@ -202,5 +207,6 @@ def import_archive(archive: Path, cfg: Config, out: Path, *, through: date) -> I
         ambiguous=ambiguous,
         bad_hash=bad_hash,
         skipped_after=skipped_after,
+        skipped_html=skipped_html,
         rerouted=rerouted,
     )

@@ -157,6 +157,31 @@ def test_missing_file_counts_as_bad_hash(tmp_path):
     assert r.bad_hash == [f"{e['file']} (missing)"] and r.bundles == []
 
 
+def test_html_entry_with_missing_file_is_skipped(tmp_path):
+    arch = tmp_path / "arch"
+    arch.mkdir()
+    ok = add(arch, "2026-10-30T14:00:00+00:00", PUB, CSV)
+    html = add(arch, "2026-10-30T14:01:00+00:00", "https://a.gov/p.csv?x=1", b"<html>")
+    html["content_type"] = "Text/HTML; charset=utf-8"
+    (arch / html["file"]).unlink()
+    build(tmp_path, [ok, html])
+    out = tmp_path / "out"
+    r = import_archive(arch, cfg_for(tmp_path), out, through=date(2026, 10, 31))
+    assert r.skipped_html == 1 and r.bad_hash == [] and r.unmatched == []
+    assert r.files == 1 and len(r.bundles) == 1
+
+
+def test_html_entry_with_file_present_is_skipped(tmp_path):
+    arch = tmp_path / "arch"
+    arch.mkdir()
+    ok = add(arch, "2026-10-30T14:00:00+00:00", PUB, CSV)
+    html = add(arch, "2026-10-30T14:01:00+00:00", "https://zzz.gov/gone", b"<html>")
+    html["content_type"] = "text/html"
+    build(tmp_path, [ok, html])
+    r = import_archive(arch, cfg_for(tmp_path), tmp_path / "out", through=date(2026, 10, 31))
+    assert r.skipped_html == 1 and r.unmatched == [] and r.files == 1
+
+
 def test_rerouted_to_private(tmp_path):
     arch = tmp_path / "arch"
     arch.mkdir()

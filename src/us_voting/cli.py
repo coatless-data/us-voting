@@ -127,7 +127,10 @@ def _import_archive(args: argparse.Namespace) -> int:
     print(f"{result.files} files imported, {len(result.bundles)} bundles")
     for path in result.bundles:
         print(f"  {path.parent.name}/{path.name}")
-    print(f"{result.skipped_after} skipped after {through}, {len(result.rerouted)} rerouted")
+    print(
+        f"{result.skipped_after} skipped after {through}, "
+        f"{result.skipped_html} skipped as html, {len(result.rerouted)} rerouted"
+    )
     return 0
 
 
