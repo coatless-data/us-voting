@@ -231,3 +231,128 @@ def test_cli_success_and_failure(tmp_path, capsys):
     cap = capsys.readouterr()
     assert other in cap.out + cap.err
     assert cli.main([*args, "--through", "2026-10-31"]) == 1
+
+
+def run(arch, tmp_path):
+    return import_archive(arch, cfg_for(tmp_path), tmp_path / "out", through=date(2026, 10, 31))
+
+
+def test_corrupt_gzip_body(tmp_path):
+    arch = tmp_path / "arch"
+    arch.mkdir()
+    e = add(arch, "2026-10-30T14:00:00+00:00", PUB, bytes(range(256)) * 40)
+    path = arch / e["file"]
+    raw = bytearray(path.read_bytes())
+    raw[len(raw) // 2] ^= 0xFF
+    path.write_bytes(bytes(raw))
+    build(tmp_path, [e])
+    r = run(arch, tmp_path)
+    assert r.bad_hash == [f"{e['file']} (unreadable)"] and r.bundles == []
+    assert not (tmp_path / "out/public").exists()
+
+
+@pytest.mark.parametrize("kind", ["absolute", "parent"])
+def test_path_escaping_archive(tmp_path, kind):
+    arch = tmp_path / "arch"
+    arch.mkdir()
+    e = add(arch, "2026-10-30T14:00:00+00:00", PUB, CSV)
+    target = arch / e["file"]
+    outside = tmp_path / "outside.gz"
+    outside.write_bytes(target.read_bytes())
+    e["file"] = str(outside) if kind == "absolute" else "../outside.gz"
+    build(tmp_path, [e])
+    r = run(arch, tmp_path)
+    assert r.bad_hash == [e["file"]] and r.bundles == []
+
+
+def test_torn_final_line_is_skipped(tmp_path):
+    arch = tmp_path / "arch"
+    arch.mkdir()
+    good = json.dumps(add(arch, "2026-10-30T14:00:00+00:00", PUB, CSV))
+    (arch / "_log.jsonl").write_text(good + '\n{"ts": "2026-10-30T1', encoding="utf-8")
+    r = run(arch, tmp_path)
+    assert r.files == 1 and r.bad_hash == []
+
+
+def test_bad_json_line_names_line_number(tmp_path, capsys):
+    arch = tmp_path / "arch"
+    arch.mkdir()
+    good = json.dumps(add(arch, "2026-10-30T14:00:00+00:00", PUB, CSV))
+    (arch / "_log.jsonl").write_text(f"{good}\n{{oops\n{good}\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="log line 2"):
+        run(arch, tmp_path)
+    root = write_config(tmp_path / "c2", SOURCES)
+    out = str(tmp_path / "o")
+    args = ["import-archive", str(arch), "--out", out, "--config", str(root)]
+    code = cli.main([*args, "--through", "2026-10-31"])
+    assert code == 1 and "log line 2" in capsys.readouterr().err
+
+
+def test_malformed_saved_entries(tmp_path):
+    arch = tmp_path / "arch"
+    arch.mkdir()
+    ok = add(arch, "2026-10-30T14:00:00+00:00", PUB, CSV)
+    entries = [
+        {k: v for k, v in ok.items() if k != "file"},
+        {k: v for k, v in ok.items() if k != "sha256"},
+        {k: v for k, v in ok.items() if k != "url"},
+        [1, 2],
+        "text",
+        {**ok, "file": 5},
+    ]
+    build(tmp_path, [json.dumps(e) for e in entries])
+    r = run(arch, tmp_path)
+    assert r.bad_hash == [f"log line {i}" for i in range(1, 7)] and r.bundles == []
+
+
+def test_cli_rejects_partial_day(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(cli, "_today", lambda: date(2026, 11, 1))
+    arch = standard(tmp_path)
+    root = write_config(tmp_path, SOURCES)
+    base = ["import-archive", str(arch), "--config", str(root)]
+    for extra in (["--through", "2026-11-01"], ["--through", "2026-11-05"]):
+        assert cli.main([*base, "--out", str(tmp_path / "o"), *extra]) == 1
+        assert "not a finished UTC day" in capsys.readouterr().err
+    assert not (tmp_path / "o").exists()
+    assert cli.main([*base, "--out", str(tmp_path / "o")]) == 0
+
+
+def test_unmatched_and_ambiguous_listed_once(tmp_path):
+    arch = tmp_path / "arch"
+    arch.mkdir()
+    other, other2 = "https://zzz.gov/q.csv", "https://zzz.gov/r.csv"
+    entries = [
+        add(arch, "2026-10-30T14:00:00+00:00", other, CSV),
+        add(arch, "2026-10-30T15:00:00+00:00", other2, CSV),
+        add(arch, "2026-10-30T16:00:00+00:00", other, CSV + b"1\n"),
+    ]
+    build(tmp_path, entries)
+    assert run(arch, tmp_path).unmatched == [other, other2]
+    arch2 = tmp_path / "arch2"
+    arch2.mkdir()
+    build(
+        tmp_path,
+        [
+            add(arch2, "2026-10-30T14:00:00+00:00", PUB, CSV),
+            add(arch2, "2026-10-30T15:00:00+00:00", PUB, CSV + b"1\n"),
+        ],
+        "arch2",
+    )
+    cfg = load_config(write_config(tmp_path / "amb", SOURCES.replace(PRIV, PUB)))
+    r = import_archive(arch2, cfg, tmp_path / "out2", through=date(2026, 10, 31))
+    assert r.ambiguous == [PUB]
+
+
+def test_disk_write_errors_propagate(tmp_path, monkeypatch):
+    arch = standard(tmp_path)
+    real = Path.open
+
+    def failing(self, mode="r", *a, **kw):
+        if "work" in self.parts and "w" in mode:
+            raise OSError(28, "No space left on device")
+        return real(self, mode, *a, **kw)
+
+    monkeypatch.setattr(Path, "open", failing)
+    with pytest.raises(OSError, match="No space"):
+        run(arch, tmp_path)
+    assert not (tmp_path / "out/work").exists()

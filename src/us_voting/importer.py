@@ -4,6 +4,7 @@ import gzip
 import hashlib
 import json
 import shutil
+import zlib
 from collections import defaultdict
 from dataclasses import dataclass
 from datetime import UTC, date, datetime
@@ -33,24 +34,57 @@ class ImportResult:
     rerouted: list[str]
 
 
-def _saved_entries(archive: Path) -> list[dict]:
-    entries = []
+class _ReadError(Exception):
+    """The archived file could not be read or decompressed."""
+
+
+def _saved_entries(archive: Path) -> list[tuple[int, dict | None]]:
+    """Saved log entries as (1-based line number, entry); None marks a malformed line.
+
+    A final line without a trailing newline may be half-written by a live archive, so
+    it is skipped when it does not parse.
+    """
+    entries: list[tuple[int, dict | None]] = []
     with (archive / "_log.jsonl").open(encoding="utf-8") as fh:
-        for line in fh:
+        for number, line in enumerate(fh, 1):
             if not line.strip():
                 continue
-            entry = json.loads(line)
-            if entry.get("result") == "saved":
-                entries.append(entry)
+            try:
+                entry = json.loads(line)
+            except json.JSONDecodeError:
+                if not line.endswith("\n"):
+                    continue
+                raise ValueError(f"log line {number} is not valid JSON") from None
+            if not isinstance(entry, dict):
+                entries.append((number, None))
+            elif entry.get("result") == "saved":
+                entries.append((number, entry))
     return entries
 
 
+def _well_formed(entry: dict) -> bool:
+    return all(isinstance(entry.get(k), str) and entry[k] for k in ("url", "file", "sha256", "ts"))
+
+
 def _gunzip(src: Path, dest: Path) -> tuple[str, int]:
-    """Stream-decompress `src` to `dest`, returning the sha256 and size of the body."""
+    """Stream-decompress `src` to `dest`, returning the sha256 and size of the body.
+
+    Read-side failures raise _ReadError; errors writing `dest` propagate unchanged.
+    """
     digest = hashlib.sha256()
     size = 0
-    with gzip.open(src, "rb") as fin, dest.open("wb") as fout:
-        while chunk := fin.read(CHUNK):
+    try:
+        fin = gzip.open(src, "rb")  # noqa: SIM115
+    except OSError as exc:
+        raise _ReadError from exc
+    with fin, dest.open("wb") as fout:
+        while True:
+            try:
+                chunk = fin.read(CHUNK)
+            except (OSError, EOFError, zlib.error) as exc:
+                raise _ReadError from exc
+            if not chunk:
+                break
             digest.update(chunk)
             size += len(chunk)
             fout.write(chunk)
@@ -82,25 +116,37 @@ def import_archive(archive: Path, cfg: Config, out: Path, *, through: date) -> I
     groups: dict[tuple[str, date], list[tuple[CapturedFile, Source]]] = defaultdict(list)
     count = 0
     try:
-        for n, entry in enumerate(_saved_entries(archive)):
-            received = datetime.fromisoformat(entry["ts"]).astimezone(UTC)
+        archive_root = archive.resolve()
+        for n, (number, entry) in enumerate(_saved_entries(archive)):
+            if entry is None or not _well_formed(entry):
+                bad_hash.append(f"log line {number}")
+                continue
+            try:
+                received = datetime.fromisoformat(entry["ts"]).astimezone(UTC)
+            except ValueError:
+                bad_hash.append(f"log line {number}")
+                continue
             if received.date() > through:
                 skipped_after += 1
                 continue
             url, rel = entry["url"], entry["file"]
             owners = [s for s in cfg.sources.values() if KINDS[s.kind].owns(s, url)]
             if not owners:
-                unmatched.append(url)
-            elif len(owners) > 1:
+                if url not in unmatched:
+                    unmatched.append(url)
+            elif len(owners) > 1 and url not in ambiguous:
                 ambiguous.append(url)
-            source_file = archive / rel
+            source_file = (archive / rel).resolve()
+            if not source_file.is_relative_to(archive_root):
+                bad_hash.append(rel)
+                continue
             if not source_file.is_file():
                 bad_hash.append(f"{rel} (missing)")
                 continue
             dest = work / f"{n}-{_name(rel)}"
             try:
                 sha, size = _gunzip(source_file, dest)
-            except (OSError, EOFError):
+            except _ReadError:
                 bad_hash.append(f"{rel} (unreadable)")
                 dest.unlink(missing_ok=True)
                 continue
