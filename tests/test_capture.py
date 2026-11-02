@@ -164,6 +164,41 @@ def test_kind_exception_is_recorded(tmp_path, monkeypatch):
     assert r.all_failed and r.files == 0
 
 
+TWO_URLS = """
+[[source]]
+id = "pub"
+state = "NC"
+kind = "url"
+raw = "public"
+schedule = "results"
+provides = ["results"]
+urls = ["https://a.gov/one.csv", "https://a.gov/two.csv"]
+"""
+
+
+def test_fetch_state_is_restored_when_a_kind_raises_partway(tmp_path):
+    cfg = load_config(write_config(tmp_path, TWO_URLS))
+
+    def handler(request):
+        if request.url.path == "/two.csv":
+            raise OSError("disk full simulated")
+        return httpx.Response(200, content=PUB_BODY, headers={"etag": '"e1"'})
+
+    client, _ = mock_client(handler, http=cfg.http)
+
+    def before():
+        return {"https://a.gov/one.csv": UrlState(etag='"old"', sha256="00")}
+
+    status = Status()
+    status.source("pub").urls = before()
+    r = run_capture(cfg, status, tmp_path / "out", NOW, client)
+    st = status.sources["pub"]
+    assert (st.result, st.error) == ("failed", "OSError: disk full simulated")
+    assert st.urls == before()
+    assert r.files == 0 and r.bundles == []
+    assert load_status(tmp_path / "out/capture/status.json").sources["pub"].urls == before()
+
+
 def test_max_seconds_leaves_rest_due(tmp_path):
     cfg, status, client = setup(tmp_path)
     cfg = dataclasses.replace(cfg, workers=1)
