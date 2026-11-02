@@ -1,8 +1,12 @@
 import shutil
+from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
 
-from us_voting.config import Source, load_config
+import httpx
+
+from us_voting.config import HttpConfig, Source, load_config
+from us_voting.http import Client
 
 CONFIG_DIR = Path(__file__).resolve().parent.parent / "config"
 NOW = datetime(2026, 11, 3, 23, 23, tzinfo=UTC)
@@ -25,3 +29,17 @@ def one_source(tmp_path: Path, body: str) -> Source:
     root = write_config(tmp_path, "[[source]]\n" + body)
     (source,) = load_config(root).sources.values()
     return source
+
+
+def mock_client(
+    handler: Callable[[httpx.Request], httpx.Response], *, http: HttpConfig | None = None
+) -> tuple[Client, list[float]]:
+    sleeps: list[float] = []
+    cfg = http if http is not None else load_config(CONFIG_DIR).http
+    client = Client(
+        cfg,
+        transport=httpx.MockTransport(handler),
+        sleep=sleeps.append,
+        monotonic=lambda: 1000.0,
+    )
+    return client, sleeps
