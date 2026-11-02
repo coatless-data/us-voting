@@ -1,4 +1,7 @@
+import base64
 import gzip
+import io
+import json
 import zipfile
 from itertools import count
 from pathlib import Path
@@ -172,12 +175,157 @@ def test_nested_zip_one_level(tmp_path):
     assert voter_level_reason(outer) == "inner.zip: v.csv: column 'voter_reg_num'"
 
 
-def test_only_first_five_members_checked(tmp_path):
-    members = {f"m{i}.csv": "County,Total\n" for i in range(5)}
-    members["m5.csv"] = NC_VOTERS
-    assert voter_level_reason(zip_of(tmp_path, members)) is None
-
-
 def test_curly_apostrophe_names(tmp_path):
     rows = "".join(f"{i}\tO{chr(0x2019)}Doe, Jane\n" for i in range(5))
     assert voter_level_reason(write(tmp_path, rows)) == "person names in column 2"
+
+
+def test_preamble_blank_line_before_header(tmp_path):
+    assert voter_level_reason(write(tmp_path, "\n" + NC_VOTERS)) == "column 'voter_reg_num'"
+
+
+def test_preamble_title_before_header(tmp_path):
+    text = "Absentee Report Wake County\n" + NC_VOTERS
+    assert voter_level_reason(write(tmp_path, text)) == "column 'voter_reg_num'"
+
+
+def test_preamble_before_tab_header(tmp_path):
+    text = "Report for Wake, 2026\nvoter_id\tcounty\n1\tWAKE\n"
+    assert voter_level_reason(write(tmp_path, text)) == "column 'voter_id'"
+
+
+def test_pattern_hit_never_echoes_cell_value(tmp_path):
+    reason = voter_level_reason(write(tmp_path, "123 Elm Street,Wake,5\n"))
+    assert reason == "column matching 'street address'"
+    assert "Elm" not in reason and "123" not in reason
+
+
+def test_xlsx_pattern_hit_never_echoes_cell_value(tmp_path):
+    reason = voter_level_reason(xlsx_of(tmp_path, ["County", "12 Oak Street"]))
+    assert reason == "column matching 'street address'"
+    assert "Oak" not in reason
+
+
+def test_long_single_line_does_not_raise(tmp_path):
+    text = ("QUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVo" * 6000)[:200_000]
+    assert voter_level_reason(write(tmp_path, text)) is None
+
+
+def test_unclosed_quote_does_not_raise(tmp_path):
+    text = 'County,Total\n"Wake,5\nDurham,6\n'
+    assert voter_level_reason(write(tmp_path, text)) is None
+
+
+def test_stray_quote_does_not_hide_names(tmp_path):
+    rows = ['EVtrs\tALA\t49894\t11/03/2026\tGeneral\t100\tDoe, Jane Q\t47\tREP\t"Lib\n']
+    rows += [
+        f"EVtrs\tALA\t49894\t11/03/2026\tGeneral\t{101 + i}\tDoe, Jane Q\t47\tREP\tLibrary\n"
+        for i in range(19)
+    ]
+    assert voter_level_reason(write(tmp_path, "".join(rows))) == "person names in column 7"
+
+
+def test_member_cap_reports_unchecked(tmp_path):
+    members = {f"m{i}.csv": "County,Total\n" for i in range(50)}
+    members["m50.csv"] = NC_VOTERS
+    assert voter_level_reason(zip_of(tmp_path, members)) == "1 members not checked"
+
+
+def test_member_within_cap_checked(tmp_path):
+    members = {f"m{i}.csv": "County,Total\n" for i in range(49)}
+    members["m49.csv"] = NC_VOTERS
+    assert voter_level_reason(zip_of(tmp_path, members)) == "m49.csv: column 'voter_reg_num'"
+
+
+def test_macosx_entries_skipped(tmp_path):
+    members = {f"c{i}.csv": "County,Total\n" for i in range(3)}
+    members.update({f"__MACOSX/._c{i}.csv": "junk" for i in range(3)})
+    members["voters.csv"] = NC_VOTERS
+    assert voter_level_reason(zip_of(tmp_path, members)) == "voters.csv: column 'voter_reg_num'"
+
+
+def _zip_bytes(members: dict[str, bytes]) -> bytes:
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w") as z:
+        for name, data in members.items():
+            z.writestr(name, data)
+    return buf.getvalue()
+
+
+def test_zip_in_zip_in_zip_is_too_deep(tmp_path):
+    inner = _zip_bytes({"v.csv": NC_VOTERS.encode()})
+    mid = _zip_bytes({"inner.zip": inner})
+    p = tmp_path / "deep.zip"
+    p.write_bytes(_zip_bytes({"mid.zip": mid}))
+    assert voter_level_reason(p) == "mid.zip: inner.zip: nested archive too deep"
+
+
+def test_gzip_of_gzip_is_too_deep(tmp_path):
+    p = tmp_path / "gg.gz"
+    p.write_bytes(gzip.compress(gzip.compress(NC_VOTERS.encode())))
+    assert voter_level_reason(p) == "nested archive too deep"
+
+
+def test_xlsx_in_nested_zip_is_too_deep(tmp_path):
+    book = _zip_bytes({"xl/workbook.xml": b"<w/>", "xl/sharedStrings.xml": b"<sst/>"})
+    mid = _zip_bytes({"book.xlsx": book})
+    p = tmp_path / "x.zip"
+    p.write_bytes(_zip_bytes({"mid.zip": mid}))
+    assert voter_level_reason(p) == "mid.zip: book.xlsx: nested archive too deep"
+
+
+def test_base64_json_wrapper_flagged(tmp_path):
+    blob = base64.b64encode((NC_VOTERS * 3).encode()).decode()
+    p = tmp_path / "wrap.json"
+    p.write_text(json.dumps({"upload": blob}))
+    assert voter_level_reason(p) == "column 'voter_reg_num'"
+
+
+def test_base64_json_wrapper_of_counts_passes(tmp_path):
+    inner = json.dumps({"turnout_by_county": [{"name": "ANDERSON", "total": 5}]})
+    p = tmp_path / "wrap.json"
+    p.write_text(json.dumps({"upload": base64.b64encode(inner.encode()).decode()}))
+    assert voter_level_reason(p) is None
+
+
+def test_json_bare_name_key_ignored(tmp_path):
+    p = tmp_path / "r.json"
+    p.write_text('[{"name": "Governor", "votes": 3}]')
+    assert voter_level_reason(p) is None
+
+
+def test_json_other_keys_still_flagged(tmp_path):
+    p = tmp_path / "r.json"
+    p.write_text('[{"name": "x", "firstName": "y"}]')
+    assert voter_level_reason(p) == "column 'first_name'"
+
+
+def test_clark_name_column_still_flagged(tmp_path):
+    assert voter_level_reason(write(tmp_path, '"NAME","PRECINCT"\n')) == "column 'name'"
+
+
+@pytest.mark.parametrize(
+    ("header", "expected"),
+    [
+        ("VoterRegNum,County", "column 'voter_reg_num'"),
+        ("County,DateOfBirth", "column 'date_of_birth'"),
+        ("County,FullName", "column 'full_name'"),
+        ("IDNUMBER,County", "column 'idnumber'"),
+        ("CountyName,Total", None),
+    ],
+)
+def test_camel_case_headers(tmp_path, header, expected):
+    assert voter_level_reason(write(tmp_path, header + "\n")) == expected
+
+
+def test_legacy_excel_not_inspected(tmp_path):
+    p = tmp_path / "old.xls"
+    p.write_bytes(b"\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" + b"\x00" * 100)
+    assert voter_level_reason(p) == "legacy Excel file not inspected"
+
+
+@pytest.mark.parametrize("codec", ["utf-16-le", "utf-16-be"])
+def test_utf16_without_bom(tmp_path, codec):
+    p = tmp_path / "nobom.txt"
+    p.write_bytes("county_id\tvoter_reg_num\tfull_name\r\n1\t1\tJANE DOE\r\n".encode(codec))
+    assert voter_level_reason(p) == "column 'voter_reg_num'"
