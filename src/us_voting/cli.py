@@ -92,14 +92,21 @@ def _alerts(args: argparse.Namespace) -> int:
     return 0
 
 
+def _today() -> date:
+    return datetime.now(UTC).date()
+
+
 def _import_archive(args: argparse.Namespace) -> int:
     try:
         cfg = load_config(Path(args.config))
-        through = (
-            date.fromisoformat(args.through)
-            if args.through
-            else datetime.now(UTC).date() - timedelta(days=1)
-        )
+        today = _today()
+        through = date.fromisoformat(args.through) if args.through else today - timedelta(days=1)
+        if through >= today:
+            print(
+                f"--through {through} is not a finished UTC day (today is {today})",
+                file=sys.stderr,
+            )
+            return 1
         result = import_archive(Path(args.archive), cfg, Path(args.out), through=through)
     except (ConfigError, ValueError, FileExistsError, FileNotFoundError) as exc:
         print(exc, file=sys.stderr)
