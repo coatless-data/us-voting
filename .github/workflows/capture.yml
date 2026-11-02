@@ -31,8 +31,6 @@ jobs:
     timeout-minutes: 120
     env:
       GITHUB_TOKEN: ${{ github.token }}
-      RAW_PRIVATE_TOKEN: ${{ secrets.RAW_PRIVATE_TOKEN }}
-      US_VOTING_WRITER: "1"
       ONLY: ${{ inputs.only || '' }}
     steps:
       - name: Check out the default branch
@@ -57,6 +55,9 @@ jobs:
         id: publish
         if: ${{ inputs.dry_run != true && steps.capture.outputs.files != '0' }}
         timeout-minutes: 45
+        env:
+          RAW_PRIVATE_TOKEN: ${{ secrets.RAW_PRIVATE_TOKEN }}
+          US_VOTING_WRITER: "1"
         run: uv run us-voting publish out/capture
 
       - name: Alerts
@@ -95,7 +96,7 @@ jobs:
           echo "::warning::could not push status/latest.json after 3 attempts"
 
       - name: Gate
-        if: ${{ steps.publish.outcome == 'failure' }}
+        if: ${{ failure() && steps.publish.outcome == 'failure' }}
         run: |
           echo "::error::captured files were not published; status was not advanced"
           exit 1

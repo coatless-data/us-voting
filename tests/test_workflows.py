@@ -40,6 +40,21 @@ def test_private_token_only_from_secrets():
     assert text.count("RAW_PRIVATE_TOKEN") == 2
 
 
+def test_private_token_scoped_to_publish():
+    lines = read("capture.yml").splitlines()
+    publish = lines.index("      - name: Publish")
+    alerts = lines.index("      - name: Alerts")
+    token = [i for i, line in enumerate(lines) if "secrets.RAW_PRIVATE_TOKEN" in line]
+    assert len(token) == 1
+    assert publish < token[0] < alerts
+
+
+def test_gate_runs_after_publish_failure():
+    assert "        if: ${{ failure() && steps.publish.outcome == 'failure' }}\n" in read(
+        "capture.yml"
+    )
+
+
 def test_hourly_cron_and_serial_concurrency():
     text = read("capture.yml")
     assert 'cron: "23 * * * *"' in text
