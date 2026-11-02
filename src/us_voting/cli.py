@@ -146,8 +146,10 @@ def _import_archive(args: argparse.Namespace) -> int:
         print(f"  {path.parent.name}/{path.name}")
     print(
         f"{result.skipped_after} skipped after {through}, "
-        f"{result.skipped_html} skipped as html, {len(result.rerouted)} rerouted"
+        f"{len(result.skipped_html)} skipped as html, {len(result.rerouted)} rerouted"
     )
+    for url in dict.fromkeys(result.skipped_html):
+        print(f"  skipped as html: {url}")
     return 0
 
 

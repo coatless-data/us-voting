@@ -13,6 +13,7 @@ from pathlib import Path
 from us_voting.bundle import member_name, write_bundles
 from us_voting.capture import route
 from us_voting.config import Config, Source
+from us_voting.http import HEAD_BYTES, looks_like_markup
 from us_voting.kinds import KINDS
 from us_voting.kinds.base import CapturedFile
 
@@ -31,7 +32,7 @@ class ImportResult:
     ambiguous: list[str]
     bad_hash: list[str]
     skipped_after: int
-    skipped_html: int
+    skipped_html: list[str]
     rerouted: list[str]
 
 
@@ -92,6 +93,25 @@ def _gunzip(src: Path, dest: Path) -> tuple[str, int]:
     return digest.hexdigest(), size
 
 
+def _html_page(archive_root: Path, rel: str) -> bool:
+    """Whether a saved entry logged as text/html is an HTML page, by capture's soft-404 rule.
+
+    It is when its file is missing or the decompressed file starts with markup. A file
+    outside the archive is never read; the checks that follow reject it.
+    """
+    path = (archive_root / rel).resolve()
+    if not path.is_relative_to(archive_root):
+        return False
+    if not path.is_file():
+        return True
+    try:
+        with gzip.open(path, "rb") as fh:
+            head = fh.read(HEAD_BYTES)
+    except (OSError, EOFError, zlib.error):
+        return False
+    return looks_like_markup(head)
+
+
 def _name(rel: str) -> str:
     base = Path(rel).name.removesuffix(".gz")
     return base.split("__", 1)[1] if "__" in base else base
@@ -113,7 +133,7 @@ def import_archive(archive: Path, cfg: Config, out: Path, *, through: date) -> I
     ambiguous: list[str] = []
     bad_hash: list[str] = []
     skipped_after = 0
-    skipped_html = 0
+    skipped_html: list[str] = []
     rerouted: list[str] = []
     groups: dict[tuple[str, date], list[tuple[CapturedFile, Source]]] = defaultdict(list)
     count = 0
@@ -131,8 +151,9 @@ def import_archive(archive: Path, cfg: Config, out: Path, *, through: date) -> I
             if received.date() > through:
                 skipped_after += 1
                 continue
-            if str(entry.get("content_type") or "").lower().startswith("text/html"):
-                skipped_html += 1
+            html_typed = str(entry.get("content_type") or "").lower().startswith("text/html")
+            if html_typed and _html_page(archive_root, entry["file"]):
+                skipped_html.append(entry["url"])
                 continue
             url, rel = entry["url"], entry["file"]
             owners = [s for s in cfg.sources.values() if KINDS[s.kind].owns(s, url)]
