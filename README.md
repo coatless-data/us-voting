@@ -17,10 +17,11 @@ counts derived from them are published.
   schedule, `--status PATH` names the status file to start from, and `--config DIR` names the
   config directory.
 - `us-voting publish DIR` uploads the bundles in `DIR/public` and `DIR/private` to their stores, one
-  monthly `raw-YYYY-MM` release each, and updates every release's `_manifest.json`. A public
-  bundle that holds a voter-level file is refused before anything is uploaded.
-  `--public-store SPEC` and `--private-store SPEC` (`local:DIR` or `github:OWNER/REPO`) override
-  the configured stores. Writing to GitHub needs `US_VOTING_WRITER=1`.
+  monthly `raw-YYYY-MM` release each, and updates every release's `_manifest.json`. Each public
+  bundle is checked before it is uploaded, and one that holds a voter-level file is refused, which
+  stops the publish. `--public-store SPEC` and `--private-store SPEC` (`local:DIR` or
+  `github:OWNER/REPO`) override the configured stores, which must not be the same. Writing to
+  GitHub needs `US_VOTING_WRITER=1`.
 
 - `us-voting alerts STATUS_JSON --publish-outcome X` opens, refreshes and closes GitHub issues from
   a status file: one per failing or blocked source, one per public source with voter-level files,
