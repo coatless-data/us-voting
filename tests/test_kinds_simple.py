@@ -235,3 +235,52 @@ def test_page_links_stops_at_the_deadline(tmp_path):
     kr = PageLinksKind().fetch(run)
     assert len(requested) == 2 and [f.name for f in kr.files] == ["c.xlsx"]
     assert kr.failure == "capture deadline reached after 1 of 2 URLs"
+
+
+THREE = PAGE + '<a href="/2026_stats/GG26/d.csv">d</a>'
+
+
+def test_page_links_truncation_fails_the_source(tmp_path):
+    requested = []
+    run = make_run(tmp_path, page_handler(requested, page=THREE), body=PL + "max_links = 2\n")
+    kr = PageLinksKind().fetch(run)
+    assert requested[1:] == [
+        "https://x.gov/2026_stats/GG26/c.xlsx",
+        "https://x.gov/2026_stats/GG26/d.csv",
+    ]
+    assert len(kr.files) == 2
+    result, error = source_result(run.source, kr, run.now)
+    assert result == "failed"
+    assert error.startswith("3 links matched; max_links is 2")
+
+
+def test_page_links_truncation_does_not_hide_a_block(tmp_path):
+    def h(r):
+        if str(r.url).endswith("c.xlsx"):
+            return httpx.Response(429)
+        return page_handler([], page=THREE)(r)
+
+    run = make_run(tmp_path, h, body=PL + "max_links = 2\n")
+    kr = PageLinksKind().fetch(run)
+    assert source_result(run.source, kr, run.now) == (
+        "blocked",
+        "https://x.gov/2026_stats/GG26/c.xlsx",
+    )
+
+
+def test_page_links_within_max_links_is_ok(tmp_path):
+    run = make_run(tmp_path, page_handler([], page=THREE), body=PL + "max_links = 3\n")
+    kr = PageLinksKind().fetch(run)
+    assert kr.failure is None
+    assert source_result(run.source, kr, run.now) == ("ok", None)
+
+
+def test_page_links_truncated_and_cut_off_reports_both(tmp_path):
+    clock = Clock()
+    handler = ticking(page_handler([], page=THREE), clock, 10)
+    run = make_run(tmp_path, handler, body=PL + "max_links = 2\n", monotonic=clock)
+    run.client.set_deadline(20)
+    kr = PageLinksKind().fetch(run)
+    assert kr.failure == (
+        "3 links matched; max_links is 2; capture deadline reached after 1 of 2 URLs"
+    )
