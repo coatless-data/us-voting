@@ -1,6 +1,10 @@
 import hashlib
+import io
 import json
+import shutil
+import tarfile
 import tempfile
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -16,7 +20,7 @@ from us_voting.publish import (
     PublishRefused,
     publish_dir,
 )
-from us_voting.store import LocalReleaseStore, sha256_file, sha256_label
+from us_voting.store import LocalReleaseStore, StorageError, sha256_file, sha256_label
 
 SOURCES = """
 [[source]]
@@ -186,7 +190,125 @@ def test_missing_subfolder_is_fine(tmp_path):
     cap = build(tmp_path, cfg, "cap", prv=None)
     pub_store, prv_store = stores(tmp_path)
     assert publish_dir(cap, cfg, pub_store, prv_store).uploaded != []
+    (tmp_path / "empty").mkdir()
     assert publish_dir(tmp_path / "empty", cfg, pub_store, prv_store).uploaded == []
+
+
+def test_missing_dir_fails(tmp_path, capsys):
+    cfg = cfg_for(tmp_path)
+    pub_store, prv_store = stores(tmp_path)
+    with pytest.raises(FileNotFoundError):
+        publish_dir(tmp_path / "nope", cfg, pub_store, prv_store)
+    config = tmp_path / "config"
+    argv = ["publish", str(tmp_path / "nope"), "--config", str(config)]
+    argv += [
+        "--public-store",
+        f"local:{tmp_path / 'p'}",
+        "--private-store",
+        f"local:{tmp_path / 'q'}",
+    ]
+    assert cli.main(argv) == 1
+    assert "nope" in capsys.readouterr().err
+
+
+def _assert_refused_untouched(tmp_path, cfg, cap, match):
+    pub_store, prv_store = stores(tmp_path)
+    with pytest.raises(PublishRefused, match=match) as exc:
+        publish_dir(cap, cfg, pub_store, prv_store)
+    assert "1,2" not in str(exc.value)
+    assert pub_store.get_release(TAG) is None or names(pub_store, TAG) == []
+
+
+def test_private_marked_bundle_in_public_folder_is_refused(tmp_path):
+    cfg = cfg_for(tmp_path)
+    cap = build(tmp_path, cfg, "cap", pub=None)
+    (cap / "public").mkdir()
+    for f in (cap / "private").iterdir():
+        shutil.copy(f, cap / "public" / f.name)
+    _assert_refused_untouched(tmp_path, cfg, cap, "marked 'private'")
+
+
+def test_bundle_from_private_source_in_public_folder_is_refused(tmp_path):
+    cfg = cfg_for(tmp_path)
+    cap = tmp_path / "cap"
+    write_bundles(
+        IDENT, "capture", "public", [make_file(tmp_path, cfg, "prv", b"c\n3\n")], cap / "public",
+        max_bytes=10**9,
+    )  # fmt: skip
+    _assert_refused_untouched(tmp_path, cfg, cap, "private source prv")
+
+
+def test_non_regular_member_in_public_bundle_is_refused(tmp_path):
+    cfg = cfg_for(tmp_path)
+    cap = build(tmp_path, cfg, "cap", prv=None)
+    tar_path = cap / "public" / "capture-2026-11-03T2323Z.tar.gz"
+    with tarfile.open(tar_path) as t:
+        members = [(m, t.extractfile(m).read()) for m in t.getmembers()]
+    with tarfile.open(tar_path, "w:gz") as t:
+        for m, data in members:
+            t.addfile(m, io.BytesIO(data))
+        link = tarfile.TarInfo("pub/link")
+        link.type = tarfile.SYMTYPE
+        link.linkname = "/etc/passwd"
+        t.addfile(link)
+    _assert_refused_untouched(tmp_path, cfg, cap, "not a regular file")
+
+
+class Exists422(LocalReleaseStore):
+    """Pretends the first upload landed but reports 422, as GitHub does after a lost response."""
+
+    def __init__(self, root, *, strip_digest=False):
+        super().__init__(root)
+        self.strip_digest = strip_digest
+
+    def upload_new(self, tag, path, name, label=None):
+        asset = super().upload_new(tag, path, name, label)
+        if not name.endswith(".tar.gz"):
+            return asset
+        raise StorageError("asset exists", status=422)
+
+    def list_assets(self, tag):
+        assets = super().list_assets(tag)
+        if self.strip_digest:
+            assets = [replace(a, digest=None) for a in assets]
+        return assets
+
+
+def test_422_with_matching_digest_counts_as_uploaded(tmp_path):
+    cfg = cfg_for(tmp_path)
+    cap = build(tmp_path, cfg, "cap", prv=None)
+    store = Exists422(tmp_path / "s")
+    r = publish_dir(cap, cfg, store, LocalReleaseStore(tmp_path / "q"))
+    assert r.uploaded == ["capture-2026-11-03T2323Z.tar.gz"]
+    assert len(manifest(store, TAG)["bundles"]) == 1
+
+
+def test_422_with_matching_content_and_no_digest_counts_as_uploaded(tmp_path):
+    cfg = cfg_for(tmp_path)
+    cap = build(tmp_path, cfg, "cap", prv=None)
+    store = Exists422(tmp_path / "s", strip_digest=True)
+    r = publish_dir(cap, cfg, store, LocalReleaseStore(tmp_path / "q"))
+    assert r.uploaded == ["capture-2026-11-03T2323Z.tar.gz"]
+
+
+def _stale_then_422(tmp_path, strip_digest):
+    cfg = cfg_for(tmp_path)
+    store = Exists422(tmp_path / "s", strip_digest=strip_digest)
+    store.ensure_release(TAG, "t", "b", False, "false")
+    other = tmp_path / "other.bin"
+    other.write_bytes(b"different")
+    LocalReleaseStore.upload_new(store, TAG, other, "capture-2026-11-03T2323Z.tar.gz")
+    cap = build(tmp_path, cfg, "cap", prv=None)
+    return cfg, cap, store
+
+
+@pytest.mark.parametrize("strip_digest", [False, True])
+def test_422_with_different_content_reraises(tmp_path, strip_digest):
+    cfg, cap, store = _stale_then_422(tmp_path, strip_digest)
+    with pytest.raises(StorageError) as exc:
+        publish_dir(cap, cfg, store, LocalReleaseStore(tmp_path / "q"))
+    assert exc.value.status == 422
+    assert not [a for a in store.list_assets(TAG) if a.name == MANIFEST_NAME]
 
 
 def test_cli_exit_codes(tmp_path, capsys):
