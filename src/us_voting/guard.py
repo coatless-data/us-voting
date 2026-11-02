@@ -11,6 +11,7 @@ import binascii
 import csv
 import html
 import io
+import json
 import re
 import zipfile
 import zlib
@@ -66,7 +67,9 @@ PERSON_NAME = re.compile(
 JSON_KEY = re.compile(r'"([^"]{1,40})"\s*:')
 XML_TEXT = re.compile(r"<t(?:\s[^>]*)?>([^<]*)</t>")
 DELIMITERS = (",", "\t", "|", ";")
-BASE64_VALUE = re.compile(r'"([A-Za-z0-9+/=]{64,})(?:"|$)')
+JSON_STRING = re.compile(r'"((?:[^"\\]|\\.)*)("|$)')
+BASE64_TEXT = re.compile(r"[A-Za-z0-9+/=]{64,}")
+BASE64_MAX_DEPTH = 2
 OLE2_MAGIC = b"\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1"
 MAX_NAME_LEN = 100
 
@@ -78,16 +81,26 @@ def normalize(name: str) -> str:
     return re.sub(r"[^a-z0-9]+", "_", spaced.lower()).strip("_")
 
 
-def _column_reason(column: str, allow: frozenset[str], json_keys: bool = False) -> str | None:
-    if not column or column in allow:
-        return None
-    if json_keys and column == "name":
-        return None
-    if column in VOTER_COLUMNS:
-        return f"column '{column}'"
-    for pattern, label in VOTER_PATTERNS:
-        if pattern.search(column):
-            return f"column matching '{label}'"
+def _compact(name: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "_", name.strip().strip('"').lower()).strip("_")
+
+
+def _variants(name: str) -> list[str]:
+    """Normalized forms to check: camelCase split and unsplit (fName, DoB, idNumber)."""
+    return list(dict.fromkeys((normalize(name), _compact(name))))
+
+
+def _column_reason(raw: str, allow: frozenset[str], json_keys: bool = False) -> str | None:
+    names = [v for v in _variants(raw) if v and v not in allow]
+    if json_keys:
+        names = [v for v in names if v != "name"]
+    for column in names:
+        if column in VOTER_COLUMNS:
+            return f"column '{column}'"
+    for column in names:
+        for pattern, label in VOTER_PATTERNS:
+            if pattern.search(column):
+                return f"column matching '{label}'"
     return None
 
 
@@ -95,7 +108,7 @@ def _first_flagged(
     names: Iterable[str], allow: frozenset[str], json_keys: bool = False
 ) -> str | None:
     for raw in names:
-        reason = _column_reason(normalize(raw), allow, json_keys)
+        reason = _column_reason(raw, allow, json_keys)
         if reason:
             return reason
     return None
@@ -103,9 +116,9 @@ def _first_flagged(
 
 def _exact_hit(fields: Iterable[str], allow: frozenset[str]) -> str | None:
     for raw in fields:
-        column = normalize(raw)
-        if column in VOTER_COLUMNS and column not in allow:
-            return f"column '{column}'"
+        for column in _variants(raw):
+            if column in VOTER_COLUMNS and column not in allow:
+                return f"column '{column}'"
     return None
 
 
@@ -183,12 +196,28 @@ def _check_text(text: str, allow: frozenset[str]) -> str | None:
     return None
 
 
+def _base64_candidates(text: str) -> Iterable[str]:
+    for match in JSON_STRING.finditer(text):
+        body = match.group(1)
+        if len(body) < 64:
+            continue
+        try:
+            value = json.loads('"' + body + '"')
+        except ValueError:
+            value = body.replace("\\/", "/")
+        value = "".join(value.split())
+        if BASE64_TEXT.fullmatch(value):
+            yield value
+
+
 def _check_json(text: str, allow: frozenset[str], depth: int) -> str | None:
     reason = _first_flagged(JSON_KEY.findall(text), allow, json_keys=True)
-    if reason or depth >= 1:
+    if reason:
         return reason
-    for match in BASE64_VALUE.finditer(text):
-        blob = match.group(1)[:HEAD_BYTES]
+    for value in _base64_candidates(text):
+        if depth >= BASE64_MAX_DEPTH:
+            return "nested archive too deep"
+        blob = value[:HEAD_BYTES]
         blob = blob[: len(blob) // 4 * 4]
         try:
             decoded = base64.b64decode(blob, validate=False)
@@ -264,7 +293,7 @@ def _check_bytes(data: bytes, allow: frozenset[str], depth: int = 0) -> str | No
 
 def voter_level_reason(path: Path, allow: Iterable[str] = ()) -> str | None:
     """Return why the file looks voter-level, or None. Unreadable input returns a reason."""
-    allowed = frozenset(normalize(a) for a in allow)
+    allowed = frozenset(v for a in allow for v in _variants(a))
     try:
         with open(path, "rb") as f:
             head = f.read(HEAD_BYTES)
