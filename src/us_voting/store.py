@@ -684,6 +684,8 @@ class GitHubReleaseStore(_BaseStore):
     signed URL. httpx drops the Authorization header when a redirect leaves
     the API host, so the token never reaches the signed URL. A private store
     does not fall back to `GITHUB_TOKEN`: its token comes from the caller.
+    Before its first write, a private store asks GitHub whether the repository
+    is private, and refuses to write unless the answer is yes.
     """
 
     API = "https://api.github.com"
@@ -720,6 +722,7 @@ class GitHubReleaseStore(_BaseStore):
         self._writes: deque[float] = deque()
         self._lock = threading.Lock()
         self._client = httpx.Client(transport=transport, timeout=120.0, follow_redirects=True)
+        self._confirmed_private = False
 
     # -- plumbing --------------------------------------------------------
     def _headers(self) -> dict[str, str]:
@@ -744,6 +747,37 @@ class GitHubReleaseStore(_BaseStore):
     def _require_token(self) -> None:
         if self._private and not self._token:
             raise StorageError("private store requires a token")
+
+    def _require_private_repo(self) -> None:
+        """Refuse to write unless `GET /repos/{owner}/{repo}` says `"private": true`.
+
+        Asked once per store. Any other answer, including an error status or a
+        missing field, refuses: private bundles must never land in a public repository.
+        """
+        if self._confirmed_private:
+            return
+        where = f"{self._owner}/{self._repo}"
+        refused = f"refusing to write to the private store {where}"
+        try:
+            response = self._client.request("GET", self._base, headers=self._headers())
+        except httpx.HTTPError as exc:
+            raise StorageError(
+                f"{refused}: GET {self._base} failed ({type(exc).__name__})"
+            ) from None
+        if response.status_code != 200:
+            raise StorageError(
+                f"{refused}: GET {self._base} answered {response.status_code}, so the "
+                "repository cannot be confirmed private"
+            )
+        try:
+            private = response.json().get("private")
+        except (ValueError, AttributeError):
+            private = None
+        if private is False:
+            raise StorageError(f"{refused}: the repository is not private")
+        if private is not True:
+            raise StorageError(f"{refused}: the repository does not say whether it is private")
+        self._confirmed_private = True
 
     def _reserve_write_slot(self) -> None:
         """Hold back a write until it fits inside 60/minute and 450/hour."""
@@ -797,6 +831,8 @@ class GitHubReleaseStore(_BaseStore):
         self._require_token()
         if method in self.WRITE_METHODS:
             self._require_writer()
+            if self._private:
+                self._require_private_repo()
         headers = self._headers()
         if extra_headers:
             headers.update(extra_headers)

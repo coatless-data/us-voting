@@ -211,15 +211,38 @@ def _load_elections(root: Path) -> dict[str, Election]:
 
 def _load_stores(root: Path) -> dict[str, StoreConfig]:
     path = root / "stores.toml"
+    data = _read(path)
+    for name in ("public", "private"):
+        _section(data, name, path)
     out: dict[str, StoreConfig] = {}
-    for name, t in _read(path).items():
+    for name, t in data.items():
         where = f"{path} [{name}]"
+        if not isinstance(t, dict):
+            raise ConfigError(f"{where}: must be a table")
+        private = t.get("private", False)
+        # The flag is what makes a GitHub store read only through the authenticated API
+        # and check that its repository is private, so it must be written out exactly.
+        if name == "private" and private is not True:
+            raise ConfigError(f"{where}: private = true is required")
         out[name] = StoreConfig(
             _get(t, "store", str, where),
             _get(t, "token_env", str, where),
-            bool(t.get("private", False)),
+            bool(private),
         )
     return out
+
+
+def _store_key(spec: str) -> str:
+    return spec.strip().lower().removeprefix("github:")
+
+
+def check_stores_distinct(public: str, private: str) -> None:
+    """Refuse a public and a private store spec that name the same repository or folder."""
+    if _store_key(public) == _store_key(private):
+        raise ConfigError(
+            f"the public store {public!r} and the private store {private!r} are the same; "
+            "private bundles must never be uploaded to the public store"
+        )
 
 
 def _check_params(params: dict[str, Any], kind: str, where: str) -> None:

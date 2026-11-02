@@ -1605,3 +1605,93 @@ def test_open_configured_treats_an_unset_or_empty_token_as_none(
         StoreConfig("github:coatless-data/us-voting-raw", "RAW_PRIVATE_TOKEN", True)
     )
     assert s._token is None
+
+
+# -- private repository check ----------------------------------------------------
+
+
+class RawRepo:
+    """Answers just enough of the API for one upload, plus the repository itself."""
+
+    def __init__(self, repo_status: int = 200, repo_json: object = None) -> None:
+        self.repo_status = repo_status
+        self.repo_json = {"private": True} if repo_json is None else repo_json
+        self.requests: list[httpx.Request] = []
+
+    def handler(self, request: httpx.Request) -> httpx.Response:
+        self.requests.append(request)
+        path = request.url.path
+        if path == "/repos/o/r":
+            return httpx.Response(self.repo_status, json=self.repo_json)
+        if path == "/repos/o/r/releases/tags/raw-2026-09":
+            return httpx.Response(200, json={"id": 1, "tag_name": "raw-2026-09"})
+        if request.url.host == "uploads.github.com" and request.method == "POST":
+            payload = PrivateRepo(request.content).asset_payload(name=request.url.params["name"])
+            return httpx.Response(201, json=payload)
+        return httpx.Response(404)
+
+    def repo_calls(self) -> int:
+        return sum(r.url.path == "/repos/o/r" for r in self.requests)
+
+    def uploads(self) -> int:
+        return sum(r.url.host == "uploads.github.com" for r in self.requests)
+
+
+def _raw_store(repo: RawRepo, *, private: bool = True) -> store.GitHubReleaseStore:
+    return store.GitHubReleaseStore(
+        "o",
+        "r",
+        token="t",
+        private=private,
+        transport=httpx.MockTransport(repo.handler),
+        sleep=lambda _seconds: None,
+    )
+
+
+def test_private_store_checks_the_repository_once_before_uploading(tmp_path, monkeypatch):
+    monkeypatch.setenv("US_VOTING_WRITER", "1")
+    repo = RawRepo()
+    s = _raw_store(repo)
+    payload = _write(tmp_path, "b.tar.gz", b"bundle")
+    s.upload_new("raw-2026-09", payload, "a.tar.gz")
+    s.upload_new("raw-2026-09", payload, "b.tar.gz")
+    assert repo.repo_calls() == 1 and repo.uploads() == 2
+    first = next(i for i, r in enumerate(repo.requests) if r.url.path == "/repos/o/r")
+    assert first < next(
+        i for i, r in enumerate(repo.requests) if r.url.host == "uploads.github.com"
+    )
+    assert repo.requests[first].headers["authorization"] == "Bearer t"
+
+
+@pytest.mark.parametrize(
+    ("status", "body", "match"),
+    [
+        (200, {"private": False}, "not private"),
+        (200, {"name": "r"}, "does not say"),
+        (200, {"private": "true"}, "does not say"),
+        (200, [1], "does not say"),
+        (404, {"message": "Not Found"}, "404"),
+        (500, {}, "500"),
+    ],
+)
+def test_private_store_refuses_a_repository_not_known_to_be_private(
+    tmp_path, monkeypatch, status, body, match
+):
+    monkeypatch.setenv("US_VOTING_WRITER", "1")
+    repo = RawRepo(status, body)
+    s = _raw_store(repo)
+    with pytest.raises(store.StorageError, match=match) as exc:
+        s.upload_new("raw-2026-09", _write(tmp_path, "b.tar.gz", b"bundle"), "b.tar.gz")
+    assert "o/r" in str(exc.value) and exc.value.status is None
+    assert repo.uploads() == 0
+    with pytest.raises(store.StorageError):
+        s.ensure_release("raw-2026-10", "t", "b", False, "false")
+    assert not [r for r in repo.requests if r.method == "POST"]
+
+
+def test_public_store_skips_the_repository_check(tmp_path, monkeypatch):
+    monkeypatch.setenv("US_VOTING_WRITER", "1")
+    repo = RawRepo(200, {"private": False})
+    s = _raw_store(repo, private=False)
+    s.upload_new("raw-2026-09", _write(tmp_path, "b.tar.gz", b"bundle"), "b.tar.gz")
+    assert repo.repo_calls() == 0 and repo.uploads() == 1
