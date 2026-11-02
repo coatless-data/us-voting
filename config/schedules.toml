@@ -1,0 +1,24 @@
+# Hours count from 00:00 UTC on election day; negative is before it.
+# A source is due once per daily_at_utc hour when its interval is 24 hours.
+
+[results]
+every_hours = 24
+start_hour = -720
+end_hour = 1440
+daily_at_utc = 15
+windows = [{ start_hour = 23, end_hour = 39, every_hours = 1 }]
+
+[early_vote]
+every_hours = 24
+start_hour = -1104
+end_hour = 336
+daily_at_utc = 14
+
+[early_vote_overwrite]
+every_hours = 6
+start_hour = -1104
+end_hour = 168
+
+[daily]
+every_hours = 24
+daily_at_utc = 14

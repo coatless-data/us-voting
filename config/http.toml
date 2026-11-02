@@ -1,0 +1,26 @@
+# Shared HTTP policy for every capture.
+
+[identity]
+project_user_agent = "us-voting/0.1 (+https://github.com/coatless-data/us-voting)"
+# Sent only to hosts in browser_hosts, which reject other user agents.
+browser_user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+# Sent as X-Project on every request so the operator is identifiable.
+x_project = "https://github.com/coatless-data/us-voting"
+# Host suffixes, matched at a dot boundary.
+browser_hosts = ["tnsosgovfiles.com", "sos.tn.gov"]
+
+# read covers the wait for headers; total bounds one whole download.
+[timeouts]
+connect = 15.0
+read = 180.0
+total = 1800.0
+
+[retry]
+max_attempts = 3
+backoff_seconds = [2.0, 5.0]
+
+[pacing]
+min_interval_seconds = 1.0
+
+[blocks]
+signals_before_abandon = 2
