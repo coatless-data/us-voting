@@ -16,5 +16,10 @@ counts derived from them are published.
   bundles and a status file under `DIR/capture`. `--only ids` runs the named sources regardless of
   schedule, `--status PATH` names the status file to start from, and `--config DIR` names the
   config directory.
+- `us-voting publish DIR` uploads the bundles in `DIR/public` and `DIR/private` to their stores, one
+  monthly `raw-YYYY-MM` release each, and updates every release's `_manifest.json`. A public
+  bundle that holds a voter-level file is refused before anything is uploaded.
+  `--public-store SPEC` and `--private-store SPEC` (`local:DIR` or `github:OWNER/REPO`) override
+  the configured stores. Writing to GitHub needs `US_VOTING_WRITER=1`.
 
-Later releases add commands for publishing, alerts and importing an archive.
+Later releases add commands for alerts and importing an archive.
