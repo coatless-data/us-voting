@@ -1,0 +1,352 @@
+election = "2026-11-03-general"
+
+[[source]]
+id = "nc-2026-11-03-results"
+state = "NC"
+kind = "url"
+raw = "public"
+schedule = "results"
+provides = ["results", "results_by_method"]
+url = "https://dl.ncsbe.gov/ENRS/2026_11_03/results_pct_20261103.zip"
+
+[[source]]
+id = "sc-2026-11-03-results"
+state = "SC"
+kind = "clarity"
+raw = "public"
+schedule = "results"
+provides = ["results", "results_by_method"]
+base = "https://www.enr-scvotes.org/SC"
+eid = "127300"
+files = [
+  "json/en/summary.json",
+  "reports/detailxml.zip",
+]
+
+[[source]]
+id = "ia-2026-11-03-results"
+state = "IA"
+kind = "clarity"
+raw = "public"
+schedule = "results"
+provides = ["results"]
+base = "https://electionresults.iowa.gov/IA"
+eid = "127077"
+files = [
+  "json/en/summary.json",
+  "reports/detailxml.zip",
+]
+
+[[source]]
+id = "co-2026-11-03-results"
+state = "CO"
+kind = "clarity"
+raw = "public"
+schedule = "results"
+provides = ["results"]
+base = "https://results.enr.clarityelections.com/CO"
+discover_date = "11/3/2026"
+files = [
+  "json/en/summary.json",
+  "reports/detailxml.zip",
+]
+
+[[source]]
+id = "wv-2026-11-03-results"
+state = "WV"
+kind = "clarity"
+raw = "public"
+schedule = "results"
+provides = ["results"]
+base = "https://results.enr.clarityelections.com/WV"
+discover_date = "11/3/2026"
+files = [
+  "json/en/summary.json",
+  "reports/detailxml.zip",
+]
+
+[[source]]
+id = "va-2026-11-03-results"
+state = "VA"
+kind = "enhanced"
+raw = "public"
+schedule = "results"
+provides = ["results", "results_by_method"]
+host = "https://enr.elections.virginia.gov"
+jurisdiction = "Virginia"
+election = "2026-November-General"
+
+[[source]]
+id = "ut-2026-11-03-results"
+state = "UT"
+kind = "enhanced"
+raw = "public"
+schedule = "results"
+provides = ["results"]
+host = "https://electionresults.utah.gov"
+jurisdiction = "Utah"
+election = "General11032026"
+
+[[source]]
+id = "wa-2026-11-03-results"
+state = "WA"
+kind = "enhanced"
+raw = "public"
+schedule = "results"
+provides = ["results"]
+host = "https://results.votewa.gov"
+jurisdiction = "washington"
+election = "20261103"
+
+[[source]]
+id = "id-2026-11-03-results"
+state = "ID"
+kind = "enhanced"
+raw = "public"
+schedule = "results"
+provides = ["results"]
+host = "https://results.voteidaho.gov"
+jurisdiction = "id"
+election = "nov2026"
+
+[[source]]
+id = "ga-2026-11-03-results"
+state = "GA"
+kind = "enhanced"
+raw = "public"
+schedule = "results"
+provides = ["results", "results_by_method"]
+host = "https://results.sos.ga.gov"
+jurisdiction = "Georgia"
+discover_date = "2026-11-03"
+
+[[source]]
+id = "de-2026-11-03-results"
+state = "DE"
+kind = "url"
+raw = "public"
+schedule = "results"
+provides = ["results", "results_by_method"]
+urls = [
+  "https://elections.delaware.gov/results/enr/Election_StatewideResults_ID_GE2026.json",
+  "https://elections.delaware.gov/results/enr/Election_ByCountyWithWilmington_ID_GE2026.json",
+  "https://elections.delaware.gov/results/enr/Election_ByRepresentativeDistrict_ID_GE2026.json",
+  "https://elections.delaware.gov/results/enr/Election_ByElectionDistrict_ID_GE2026.json",
+  "https://elections.delaware.gov/results/enr/Election_VoterTurnout_ID_GE2026.json",
+]
+
+[[source]]
+id = "ne-2026-11-03-results"
+state = "NE"
+kind = "url"
+raw = "public"
+schedule = "results"
+provides = ["results"]
+url = "https://electionresults.nebraska.gov/resultsCSV.aspx?text=All&type=All&map=CTY"
+
+[[source]]
+id = "fl-2026-11-03-results"
+state = "FL"
+kind = "url"
+raw = "public"
+schedule = "results"
+provides = ["results"]
+expect_missing_until = 2026-11-04T00:00:00Z
+url = "https://results.elections.myflorida.com/downloadresults.asp?ElectionDate=11/3/2026&DATAMODE="
+
+[[source]]
+id = "hi-2026-11-03-results"
+state = "HI"
+kind = "page_links"
+raw = "public"
+schedule = "results"
+provides = ["results"]
+page = "https://elections.hawaii.gov/election-results/"
+pattern = '''2026[^"']*General[^"']*/(summary|media)\.txt$'''
+
+[[source]]
+id = "nc-2026-11-03-absentee-voters"
+state = "NC"
+kind = "url"
+raw = "private"
+schedule = "early_vote_overwrite"
+provides = ["turnout_daily", "demographics"]
+urls = [
+  "https://dl.ncsbe.gov/ENRS/2026_11_03/absentee_20261103.zip",
+  "https://dl.ncsbe.gov/ENRS/2026_11_03/provisional_20261103.txt",
+]
+
+[[source]]
+id = "nc-2026-11-03-absentee-counts"
+state = "NC"
+kind = "url"
+raw = "public"
+schedule = "early_vote_overwrite"
+provides = ["turnout_daily", "demographics"]
+urls = [
+  "https://dl.ncsbe.gov/ENRS/2026_11_03/absentee_counts_county_20261103.csv",
+  "https://dl.ncsbe.gov/ENRS/2026_11_03/absentee_counts_state_20261103.csv",
+  "https://dl.ncsbe.gov/ENRS/2026_11_03/absentee_demo_stats_20261103.csv",
+]
+
+[[source]]
+id = "nc-2026-11-03-polling-places"
+state = "NC"
+kind = "url"
+raw = "public"
+schedule = "early_vote"
+provides = ["sites"]
+guard_allow = ["street_address"]
+url = "https://dl.ncsbe.gov/ENRS/2026_11_03/polling_place_20261103.csv"
+
+[[source]]
+id = "fl-2026-11-03-ev-stats"
+state = "FL"
+kind = "url"
+raw = "public"
+schedule = "early_vote_overwrite"
+provides = ["turnout_daily"]
+urls = [
+  "https://electionfiles.floridados.gov/countyballotreportfiles/Stats_49894_EarlyVoted.txt",
+  "https://electionfiles.floridados.gov/countyballotreportfiles/Stats_49894_VbmVoted.txt",
+  "https://electionfiles.floridados.gov/countyballotreportfiles/Stats_49894_VbmProvided.txt",
+]
+
+[[source]]
+id = "fl-2026-11-03-ev-voters"
+state = "FL"
+kind = "url"
+raw = "private"
+schedule = "early_vote"
+provides = ["turnout_daily", "sites", "demographics"]
+url = "https://countyfilesvbm-ev.floridados.gov/VoteByMailEarlyVotingReports/ViewArchive?name=EVL_49894.zip"
+name = "EVL_49894.zip"
+
+[[source]]
+id = "md-2026-11-03-ev"
+state = "MD"
+kind = "page_links"
+raw = "public"
+schedule = "early_vote"
+provides = ["turnout_daily", "sites", "demographics"]
+page = "https://elections.maryland.gov/press_room/index.html"
+pattern = '''2026_stats/GG26/[^"']+\.(csv|xlsx)$'''
+
+[[source]]
+id = "la-2026-11-03-ev"
+state = "LA"
+kind = "url"
+raw = "public"
+schedule = "early_vote_overwrite"
+provides = ["turnout_daily", "demographics"]
+urls = [
+  "https://electionstatistics.sos.la.gov/Data/Early_Voting_Statistics/parish/2026_1103_ParishStats.xlsx",
+  "https://electionstatistics.sos.la.gov/Data/Early_Voting_Statistics/statewide/2026_1103_StatewideStats.xlsx",
+]
+
+[[source]]
+id = "sc-2026-11-03-ev"
+state = "SC"
+kind = "page_links"
+raw = "public"
+schedule = "early_vote"
+provides = ["turnout_daily", "sites", "demographics"]
+page = "https://scvotes.gov/elections-statistics/voter-participation/"
+pattern = '''(EV-Totals-[0-9-]+\.csv|Absentee-Statistics-by-Race[^"']*\.xlsx)$'''
+
+[[source]]
+id = "ca-2026-11-03-ballots"
+state = "CA"
+kind = "dated"
+raw = "public"
+schedule = "early_vote"
+provides = ["turnout_daily"]
+template = "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/bsr-statistics-{d:%m-%d-%y}.xlsx"
+start = "2026-10-05"
+end = "2026-11-12"
+
+[[source]]
+id = "tn-2026-11-03-ev"
+state = "TN"
+kind = "dated"
+raw = "public"
+schedule = "early_vote"
+provides = ["turnout_daily"]
+templates = [
+  "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/20261103Day{n}Turnout.xlsx",
+  "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/20261103Day{n}Comparison.pdf",
+]
+n_range = [1, 14]
+
+[[source]]
+id = "ky-2026-11-03-absentee"
+state = "KY"
+kind = "dated"
+raw = "public"
+schedule = "early_vote"
+provides = ["turnout_daily"]
+template = "https://elect.ky.gov/Documents/Absentee_Public_{d:%m%d%y}.xlsx"
+start = "2026-10-01"
+end = "2026-11-10"
+
+[[source]]
+id = "id-2026-11-03-absentee"
+state = "ID"
+kind = "url"
+raw = "public"
+schedule = "early_vote_overwrite"
+provides = ["turnout_daily"]
+url = "https://archive.voteidaho.gov/data/absentee/absentee_totals_2026_general.json"
+
+[[source]]
+id = "nv-2026-11-03-clark-ev-voters"
+state = "NV"
+kind = "dated"
+raw = "private"
+schedule = "early_vote"
+provides = ["turnout_daily", "sites"]
+template = "https://elections.clarkcountynv.gov/VoterRequestsTV/EVMB/ev_{d:%Y%m%d}.zip"
+start = "2026-10-17"
+end = "2026-10-30"
+
+[[source]]
+id = "nv-2026-11-03-clark-ev-voters-cumulative"
+state = "NV"
+kind = "url"
+raw = "private"
+schedule = "early_vote"
+provides = ["turnout_daily", "sites"]
+url = "https://elections.clarkcountynv.gov/VoterRequestsTV/EVMB/ev_26GE.zip"
+
+[[source]]
+id = "tx-2026-11-03-ev"
+state = "TX"
+kind = "dated"
+raw = "public"
+schedule = "early_vote"
+provides = ["turnout_daily"]
+template = "https://goelect.txelections.civixapps.com/api-ivis-system/api/v1/getFile?type=EVR_EARLYVOTING&electionId=53815&electionDate={d:%m/%d/%Y}"
+start = "2026-10-14"
+end = "2026-10-30"
+
+[[source]]
+id = "tx-2026-11-03-election-day"
+state = "TX"
+kind = "url"
+raw = "public"
+schedule = "results"
+provides = ["turnout_daily"]
+urls = [
+  "https://goelect.txelections.civixapps.com/api-ivis-system/api/v1/getFile?type=EVR_ELECTION",
+  "https://goelect.txelections.civixapps.com/api-ivis-system/api/v1/getFile?type=EVR_ELECTIONDAYTURNOUT&electionId=53815&electionDate=11/03/2026",
+]
+
+[[source]]
+id = "pa-2026-11-03-mail-voters"
+state = "PA"
+kind = "url"
+raw = "private"
+schedule = "early_vote"
+provides = ["turnout_daily", "demographics"]
+url = "https://data.pa.gov/api/views/nbwd-pfn4/rows.csv?accessType=DOWNLOAD"
+name = "pa_mail_ballots_2026G.csv"
