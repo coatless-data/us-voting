@@ -1,6 +1,7 @@
 from datetime import UTC, datetime
 
 import httpx
+import pytest
 
 from conftest import Clock, make_run, ticking
 from us_voting.kinds import KINDS
@@ -187,9 +188,20 @@ def test_page_links_page_error(tmp_path):
     ]
 
 
-def test_page_links_page_missing(tmp_path):
-    run = make_run(tmp_path, page_handler([], status=404), body=PL)
+@pytest.mark.parametrize("status", [401, 403, 404, 410])
+def test_page_links_page_missing(tmp_path, status):
+    run = make_run(tmp_path, page_handler([], status=status), body=PL)
     assert PageLinksKind().fetch(run).outcomes[0].result == "missing"
+
+
+def test_page_links_unresponsive_page_is_an_error_not_a_block(tmp_path):
+    def h(r):
+        raise httpx.ReadTimeout("stalled", request=r)
+
+    run = make_run(tmp_path, h, body=PL)
+    PageLinksKind().fetch(run)  # three timeouts in a row: the host is now unresponsive
+    (o,) = PageLinksKind().fetch(run).outcomes
+    assert (o.result, o.error) == ("error", "host_unresponsive")
 
 
 def test_page_links_blocked_page_is_blocked_not_waiting(tmp_path):

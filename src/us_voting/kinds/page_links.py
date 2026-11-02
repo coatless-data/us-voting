@@ -7,10 +7,10 @@ from us_voting.config import Source
 from us_voting.kinds.base import (
     KindResult,
     SourceRun,
-    UrlOutcome,
     fetch_file,
     fetch_in_turn,
     safe_name,
+    text_failure,
 )
 
 LINK = re.compile(r"""(?:href|src)\s*=\s*["']([^"']+)["']""", re.I)
@@ -21,21 +21,12 @@ def _pattern(source: Source) -> re.Pattern[str]:
     return re.compile(source.params["pattern"], re.I)
 
 
-def _page_outcome(page: str, status: int | None, error: str | None) -> UrlOutcome:
-    if error in ("blocked", "host_abandoned"):
-        return UrlOutcome(page, "blocked", status, error)
-    if error is not None:
-        return UrlOutcome(page, "error", status, error)
-    result = "missing" if status in (403, 404, 410) else "http_error"
-    return UrlOutcome(page, result, status)
-
-
 class PageLinksKind:
     def fetch(self, run: SourceRun) -> KindResult:
         page = run.source.params["page"]
         status, text, error = run.client.get_text(page)
         if error is not None or status != 200:
-            return KindResult([_page_outcome(page, status, error)])
+            return KindResult([text_failure(page, status, error)])
         pattern = _pattern(run.source)
         matched = sorted({urljoin(page, h) for h in LINK.findall(text) if pattern.search(h)})
         if not matched:
