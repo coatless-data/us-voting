@@ -3,7 +3,7 @@
 from datetime import date, timedelta
 
 from us_voting.config import Source
-from us_voting.kinds.base import KindResult, SourceRun, UrlOutcome, fetch_file, url_name
+from us_voting.kinds.base import KindResult, SourceRun, fetch_file, fetch_in_turn, url_name
 
 
 def _templates(source: Source) -> list[str]:
@@ -31,10 +31,11 @@ def _urls(source: Source, today: date) -> list[str]:
 
 class DatedKind:
     def fetch(self, run: SourceRun) -> KindResult:
-        outcomes: list[UrlOutcome] = []
-        for url in _urls(run.source, run.now.date()):
-            outcomes.append(fetch_file(run, url, url_name(url)))
-        return KindResult(outcomes)
+        urls = _urls(run.source, run.now.date())
+        outcomes, failure = fetch_in_turn(
+            run, urls, lambda url: fetch_file(run, url, url_name(url))
+        )
+        return KindResult(outcomes, failure=failure)
 
     def owns(self, source: Source, url: str) -> bool:
         return url in _expand(source, None)

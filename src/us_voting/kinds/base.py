@@ -2,7 +2,7 @@
 
 import itertools
 import re
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator, Sequence
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
@@ -52,9 +52,16 @@ class SourceRun:
 
 @dataclass(frozen=True)
 class KindResult:
+    """What one source's fetch produced.
+
+    `failure` is a source-level error, such as being cut off by the capture deadline,
+    that makes the source failed whatever its URL outcomes say, unless one was blocked.
+    """
+
     outcomes: list[UrlOutcome]
     version: str | None = None
     note: str | None = None
+    failure: str | None = None
 
     @property
     def files(self) -> list[CapturedFile]:
@@ -101,7 +108,8 @@ def fetch_file(
     version: str | None = None,
 ) -> UrlOutcome:
     name = safe_name(name)
-    state = run.status.urls.setdefault(url, UrlState())
+    # Fetch state is stored only once a response says something about the URL.
+    state = run.status.urls.get(url, UrlState())
     dest = run.work_dir / f".part-{next(run.counter)}-{name}"
     fetched = run.client.fetch(
         url,
@@ -122,6 +130,7 @@ def fetch_file(
     checked = fetched.received_at.strftime(TIME_FORMAT)
     if status == 304:
         state.checked = checked
+        run.status.urls[url] = state
         return UrlOutcome(url, "not_modified", status)
     if status != 200 or fetched.path is None or fetched.sha256 is None:
         if fetched.path is not None:
@@ -133,6 +142,7 @@ def fetch_file(
     state.etag = fetched.headers.get("etag")
     state.last_modified = fetched.headers.get("last-modified")
     state.sha256 = fetched.sha256
+    run.status.urls[url] = state
     if unchanged:
         fetched.path.unlink(missing_ok=True)
         return UrlOutcome(url, "unchanged", status)
@@ -153,10 +163,34 @@ def fetch_file(
     return UrlOutcome(url, "saved", status, file=captured)
 
 
+def fetch_in_turn[T](
+    run: SourceRun, items: Sequence[T], fetch: Callable[[T], UrlOutcome]
+) -> tuple[list[UrlOutcome], str | None]:
+    """Fetch items one after another, starting none once the capture deadline has passed.
+
+    Returns the outcomes of the items attempted and, when the deadline cut the list
+    short, the source-level error. A request refused for lack of time counts as not
+    attempted, so it leaves no outcome and no fetch state behind.
+    """
+    outcomes: list[UrlOutcome] = []
+    for item in items:
+        if run.client.past_deadline():
+            break
+        outcome = fetch(item)
+        if outcome.error == "deadline":
+            break
+        outcomes.append(outcome)
+    if len(outcomes) == len(items):
+        return outcomes, None
+    return outcomes, f"capture deadline reached after {len(outcomes)} of {len(items)} URLs"
+
+
 def source_result(source: Source, kr: KindResult, now: datetime) -> tuple[str, str | None]:
     for o in kr.outcomes:
         if o.result == "blocked":
             return "blocked", o.url
+    if kr.failure is not None:
+        return "failed", kr.failure[:ERROR_LIMIT]
     ignored = {"missing"} if source.kind == "dated" else set()
     if source.kind == "page_links" and any(o.result in GOOD for o in kr.outcomes):
         ignored = {"missing", "soft_404"}

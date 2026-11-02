@@ -22,5 +22,8 @@ backoff_seconds = [2.0, 5.0]
 [pacing]
 min_interval_seconds = 1.0
 
+# A host is skipped for the rest of the run after this many block pages, or after
+# this many attempts in a row that got no response at all.
 [blocks]
 signals_before_abandon = 2
+timeouts_before_abandon = 3

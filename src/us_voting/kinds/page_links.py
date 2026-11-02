@@ -4,7 +4,14 @@ import re
 from urllib.parse import unquote, urljoin, urlsplit
 
 from us_voting.config import Source
-from us_voting.kinds.base import KindResult, SourceRun, UrlOutcome, fetch_file, safe_name
+from us_voting.kinds.base import (
+    KindResult,
+    SourceRun,
+    UrlOutcome,
+    fetch_file,
+    fetch_in_turn,
+    safe_name,
+)
 
 LINK = re.compile(r"""(?:href|src)\s*=\s*["']([^"']+)["']""", re.I)
 DEFAULT_MAX_LINKS = 60
@@ -34,13 +41,14 @@ class PageLinksKind:
         links = links[: int(run.source.params.get("max_links", DEFAULT_MAX_LINKS))]
         if not links:
             return KindResult([], note="no_links")
-        outcomes = [
-            fetch_file(
+        outcomes, failure = fetch_in_turn(
+            run,
+            links,
+            lambda url: fetch_file(
                 run, url, safe_name(unquote(urlsplit(url).path.rsplit("/", 1)[-1])) or "file"
-            )
-            for url in links
-        ]
-        return KindResult(outcomes)
+            ),
+        )
+        return KindResult(outcomes, failure=failure)
 
     def owns(self, source: Source, url: str) -> bool:
         return _pattern(source).search(url) is not None

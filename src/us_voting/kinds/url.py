@@ -1,7 +1,7 @@
 """Fixed URLs, fetched as they are."""
 
 from us_voting.config import Source
-from us_voting.kinds.base import KindResult, SourceRun, UrlOutcome, fetch_file, url_name
+from us_voting.kinds.base import KindResult, SourceRun, fetch_file, fetch_in_turn, url_name
 
 
 def _urls(source: Source) -> list[str]:
@@ -11,11 +11,11 @@ def _urls(source: Source) -> list[str]:
 
 class UrlKind:
     def fetch(self, run: SourceRun) -> KindResult:
-        outcomes: list[UrlOutcome] = []
         name = run.source.params.get("name")
-        for url in _urls(run.source):
-            outcomes.append(fetch_file(run, url, name or url_name(url)))
-        return KindResult(outcomes)
+        outcomes, failure = fetch_in_turn(
+            run, _urls(run.source), lambda url: fetch_file(run, url, name or url_name(url))
+        )
+        return KindResult(outcomes, failure=failure)
 
     def owns(self, source: Source, url: str) -> bool:
         return url in _urls(source)

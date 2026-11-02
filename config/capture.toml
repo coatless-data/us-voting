@@ -1,5 +1,7 @@
 workers = 6
-# No new source starts after this many seconds; the rest stay due for the next run.
+# The capture's hard deadline, in seconds from its start. No source starts after it;
+# those stay due for the next run. No request is sent after it either: a source cut
+# off partway keeps the files it saved and is recorded as failed.
 max_seconds = 3000
 # GitHub caps a release asset at 2 GiB; bundles are split below this.
 max_bundle_bytes = 1800000000

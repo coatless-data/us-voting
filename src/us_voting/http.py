@@ -82,13 +82,41 @@ class Client:
         self._lock = threading.Lock()
         self._next_allowed: dict[str, float] = {}
         self._signals: dict[str, int] = {}
+        self._silent: dict[str, int] = {}
+        self._deadline: float | None = None
 
     def close(self) -> None:
         self._http.close()
 
-    def abandoned(self, url: str) -> bool:
+    def set_deadline(self, seconds: float) -> None:
+        """Send no request, and let no attempt run, past `seconds` from now."""
+        self._deadline = self._monotonic() + seconds
+
+    def time_left(self) -> float | None:
+        """Seconds until the deadline, or None when there is no deadline."""
+        return None if self._deadline is None else self._deadline - self._monotonic()
+
+    def past_deadline(self) -> bool:
+        left = self.time_left()
+        return left is not None and left <= 0
+
+    def _refusal(self, url: str) -> str | None:
+        """Why a request to `url` must not be sent on this run, or None.
+
+        A host is abandoned after `signals_before_abandon` block pages, and is
+        unresponsive after `timeouts_before_abandon` attempts in a row that got no
+        response. Both last for the rest of the run.
+        """
+        host = _host(url)
         with self._lock:
-            return self._signals.get(_host(url), 0) >= self.cfg.signals_before_abandon
+            if self._signals.get(host, 0) >= self.cfg.signals_before_abandon:
+                return "host_abandoned"
+            if self._silent.get(host, 0) >= self.cfg.timeouts_before_abandon:
+                return "host_unresponsive"
+        return "deadline" if self.past_deadline() else None
+
+    def abandoned(self, url: str) -> bool:
+        return self._refusal(url) in ("host_abandoned", "host_unresponsive")
 
     def _pace(self, host: str) -> None:
         with self._lock:
@@ -103,6 +131,23 @@ class Client:
         with self._lock:
             self._signals[host] = self._signals.get(host, 0) + 1
 
+    def _heard(self, host: str, out: _Outcome) -> bool:
+        """Count an attempt that got no response; any response resets the count.
+
+        Returns False once the host has gone unresponsive.
+        """
+        with self._lock:
+            if out.status is not None:
+                self._silent[host] = 0
+            elif out.error in ("timeout", "transport"):
+                self._silent[host] = self._silent.get(host, 0) + 1
+            return self._silent.get(host, 0) < self.cfg.timeouts_before_abandon
+
+    def _attempt_seconds(self) -> float:
+        """One attempt's overall time limit: `total`, cut short by the deadline."""
+        left = self.time_left()
+        return self.cfg.total if left is None else min(self.cfg.total, left)
+
     def _headers(self, host: str, extra: dict[str, str]) -> dict[str, str]:
         return {
             "User-Agent": self.cfg.user_agent_for(host),
@@ -111,16 +156,16 @@ class Client:
         }
 
     def _attempt(
-        self, url: str, headers: dict[str, str], dest: Path | None, limit: int
+        self, url: str, headers: dict[str, str], dest: Path | None, limit: int, seconds: float
     ) -> _Outcome:
         out = _Outcome()
         timeout = httpx.Timeout(
-            connect=self.cfg.connect,
-            read=self.cfg.read,
-            write=self.cfg.read,
-            pool=self.cfg.connect,
+            connect=min(self.cfg.connect, seconds),
+            read=min(self.cfg.read, seconds),
+            write=min(self.cfg.read, seconds),
+            pool=min(self.cfg.connect, seconds),
         )
-        deadline = self._monotonic() + self.cfg.total
+        deadline = self._monotonic() + seconds
         try:
             with self._http.stream("GET", url, headers=headers, timeout=timeout) as resp:
                 out.status = resp.status_code
@@ -169,11 +214,16 @@ class Client:
     def _run(self, url: str, extra: dict[str, str], dest: Path | None, limit: int) -> _Outcome:
         host = _host(url)
         headers = self._headers(host, extra)
-        attempt = 0
-        while True:
-            attempt += 1
+        out: _Outcome | None = None
+        for attempt in range(1, self.cfg.max_attempts + 1):
+            backoff = self.cfg.backoff_seconds
+            if attempt > 1 and backoff:
+                self._sleep(backoff[min(attempt - 2, len(backoff) - 1)])
             self._pace(host)
-            out = self._attempt(url, headers, dest, limit)
+            seconds = self._attempt_seconds()
+            if seconds <= 0:
+                break
+            out = self._attempt(url, headers, dest, limit, seconds)
             status = out.status
             retryable = (
                 out.error == "transport"
@@ -181,11 +231,12 @@ class Client:
                 or status == 429
                 or (status is not None and status >= 500)
             )
-            if not retryable or attempt >= self.cfg.max_attempts:
+            if not self._heard(host, out) or not retryable:
                 break
-            backoff = self.cfg.backoff_seconds
-            if backoff:
-                self._sleep(backoff[min(attempt - 1, len(backoff) - 1)])
+        if out is None:
+            out = _Outcome()
+            out.error = "deadline"
+            return out
         if out.error is None and is_block(out.status, out.headers, out.head):
             out.error = "blocked"
             self._signal(host)
@@ -220,8 +271,9 @@ class Client:
                 error=error,
             )
 
-        if self.abandoned(url):
-            return done(None, "host_abandoned")
+        refusal = self._refusal(url)
+        if refusal is not None:
+            return done(None, refusal)
         extra: dict[str, str] = {}
         if etag:
             extra["If-None-Match"] = etag
@@ -247,12 +299,14 @@ class Client:
     def get_text(self, url: str) -> tuple[int | None, str, str | None]:
         """GET a small text resource, returning (status, text, error).
 
-        error is None, "blocked", "host_abandoned", "too_large", "timeout" or "transport".
-        Whenever error is set, text is "" and status is the HTTP status if one was
-        received, else None. A non-200 response without an error gives (status, "", None).
+        error is None, "blocked", "host_abandoned", "host_unresponsive", "deadline",
+        "too_large", "timeout" or "transport". Whenever error is set, text is "" and
+        status is the HTTP status if one was received, else None. A non-200 response
+        without an error gives (status, "", None).
         """
-        if self.abandoned(url):
-            return None, "", "host_abandoned"
+        refusal = self._refusal(url)
+        if refusal is not None:
+            return None, "", refusal
         out = self._run(url, {}, None, SMALL_LIMIT)
         if out.error is not None:
             return out.status, "", out.error

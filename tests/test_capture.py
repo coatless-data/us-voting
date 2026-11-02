@@ -8,7 +8,7 @@ import httpx
 import pytest
 
 import us_voting.capture as capture_mod
-from conftest import NOW, mock_client, write_config
+from conftest import NOW, Clock, mock_client, ticking, write_config
 from us_voting import cli
 from us_voting.capture import (
     CaptureResult,
@@ -20,7 +20,7 @@ from us_voting.capture import (
 from us_voting.config import load_config
 from us_voting.kinds import KINDS
 from us_voting.kinds.base import CapturedFile
-from us_voting.status import Status, load_status
+from us_voting.status import Status, UrlState, load_status
 
 SOURCES = """
 [[source]]
@@ -220,3 +220,62 @@ def test_cli_unknown_only_and_existing_out(tmp_path, monkeypatch, capsys):
     (tmp_path / "o2/capture/f").write_text("x")
     assert cli.main(cli_args(tmp_path, root, "--out", str(tmp_path / "o2"))) == 1
     assert "capture" in capsys.readouterr().err
+
+
+DATED = """
+[[source]]
+id = "dated"
+state = "NC"
+kind = "dated"
+raw = "public"
+schedule = "results"
+provides = ["results"]
+template = "https://a.gov/d{n}.csv"
+n_range = [1, 5]
+"""
+
+
+def test_dated_source_cut_off_by_the_deadline(tmp_path):
+    cfg = load_config(write_config(tmp_path, DATED))
+    clock = Clock()
+    step = cfg.max_seconds / 3
+    client, _ = mock_client(
+        ticking(lambda r: httpx.Response(200, content=r.url.path.encode() + b",1\n"), clock, step),
+        http=cfg.http,
+        monotonic=clock,
+    )
+    status = Status()
+    untouched = UrlState(etag='"e5"', sha256="55", checked="2026-11-03T22:23:00Z")
+    status.source("dated").urls["https://a.gov/d5.csv"] = untouched
+    r = run_capture(cfg, status, tmp_path / "out", NOW, client, monotonic=lambda: 0.0)
+    st = status.sources["dated"]
+    assert st.result == "failed"
+    assert st.error.startswith("capture deadline reached after 3 of 5 URLs")
+    assert r.files == 3
+    tar = tmp_path / "out/capture/public/capture-2026-11-03T2323Z.tar.gz"
+    assert stamped(members(tar)) == [
+        "_bundle.json",
+        "dated/STAMP__d1.csv",
+        "dated/STAMP__d2.csv",
+        "dated/STAMP__d3.csv",
+    ]
+    assert sorted(st.urls) == [f"https://a.gov/d{n}.csv" for n in (1, 2, 3, 5)]
+    assert st.urls["https://a.gov/d5.csv"] == untouched
+    assert all(st.urls[f"https://a.gov/d{n}.csv"].sha256 for n in (1, 2, 3))
+
+
+def test_stalled_host_costs_three_requests_and_is_not_blocked(tmp_path):
+    cfg = load_config(write_config(tmp_path, DATED))
+    calls = []
+
+    def stalled(request):
+        calls.append(str(request.url))
+        raise httpx.ReadTimeout("stalled", request=request)
+
+    client, _ = mock_client(stalled, http=cfg.http)
+    status = Status()
+    r = run_capture(cfg, status, tmp_path / "out", NOW, client)
+    assert len(calls) == 3
+    assert r.results == {"dated": "failed"}
+    assert "timeout" in status.sources["dated"].error
+    assert status.sources["dated"].urls == {}

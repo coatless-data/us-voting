@@ -8,6 +8,7 @@ from us_voting.kinds.base import (
     KindResult,
     SourceRun,
     fetch_file,
+    fetch_in_turn,
     text_failure,
     unparseable,
 )
@@ -53,18 +54,19 @@ class ClarityKind:
             return KindResult([unparseable(ver_url)])
         if version == run.status.version:
             return KindResult([], note="same_version")
-        outcomes = [
-            fetch_file(
+        outcomes, failure = fetch_in_turn(
+            run,
+            params["files"],
+            lambda path: fetch_file(
                 run,
                 f"{base}/{eid}/{version}/{path}",
                 f"e{eid}_v{version}__{path.replace('/', '_')}",
                 conditional=False,
                 version=version,
-            )
-            for path in params["files"]
-        ]
-        good = all(o.result in GOOD for o in outcomes)
-        return KindResult(outcomes, version=version if good else None)
+            ),
+        )
+        good = failure is None and all(o.result in GOOD for o in outcomes)
+        return KindResult(outcomes, version=version if good else None, failure=failure)
 
     def owns(self, source: Source, url: str) -> bool:
         if not url.startswith(_base(source) + "/"):
