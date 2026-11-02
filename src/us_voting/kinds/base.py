@@ -173,3 +173,16 @@ def source_result(source: Source, kr: KindResult, now: datetime) -> tuple[str, s
     if source.kind == "dated" and all(o.result == "missing" for o in kr.outcomes):
         return "waiting", None
     return "ok", None
+
+
+def text_failure(url: str, status: int | None, error: str | None) -> UrlOutcome:
+    """Outcome for a discovery or version request that did not return a usable 200."""
+    if error in ("blocked", "host_abandoned"):
+        return UrlOutcome(url, "blocked", status, error)
+    if error is not None:
+        return UrlOutcome(url, "error", status, error)
+    return UrlOutcome(url, "missing" if status in (403, 404, 410) else "http_error", status)
+
+
+def unparseable(url: str) -> UrlOutcome:
+    return UrlOutcome(url, "error", 200, "unparseable")
