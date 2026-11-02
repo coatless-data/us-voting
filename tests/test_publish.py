@@ -1,3 +1,4 @@
+import gzip
 import hashlib
 import io
 import json
@@ -178,6 +179,57 @@ def test_conflict_changes_nothing(tmp_path):
         publish_dir(cap2, cfg, pub_store, prv_store)
     assert manifest(pub_store, TAG) == before_m
     assert names(pub_store, TAG) == before_a
+
+
+def recompress(tar_path: Path) -> None:
+    """Rewrite a bundle's gzip layer so its bytes change while its files do not."""
+    raw = gzip.decompress(tar_path.read_bytes())
+    before = tar_path.read_bytes()
+    tar_path.write_bytes(gzip.compress(raw, compresslevel=1, mtime=1))
+    assert tar_path.read_bytes() != before
+
+
+def two_files(tmp_path, cfg, cap, second=b"x\n2\n"):
+    items = [
+        make_file(tmp_path / cap, cfg, "pub", b"a,b\n1,2\n", name="f.csv"),
+        make_file(tmp_path / cap, cfg, "pub", second, name="g.csv"),
+    ]
+    write_bundles(IDENT, "capture", "public", items, tmp_path / cap / "public", max_bytes=10**9)
+    return tmp_path / cap
+
+
+@pytest.mark.parametrize("folder", ["public", "private"])
+def test_same_files_with_different_gzip_bytes_are_skipped(tmp_path, folder):
+    cfg = cfg_for(tmp_path)
+    cap = build(tmp_path, cfg, "cap")
+    pub_store, prv_store = stores(tmp_path)
+    publish_dir(cap, cfg, pub_store, prv_store)
+    store = pub_store if folder == "public" else prv_store
+    before_m, before_a = manifest(store, TAG), names(store, TAG)
+    cap2 = tmp_path / "cap2"
+    shutil.copytree(cap, cap2)
+    recompress(cap2 / folder / "capture-2026-11-03T2323Z.tar.gz")
+    r = publish_dir(cap2, cfg, pub_store, prv_store)
+    assert r.uploaded == [] and len(r.skipped) == 2
+    assert manifest(store, TAG) == before_m and names(store, TAG) == before_a
+
+
+def test_one_member_with_a_different_sha_is_a_conflict(tmp_path):
+    cfg = cfg_for(tmp_path)
+    pub_store, prv_store = stores(tmp_path)
+    publish_dir(two_files(tmp_path, cfg, "cap"), cfg, pub_store, prv_store)
+    before_m, before_a = manifest(pub_store, TAG), names(pub_store, TAG)
+    with pytest.raises(PublishConflict, match="different content"):
+        publish_dir(two_files(tmp_path, cfg, "cap2", b"x\n3\n"), cfg, pub_store, prv_store)
+    assert manifest(pub_store, TAG) == before_m and names(pub_store, TAG) == before_a
+
+
+def test_a_missing_member_is_a_conflict(tmp_path):
+    cfg = cfg_for(tmp_path)
+    pub_store, prv_store = stores(tmp_path)
+    publish_dir(two_files(tmp_path, cfg, "cap"), cfg, pub_store, prv_store)
+    with pytest.raises(PublishConflict):
+        publish_dir(build(tmp_path, cfg, "cap2", prv=None), cfg, pub_store, prv_store)
 
 
 def test_public_bundle_with_voter_member_is_refused(tmp_path):

@@ -25,7 +25,7 @@ RELEASE_BODY = (
 
 
 class PublishConflict(Exception):
-    """A bundle with the same name but different bytes is already published."""
+    """A bundle with the same name but different files is already published."""
 
 
 class PublishRefused(Exception):
@@ -79,6 +79,20 @@ def _check_public(tar_path: Path, info: BundleInfo, cfg: Config) -> None:
                 )
 
 
+def _same_files(published: dict, info: BundleInfo) -> bool:
+    """Whether a published bundle holds exactly the local bundle's files.
+
+    `published` is the bundle's manifest entry, which carries its sidecar. Members are
+    compared by name, sha256 and size, because identical files can still give
+    different .tar.gz bytes, for example under another zlib build.
+    """
+    try:
+        theirs = sorted((f["member"], f["sha256"], f["bytes"]) for f in published["files"])
+    except (KeyError, TypeError):
+        return False
+    return theirs == sorted((f.member, f.sha256, f.bytes) for f in info.files)
+
+
 def _read_manifest(store: ReleaseStore, tag: str, work: Path) -> dict:
     try:
         path = store.download(tag, MANIFEST_NAME, work / "manifest.in")
@@ -118,7 +132,7 @@ def _publish_one(store: ReleaseStore, sidecar: Path, cfg: Config, public: bool) 
         digest = sha256_file(tar_path)
         for existing in manifest["bundles"]:
             if existing["name"] == info.name:
-                if existing["sha256"] == digest:
+                if existing["sha256"] == digest or _same_files(existing, info):
                     return False, tag
                 raise PublishConflict(
                     f"{info.name} is already published in {tag} with different content"
