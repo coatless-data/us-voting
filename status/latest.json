@@ -1,6 +1,6 @@
 {
- "capture_id": "2026-11-03T0830Z",
- "generated_at": "2026-11-03T08:30:14Z",
+ "capture_id": "2026-11-03T0930Z",
+ "generated_at": "2026-11-03T09:30:14Z",
  "rerouted": [],
  "sources": {
   "ca-2026-11-03-ballots": {
@@ -83,24 +83,24 @@
   "fl-2026-11-03-ev-stats": {
    "consecutive_failures": 0,
    "error": null,
-   "last_ok": "2026-11-03T03:30:16Z",
-   "last_run": "2026-11-03T03:30:16Z",
+   "last_ok": "2026-11-03T09:30:14Z",
+   "last_run": "2026-11-03T09:30:14Z",
    "result": "ok",
    "urls": {
     "https://electionfiles.floridados.gov/countyballotreportfiles/Stats_49894_EarlyVoted.txt": {
-     "checked": "2026-11-03T03:30:16Z",
+     "checked": "2026-11-03T09:30:14Z",
      "etag": "0x8DF3747A7AC6F71",
      "last_modified": "Sat, 31 Oct 2026 12:08:20 GMT",
      "sha256": "f0a240e79c84d660703880f14c74e380a71909be6b4f7b901563f5a4cf964a2c"
     },
     "https://electionfiles.floridados.gov/countyballotreportfiles/Stats_49894_VbmProvided.txt": {
-     "checked": "2026-11-03T03:30:17Z",
+     "checked": "2026-11-03T09:30:15Z",
      "etag": "0x8DF38FAC5813ADA",
      "last_modified": "Mon, 02 Nov 2026 16:03:01 GMT",
      "sha256": "a032924825115a4d94a4b9ce7fca61a476633689ceb30479e7c62e277ae7e467"
     },
     "https://electionfiles.floridados.gov/countyballotreportfiles/Stats_49894_VbmVoted.txt": {
-     "checked": "2026-11-03T03:30:17Z",
+     "checked": "2026-11-03T09:30:15Z",
      "etag": "0x8DF38E27E19F16B",
      "last_modified": "Mon, 02 Nov 2026 13:09:13 GMT",
      "sha256": "cfa164c9f0cea58007f1b82273f31df637ca1bbf6f53a91bbbf2f69e5b872408"
@@ -163,12 +163,12 @@
   "id-2026-11-03-absentee": {
    "consecutive_failures": 0,
    "error": null,
-   "last_ok": "2026-11-03T03:30:16Z",
-   "last_run": "2026-11-03T03:30:16Z",
+   "last_ok": "2026-11-03T09:30:14Z",
+   "last_run": "2026-11-03T09:30:14Z",
    "result": "ok",
    "urls": {
     "https://archive.voteidaho.gov/data/absentee/absentee_totals_2026_general.json": {
-     "checked": "2026-11-03T03:30:16Z",
+     "checked": "2026-11-03T09:30:14Z",
      "etag": "W/\"0x8DF38FD6CEBD0A6\"",
      "last_modified": "Mon, 02 Nov 2026 16:22:01 GMT",
      "sha256": "0e482dd0bad8f138079dda58e46248a2be71496f1cb9a7f5aa15e113a5de2d36"
@@ -391,21 +391,21 @@
   "la-2026-11-03-ev": {
    "consecutive_failures": 0,
    "error": null,
-   "last_ok": "2026-11-03T03:30:16Z",
-   "last_run": "2026-11-03T03:30:16Z",
+   "last_ok": "2026-11-03T09:30:14Z",
+   "last_run": "2026-11-03T09:30:14Z",
    "result": "ok",
    "urls": {
     "https://electionstatistics.sos.la.gov/Data/Early_Voting_Statistics/parish/2026_1103_ParishStats.xlsx": {
-     "checked": "2026-11-03T03:30:16Z",
-     "etag": "\"3ac1556f6bdd1:0\"",
-     "last_modified": "Mon, 02 Nov 2026 21:15:50 GMT",
-     "sha256": "d0d3f8166935d8ca15ceb52287e44f64d26e8a5b8a7898cc63ebfc14a7f331e9"
+     "checked": "2026-11-03T09:30:14Z",
+     "etag": "\"4edad99a736bdd1:0\"",
+     "last_modified": "Tue, 03 Nov 2026 09:13:35 GMT",
+     "sha256": "bf68038f49dc09276803eac3648df9f9cb7284cfed2769d292e4fde98e88d275"
     },
     "https://electionstatistics.sos.la.gov/Data/Early_Voting_Statistics/statewide/2026_1103_StatewideStats.xlsx": {
-     "checked": "2026-11-03T03:30:16Z",
-     "etag": "\"adde4d76aa6add1:0\"",
-     "last_modified": "Mon, 02 Nov 2026 09:13:45 GMT",
-     "sha256": "c7c21d84b528a4a6dee67da7f36e58f387fc7a9be2fba74d642377d1a31095c4"
+     "checked": "2026-11-03T09:30:15Z",
+     "etag": "\"9a4910ad736bdd1:0\"",
+     "last_modified": "Tue, 03 Nov 2026 09:14:05 GMT",
+     "sha256": "b56279dfb59f34d38e7160155e75060da1fba3dfd7db7c729aa6da407a845d99"
     }
    },
    "version": null
@@ -507,27 +507,27 @@
   "nc-2026-11-03-absentee-counts": {
    "consecutive_failures": 0,
    "error": null,
-   "last_ok": "2026-11-03T03:30:16Z",
-   "last_run": "2026-11-03T03:30:16Z",
+   "last_ok": "2026-11-03T09:30:14Z",
+   "last_run": "2026-11-03T09:30:14Z",
    "result": "ok",
    "urls": {
     "https://dl.ncsbe.gov/ENRS/2026_11_03/absentee_counts_county_20261103.csv": {
-     "checked": "2026-11-03T03:30:16Z",
+     "checked": "2026-11-03T09:30:14Z",
      "etag": "\"a9e862081b738a41eff6d4621a1de352-3\"",
      "last_modified": "Mon, 02 Nov 2026 09:42:34 GMT",
      "sha256": "9ff2d8f1924c50efa80ee21251759c464168d41a5145ed2828c5a93049549ed5"
     },
     "https://dl.ncsbe.gov/ENRS/2026_11_03/absentee_counts_state_20261103.csv": {
-     "checked": "2026-11-03T03:30:17Z",
+     "checked": "2026-11-03T09:30:15Z",
      "etag": "\"14cb3c571c967513fe4b5f90eb49cc13\"",
      "last_modified": "Mon, 02 Nov 2026 09:42:38 GMT",
      "sha256": "a923aa918df0e364291220ef49f0f5ccba90e692bd35319f42c6ad76f160c700"
     },
     "https://dl.ncsbe.gov/ENRS/2026_11_03/absentee_demo_stats_20261103.csv": {
-     "checked": "2026-11-03T03:30:19Z",
-     "etag": "\"824329a25a3876803b12b827d5be05a4\"",
-     "last_modified": "Mon, 02 Nov 2026 09:20:30 GMT",
-     "sha256": "87a6f7f2121e547e71b77223fa81864c53dbcc530de0fcd6c2ab0184ccc2b20f"
+     "checked": "2026-11-03T09:30:17Z",
+     "etag": "\"e6f3d35dc5f22b97c00bf2ac9b69bfd7\"",
+     "last_modified": "Tue, 03 Nov 2026 09:20:25 GMT",
+     "sha256": "ee49b00919744febb9b55b9af36471d9dfdd6ffb57ed248606e94c9b6347a8cb"
     }
    },
    "version": null
@@ -535,18 +535,18 @@
   "nc-2026-11-03-absentee-voters": {
    "consecutive_failures": 0,
    "error": null,
-   "last_ok": "2026-11-03T03:30:16Z",
-   "last_run": "2026-11-03T03:30:16Z",
+   "last_ok": "2026-11-03T09:30:14Z",
+   "last_run": "2026-11-03T09:30:14Z",
    "result": "ok",
    "urls": {
     "https://dl.ncsbe.gov/ENRS/2026_11_03/absentee_20261103.zip": {
-     "checked": "2026-11-03T03:30:16Z",
+     "checked": "2026-11-03T09:30:14Z",
      "etag": "\"f44616e4af102569d85b7daaca3895a8-15\"",
      "last_modified": "Mon, 02 Nov 2026 10:28:32 GMT",
      "sha256": "909cd9cbf849f7dfb93de1dca52fa3d83b58a1de4c33f89c706ef5d923a8e3f0"
     },
     "https://dl.ncsbe.gov/ENRS/2026_11_03/provisional_20261103.txt": {
-     "checked": "2026-11-03T03:30:16Z",
+     "checked": "2026-11-03T09:30:16Z",
      "etag": "W/\"ffd88c02a299ef70cd0f565c8278f99b\"",
      "last_modified": "Mon, 02 Nov 2026 16:00:11 GMT",
      "sha256": "6228f4403722dcc7d2315435c02cb0b60e903cf3f0d2d1cc3aab1d0dc4f657ff"
