@@ -1,6 +1,6 @@
 {
- "capture_id": "2026-11-04T0130Z",
- "generated_at": "2026-11-04T01:30:13Z",
+ "capture_id": "2026-11-04T0230Z",
+ "generated_at": "2026-11-04T02:30:14Z",
  "rerouted": [],
  "sources": {
   "ca-2026-11-03-ballots": {
@@ -38,10 +38,10 @@
    "version": null
   },
   "co-2026-11-03-results": {
-   "consecutive_failures": 7,
+   "consecutive_failures": 8,
    "error": "https://results.enr.clarityelections.com/CO/elections.json",
    "last_ok": null,
-   "last_run": "2026-11-04T01:30:13Z",
+   "last_run": "2026-11-04T02:30:14Z",
    "result": "blocked",
    "urls": {},
    "version": null
@@ -49,39 +49,39 @@
   "de-2026-11-03-results": {
    "consecutive_failures": 0,
    "error": null,
-   "last_ok": "2026-11-04T01:30:13Z",
-   "last_run": "2026-11-04T01:30:13Z",
+   "last_ok": "2026-11-04T02:30:14Z",
+   "last_run": "2026-11-04T02:30:14Z",
    "result": "ok",
    "urls": {
     "https://elections.delaware.gov/results/enr/Election_ByCountyWithWilmington_ID_GE2026.json": {
-     "checked": "2026-11-04T01:30:14Z",
-     "etag": "W/\"abd0-65f14ce932b80\"",
-     "last_modified": "Fri, 30 Oct 2026 20:40:30 GMT",
-     "sha256": "90fd75d19bb06e8c937ba5ba9088306001dff342653a491c976933993f449783"
+     "checked": "2026-11-04T02:30:15Z",
+     "etag": "W/\"b102-65f6a140f8f00\"",
+     "last_modified": "Wed, 04 Nov 2026 02:24:28 GMT",
+     "sha256": "6eb0a3158a4c32ab398757ad6621da97275511016db97855b4b207f3afcd86f7"
     },
     "https://elections.delaware.gov/results/enr/Election_ByElectionDistrict_ID_GE2026.json": {
-     "checked": "2026-11-04T01:30:16Z",
-     "etag": "W/\"393457-65f694a98da00\"",
-     "last_modified": "Wed, 04 Nov 2026 01:28:08 GMT",
-     "sha256": "af5fd4e5a5a45af4f36292fc2c75be9858c647abec0e28be4642e31a681bd861"
+     "checked": "2026-11-04T02:30:17Z",
+     "etag": "W/\"39535f-65f6a140f8f00\"",
+     "last_modified": "Wed, 04 Nov 2026 02:24:28 GMT",
+     "sha256": "e0ff452186da8546ad45a66637c0c69c0db9cbb2ced2a46fd7dc3b503346732f"
     },
     "https://elections.delaware.gov/results/enr/Election_ByRepresentativeDistrict_ID_GE2026.json": {
-     "checked": "2026-11-04T01:30:15Z",
-     "etag": "W/\"531d3-65f14ce932b80\"",
-     "last_modified": "Fri, 30 Oct 2026 20:40:30 GMT",
-     "sha256": "73acea9617489c015c771e6a8220be89cd7cd8ad5bc431dca72c8adb6ae896fc"
+     "checked": "2026-11-04T02:30:16Z",
+     "etag": "W/\"55883-65f6a14004cc0\"",
+     "last_modified": "Wed, 04 Nov 2026 02:24:27 GMT",
+     "sha256": "9b306136769556336ae4e94ff71613779e4e3384729602f206668ecbe0eeab72"
     },
     "https://elections.delaware.gov/results/enr/Election_StatewideResults_ID_GE2026.json": {
-     "checked": "2026-11-04T01:30:14Z",
-     "etag": "W/\"f6ad-65f14ce83e940\"",
-     "last_modified": "Fri, 30 Oct 2026 20:40:29 GMT",
-     "sha256": "e1f2d3ba0b2b43973b1bd28756152aae670290e93df645bdc2ae6e2e2414e3a4"
+     "checked": "2026-11-04T02:30:15Z",
+     "etag": "W/\"fe00-65f6a05a2ee80\"",
+     "last_modified": "Wed, 04 Nov 2026 02:20:26 GMT",
+     "sha256": "46794a5d05e9967420f352b6b6b2ea14a0ccf1adb0be7388ae7b832473f85f4a"
     },
     "https://elections.delaware.gov/results/enr/Election_VoterTurnout_ID_GE2026.json": {
-     "checked": "2026-11-04T01:30:19Z",
-     "etag": "W/\"202c-65f694a98da00\"",
-     "last_modified": "Wed, 04 Nov 2026 01:28:08 GMT",
-     "sha256": "cf2ede7392e560d6f72c7f3e4974118327132a06f4c24037831fb6065ef9b2c1"
+     "checked": "2026-11-04T02:30:18Z",
+     "etag": "W/\"2031-65f6a141ed140\"",
+     "last_modified": "Wed, 04 Nov 2026 02:24:29 GMT",
+     "sha256": "91950e13663411b14603927b3ae1b8518baa048ed2bdd2d9e1b39828813b2591"
     }
    },
    "version": null
@@ -131,10 +131,10 @@
    "version": null
   },
   "fl-2026-11-03-results": {
-   "consecutive_failures": 3,
+   "consecutive_failures": 4,
    "error": "1 of 1 URLs failed: https://results.elections.myflorida.com/downloadresults.asp?ElectionDate=11/3/2026&DATAMODE= 500",
    "last_ok": null,
-   "last_run": "2026-11-04T01:30:13Z",
+   "last_run": "2026-11-04T02:30:14Z",
    "result": "failed",
    "urls": {},
    "version": null
@@ -143,7 +143,7 @@
    "consecutive_failures": 0,
    "error": null,
    "last_ok": null,
-   "last_run": "2026-11-04T01:30:13Z",
+   "last_run": "2026-11-04T02:30:14Z",
    "result": "waiting",
    "urls": {},
    "version": null
@@ -152,16 +152,16 @@
    "consecutive_failures": 0,
    "error": null,
    "last_ok": null,
-   "last_run": "2026-11-04T01:30:13Z",
+   "last_run": "2026-11-04T02:30:14Z",
    "result": "waiting",
    "urls": {},
    "version": null
   },
   "ia-2026-11-03-results": {
-   "consecutive_failures": 7,
+   "consecutive_failures": 8,
    "error": "https://electionresults.iowa.gov/IA/127077/current_ver.txt",
    "last_ok": null,
-   "last_run": "2026-11-04T01:30:13Z",
+   "last_run": "2026-11-04T02:30:14Z",
    "result": "blocked",
    "urls": {},
    "version": null
@@ -185,8 +185,8 @@
   "id-2026-11-03-results": {
    "consecutive_failures": 0,
    "error": null,
-   "last_ok": "2026-11-04T01:30:13Z",
-   "last_run": "2026-11-04T01:30:13Z",
+   "last_ok": "2026-11-04T02:30:14Z",
+   "last_run": "2026-11-04T02:30:14Z",
    "result": "ok",
    "urls": {
     "https://results.voteidaho.gov/cdn/results/id/export-nov2026.json": {
@@ -579,15 +579,15 @@
   "nc-2026-11-03-results": {
    "consecutive_failures": 0,
    "error": null,
-   "last_ok": "2026-11-04T01:30:13Z",
-   "last_run": "2026-11-04T01:30:13Z",
+   "last_ok": "2026-11-04T02:30:14Z",
+   "last_run": "2026-11-04T02:30:14Z",
    "result": "ok",
    "urls": {
     "https://dl.ncsbe.gov/ENRS/2026_11_03/results_pct_20261103.zip": {
-     "checked": "2026-11-04T01:30:13Z",
-     "etag": "\"5bb4c71a2cf9e360b566a349267f1aee\"",
-     "last_modified": "Wed, 04 Nov 2026 01:29:15 GMT",
-     "sha256": "b28e77d6b9d2389b25ebcaae3dff924ef8aeb879249d30f784b31cb30df9fe99"
+     "checked": "2026-11-04T02:30:14Z",
+     "etag": "\"78cd7c2c484cf94e5151076cbb4c37af\"",
+     "last_modified": "Wed, 04 Nov 2026 02:27:24 GMT",
+     "sha256": "fc35f33dcc8b132598fdb43c8a7999ba965601c28ceef56bdc0dd12e66e5db4e"
     }
    },
    "version": null
@@ -595,15 +595,15 @@
   "ne-2026-11-03-results": {
    "consecutive_failures": 0,
    "error": null,
-   "last_ok": "2026-11-04T01:30:13Z",
-   "last_run": "2026-11-04T01:30:13Z",
+   "last_ok": "2026-11-04T02:30:14Z",
+   "last_run": "2026-11-04T02:30:14Z",
    "result": "ok",
    "urls": {
     "https://electionresults.nebraska.gov/resultsCSV.aspx?text=All&type=All&map=CTY": {
-     "checked": "2026-11-04T01:30:14Z",
+     "checked": "2026-11-04T02:30:15Z",
      "etag": null,
      "last_modified": null,
-     "sha256": "ba5cadabdece608c7d32ae5904ca25f2c33b1438353a2976e85af658521ca253"
+     "sha256": "80f2e631494b645480e9135a2b878fa45ac1376d13abb3b5af11df197830d4ee"
     }
    },
    "version": null
@@ -793,10 +793,10 @@
    "version": null
   },
   "sc-2026-11-03-results": {
-   "consecutive_failures": 7,
+   "consecutive_failures": 8,
    "error": "https://www.enr-scvotes.org/SC/127300/current_ver.txt",
    "last_ok": null,
-   "last_run": "2026-11-04T01:30:13Z",
+   "last_run": "2026-11-04T02:30:14Z",
    "result": "blocked",
    "urls": {},
    "version": null
@@ -982,18 +982,18 @@
   "tx-2026-11-03-election-day": {
    "consecutive_failures": 0,
    "error": null,
-   "last_ok": "2026-11-04T01:30:13Z",
-   "last_run": "2026-11-04T01:30:13Z",
+   "last_ok": "2026-11-04T02:30:14Z",
+   "last_run": "2026-11-04T02:30:14Z",
    "result": "ok",
    "urls": {
     "https://goelect.txelections.civixapps.com/api-ivis-system/api/v1/getFile?type=EVR_ELECTION": {
-     "checked": "2026-11-04T01:30:15Z",
+     "checked": "2026-11-04T02:30:16Z",
      "etag": null,
      "last_modified": null,
      "sha256": "d0d834d301b34c1952568051d465bc226a56b17bb39b279859b83c03c82cfc1d"
     },
     "https://goelect.txelections.civixapps.com/api-ivis-system/api/v1/getFile?type=EVR_ELECTIONDAYTURNOUT&electionId=53815&electionDate=11/03/2026": {
-     "checked": "2026-11-04T01:30:15Z",
+     "checked": "2026-11-04T02:30:21Z",
      "etag": null,
      "last_modified": null,
      "sha256": "e7a037fc06000d622ba63e1be99e2331ff647fa2d5df852e591483834b3b5c95"
@@ -1116,8 +1116,8 @@
   "ut-2026-11-03-results": {
    "consecutive_failures": 0,
    "error": null,
-   "last_ok": "2026-11-04T01:30:13Z",
-   "last_run": "2026-11-04T01:30:13Z",
+   "last_ok": "2026-11-04T02:30:14Z",
+   "last_run": "2026-11-04T02:30:14Z",
    "result": "ok",
    "urls": {
     "https://electionresults.utah.gov/cdn/results/Utah/export-General11032026.json": {
@@ -1138,30 +1138,30 @@
   "va-2026-11-03-results": {
    "consecutive_failures": 0,
    "error": null,
-   "last_ok": "2026-11-04T01:30:13Z",
-   "last_run": "2026-11-04T01:30:13Z",
+   "last_ok": "2026-11-04T02:30:14Z",
+   "last_run": "2026-11-04T02:30:14Z",
    "result": "ok",
    "urls": {
     "https://enr.elections.virginia.gov/cdn/results/virginia/export-2026-November-General.json": {
-     "checked": "2026-11-04T01:30:15Z",
-     "etag": "0x8DF3A12F1A9BF2C",
-     "last_modified": "Wed, 04 Nov 2026 01:28:34 GMT",
-     "sha256": "02cebe4e761ebc775f55ebf1a75d54d44f9d2a2ad360ab6561fad379dd5d4e32"
+     "checked": "2026-11-04T02:30:16Z",
+     "etag": "0x8DF3A1B64335A49",
+     "last_modified": "Wed, 04 Nov 2026 02:29:02 GMT",
+     "sha256": "dbaa3ed880b5d452943e9a4643ae7edf0460443ff811dcc2b9ef18aa61fe979d"
     },
     "https://enr.elections.virginia.gov/results/public/api/elections/Virginia/2026-November-General": {
-     "checked": "2026-11-04T01:30:14Z",
+     "checked": "2026-11-04T02:30:15Z",
      "etag": null,
      "last_modified": null,
-     "sha256": "1fcf0f5aba9fe3afea3541c38c1619f7ed113b7ffd16d800834b77c940e210ea"
+     "sha256": "284ccc1145090b3cf62e4ff39a0be5751aeb852e32e817f0cb268a826f8a342a"
     }
    },
-   "version": "97ffa047-3502-4a44-b641-c0fe4fcff900|2026-11-04T01:28:00.3288906Z|2026-11-04T01:28:12.9827776Z"
+   "version": "0f5420d1-ca14-4610-935d-da755512db1b|2026-11-04T02:27:56.9850837Z|2026-11-04T02:28:13.4972477Z"
   },
   "wa-2026-11-03-results": {
    "consecutive_failures": 0,
    "error": null,
-   "last_ok": "2026-11-04T01:30:13Z",
-   "last_run": "2026-11-04T01:30:13Z",
+   "last_ok": "2026-11-04T02:30:14Z",
+   "last_run": "2026-11-04T02:30:14Z",
    "result": "ok",
    "urls": {
     "https://results.votewa.gov/cdn/results/washington/export-20261103.json": {
@@ -1180,10 +1180,10 @@
    "version": "d1abb935-6491-4694-ba26-2b8a1287c697|2026-10-21T21:03:09.308386Z|2026-10-22T15:55:34.6947355Z"
   },
   "wv-2026-11-03-results": {
-   "consecutive_failures": 7,
+   "consecutive_failures": 8,
    "error": "https://results.enr.clarityelections.com/WV/elections.json",
    "last_ok": null,
-   "last_run": "2026-11-04T01:30:13Z",
+   "last_run": "2026-11-04T02:30:14Z",
    "result": "blocked",
    "urls": {},
    "version": null
