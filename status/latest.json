@@ -1,13 +1,13 @@
 {
- "capture_id": "2026-11-06T0932Z",
- "generated_at": "2026-11-06T09:32:26Z",
+ "capture_id": "2026-11-06T1735Z",
+ "generated_at": "2026-11-06T17:35:15Z",
  "rerouted": [],
  "sources": {
   "ca-2026-11-03-ballots": {
    "consecutive_failures": 0,
    "error": null,
-   "last_ok": "2026-11-05T20:43:56Z",
-   "last_run": "2026-11-05T20:43:56Z",
+   "last_ok": "2026-11-06T17:35:15Z",
+   "last_run": "2026-11-06T17:35:15Z",
    "result": "ok",
    "urls": {
     "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/bsr-statistics-10-29-26.xlsx": {
@@ -23,25 +23,25 @@
      "sha256": "56c2e86d64123193da4cf7733d344dd1b8548e3da27e2ce8cc7d37b103ca3d92"
     },
     "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/bsr-statistics-10-31-26.xlsx": {
-     "checked": "2026-11-05T20:44:29Z",
+     "checked": "2026-11-06T17:35:49Z",
      "etag": "\"de7eaf39d9477c9d9997115eaa9dbdf3\"",
      "last_modified": "Sun, 01 Nov 2026 17:31:28 GMT",
      "sha256": "cec915cf4ed648b7a32cd966fd2713cba15f7db2388c52ce88d729abf91f2c75"
     },
     "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/bsr-statistics-11-01-26.xlsx": {
-     "checked": "2026-11-05T20:44:30Z",
+     "checked": "2026-11-06T17:35:50Z",
      "etag": "\"0d62254c3172571958e023024badd00c\"",
      "last_modified": "Mon, 02 Nov 2026 16:02:20 GMT",
      "sha256": "0453b8a8c9b06f1eb17ab03efe31dd72c706aab995e5dc54df38d11cb3484f57"
     },
     "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/bsr-statistics-11-02-26.xlsx": {
-     "checked": "2026-11-05T20:44:31Z",
+     "checked": "2026-11-06T17:35:51Z",
      "etag": "\"37a52889fadfc9e61f848b47e8d0a508\"",
      "last_modified": "Tue, 03 Nov 2026 18:13:09 GMT",
      "sha256": "05980cc178861d6f7d508e564bfba65ce791dbc24cd2254e62721a54e5383471"
     },
     "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/bsr-statistics-11-03-26.xlsx": {
-     "checked": "2026-11-05T20:44:32Z",
+     "checked": "2026-11-06T17:35:52Z",
      "etag": "\"ce480cf1f76c1e754e38921d9e071609\"",
      "last_modified": "Wed, 04 Nov 2026 22:15:03 GMT",
      "sha256": "b9cce4af2253023d35c6c9226a638e11a6ea8b541f1adc58db2f25c82d4fd1bf"
@@ -50,10 +50,10 @@
    "version": null
   },
   "co-2026-11-03-results": {
-   "consecutive_failures": 13,
+   "consecutive_failures": 14,
    "error": "https://results.enr.clarityelections.com/CO/elections.json",
    "last_ok": null,
-   "last_run": "2026-11-05T20:43:56Z",
+   "last_run": "2026-11-06T17:35:15Z",
    "result": "blocked",
    "urls": {},
    "version": null
@@ -61,36 +61,36 @@
   "de-2026-11-03-results": {
    "consecutive_failures": 0,
    "error": null,
-   "last_ok": "2026-11-05T20:43:56Z",
-   "last_run": "2026-11-05T20:43:56Z",
+   "last_ok": "2026-11-06T17:35:15Z",
+   "last_run": "2026-11-06T17:35:15Z",
    "result": "ok",
    "urls": {
     "https://elections.delaware.gov/results/enr/Election_ByCountyWithWilmington_ID_GE2026.json": {
-     "checked": "2026-11-05T20:43:57Z",
+     "checked": "2026-11-06T17:35:16Z",
      "etag": "W/\"b166-65f6ee28a0000\"",
      "last_modified": "Wed, 04 Nov 2026 08:08:32 GMT",
      "sha256": "595050d1ea97fab154d3d61f328138c53e63688c16dc51b06b8679387f086cff"
     },
     "https://elections.delaware.gov/results/enr/Election_ByElectionDistrict_ID_GE2026.json": {
-     "checked": "2026-11-05T20:43:59Z",
+     "checked": "2026-11-06T17:35:18Z",
      "etag": "W/\"398238-65f6ee28a0000\"",
      "last_modified": "Wed, 04 Nov 2026 08:08:32 GMT",
      "sha256": "6c65c8ced354b678f271038c903b551ccd7bd83038f593e662556458ab55c3bf"
     },
     "https://elections.delaware.gov/results/enr/Election_ByRepresentativeDistrict_ID_GE2026.json": {
-     "checked": "2026-11-05T20:43:58Z",
+     "checked": "2026-11-06T17:35:17Z",
      "etag": "W/\"55c53-65f6ee27abdc0\"",
      "last_modified": "Wed, 04 Nov 2026 08:08:31 GMT",
      "sha256": "5e8b46b4cce813ffded391ec132858016fc52887d5fd9ef606822330700b6ede"
     },
     "https://elections.delaware.gov/results/enr/Election_StatewideResults_ID_GE2026.json": {
-     "checked": "2026-11-05T20:43:57Z",
+     "checked": "2026-11-06T17:35:16Z",
      "etag": "W/\"fee2-65f6ee26b7b80\"",
      "last_modified": "Wed, 04 Nov 2026 08:08:30 GMT",
      "sha256": "a7a8282f4a70eafcfb05fc932e2becc0df8371ed69ffef28f05391684ba3ca1c"
     },
     "https://elections.delaware.gov/results/enr/Election_VoterTurnout_ID_GE2026.json": {
-     "checked": "2026-11-05T20:44:00Z",
+     "checked": "2026-11-06T17:35:19Z",
      "etag": "W/\"203a-65f6ee2994240\"",
      "last_modified": "Wed, 04 Nov 2026 08:08:33 GMT",
      "sha256": "97e93fa638ec4dac3f784d6bd8975cfcac230e7788ad37e86fcbe79443010433"
@@ -101,27 +101,27 @@
   "fl-2026-11-03-ev-stats": {
    "consecutive_failures": 0,
    "error": null,
-   "last_ok": "2026-11-06T09:32:26Z",
-   "last_run": "2026-11-06T09:32:26Z",
+   "last_ok": "2026-11-06T17:35:15Z",
+   "last_run": "2026-11-06T17:35:15Z",
    "result": "ok",
    "urls": {
     "https://electionfiles.floridados.gov/countyballotreportfiles/Stats_49894_EarlyVoted.txt": {
-     "checked": "2026-11-06T09:32:26Z",
+     "checked": "2026-11-06T17:35:20Z",
      "etag": "0x8DF39C3EC4ED67E",
      "last_modified": "Tue, 03 Nov 2026 16:02:55 GMT",
      "sha256": "2ae1c2e97748c17f0799247236c566a4250103060b32b6eb879089e07a19a99e"
     },
     "https://electionfiles.floridados.gov/countyballotreportfiles/Stats_49894_VbmProvided.txt": {
-     "checked": "2026-11-06T09:32:27Z",
-     "etag": "0x8DF3B560C1B9FB5",
-     "last_modified": "Thu, 05 Nov 2026 16:01:26 GMT",
-     "sha256": "3147d0f99c9a771411232c5de0d56f3932c16d9bda3de564c80cde19b6ef5745"
+     "checked": "2026-11-06T17:35:21Z",
+     "etag": "0x8DF3ACD6426F57A",
+     "last_modified": "Wed, 04 Nov 2026 23:43:13 GMT",
+     "sha256": "6210eead6fada78614a7b1206d0fc139d93777e7e428dbbe296866dcaf94223c"
     },
     "https://electionfiles.floridados.gov/countyballotreportfiles/Stats_49894_VbmVoted.txt": {
-     "checked": "2026-11-06T09:32:26Z",
-     "etag": "0x8DF3B3D65C494B1",
-     "last_modified": "Thu, 05 Nov 2026 13:04:59 GMT",
-     "sha256": "823c7203f4468456dabec39d57ac5f6e087707540052e361a076bc95c0c4266f"
+     "checked": "2026-11-06T17:35:20Z",
+     "etag": "0x8DF3C1F3DD9C0D4",
+     "last_modified": "Fri, 06 Nov 2026 16:01:38 GMT",
+     "sha256": "66d0accab616bf7ca9c1d56bcc313e41c4d1d48ad8b3487de8e1de49647919d9"
     }
    },
    "version": null
@@ -129,12 +129,12 @@
   "fl-2026-11-03-ev-voters": {
    "consecutive_failures": 0,
    "error": null,
-   "last_ok": "2026-11-05T20:43:56Z",
-   "last_run": "2026-11-05T20:43:56Z",
+   "last_ok": "2026-11-06T17:35:15Z",
+   "last_run": "2026-11-06T17:35:15Z",
    "result": "ok",
    "urls": {
     "https://countyfilesvbm-ev.floridados.gov/VoteByMailEarlyVotingReports/ViewArchive?name=EVL_49894.zip": {
-     "checked": "2026-11-05T20:44:02Z",
+     "checked": "2026-11-06T17:35:21Z",
      "etag": null,
      "last_modified": null,
      "sha256": "9521d50aca5ad0d129f7b7b3af4ebedf13393dddf6d324d753f28f203faef7af"
@@ -143,10 +143,10 @@
    "version": null
   },
   "fl-2026-11-03-results": {
-   "consecutive_failures": 14,
+   "consecutive_failures": 15,
    "error": "1 of 1 URLs failed: https://results.elections.myflorida.com/downloadresults.asp?ElectionDate=11/3/2026&DATAMODE= 500",
    "last_ok": null,
-   "last_run": "2026-11-06T09:32:26Z",
+   "last_run": "2026-11-06T17:35:15Z",
    "result": "failed",
    "urls": {},
    "version": null
@@ -155,7 +155,7 @@
    "consecutive_failures": 0,
    "error": null,
    "last_ok": null,
-   "last_run": "2026-11-05T20:43:56Z",
+   "last_run": "2026-11-06T17:35:15Z",
    "result": "waiting",
    "urls": {},
    "version": null
@@ -163,30 +163,30 @@
   "hi-2026-11-03-results": {
    "consecutive_failures": 0,
    "error": null,
-   "last_ok": "2026-11-05T20:43:56Z",
-   "last_run": "2026-11-05T20:43:56Z",
+   "last_ok": "2026-11-06T17:35:15Z",
+   "last_run": "2026-11-06T17:35:15Z",
    "result": "ok",
    "urls": {
     "https://elections.hawaii.gov/wp-content/results/2026 General/media.txt": {
-     "checked": "2026-11-05T20:43:59Z",
+     "checked": "2026-11-06T17:35:19Z",
      "etag": null,
-     "last_modified": "Thu, 05 Nov 2026 20:44:00 GMT",
+     "last_modified": "Fri, 06 Nov 2026 17:34:42 GMT",
      "sha256": "340d7861c77008efcb651453b1c16113ad92976cfc7a408ec7159903bd6112e3"
     },
     "https://elections.hawaii.gov/wp-content/results/2026 General/summary.txt": {
-     "checked": "2026-11-05T20:44:00Z",
+     "checked": "2026-11-06T17:35:20Z",
      "etag": null,
-     "last_modified": "Thu, 05 Nov 2026 20:44:01 GMT",
+     "last_modified": "Fri, 06 Nov 2026 17:35:21 GMT",
      "sha256": "e3cdfcd52551119d1c63a62ed59412e5b2c0311c3e47ae14efcb5046ed3bcd28"
     }
    },
    "version": null
   },
   "ia-2026-11-03-results": {
-   "consecutive_failures": 13,
+   "consecutive_failures": 14,
    "error": "https://electionresults.iowa.gov/IA/127077/current_ver.txt",
    "last_ok": null,
-   "last_run": "2026-11-05T20:43:56Z",
+   "last_run": "2026-11-06T17:35:15Z",
    "result": "blocked",
    "urls": {},
    "version": null
@@ -194,12 +194,12 @@
   "id-2026-11-03-absentee": {
    "consecutive_failures": 0,
    "error": null,
-   "last_ok": "2026-11-06T09:32:26Z",
-   "last_run": "2026-11-06T09:32:26Z",
+   "last_ok": "2026-11-06T17:35:15Z",
+   "last_run": "2026-11-06T17:35:15Z",
    "result": "ok",
    "urls": {
     "https://archive.voteidaho.gov/data/absentee/absentee_totals_2026_general.json": {
-     "checked": "2026-11-06T09:32:26Z",
+     "checked": "2026-11-06T17:35:29Z",
      "etag": "W/\"0x8DF3B63E52D98E8\"",
      "last_modified": "Thu, 05 Nov 2026 17:40:34 GMT",
      "sha256": "4afbc2039cf28f44e94a1fd6cd069d2b171161409aab13b243664caf9a421086"
@@ -210,208 +210,208 @@
   "id-2026-11-03-results": {
    "consecutive_failures": 0,
    "error": null,
-   "last_ok": "2026-11-05T20:43:56Z",
-   "last_run": "2026-11-05T20:43:56Z",
+   "last_ok": "2026-11-06T17:35:15Z",
+   "last_run": "2026-11-06T17:35:15Z",
    "result": "ok",
    "urls": {
     "https://results.voteidaho.gov/cdn/results/id/export-nov2026.json": {
-     "checked": "2026-11-05T20:43:58Z",
-     "etag": "0x8DF3B753AD72FCC",
-     "last_modified": "Thu, 05 Nov 2026 19:44:39 GMT",
-     "sha256": "57a352de449081e22423f8ee80f4b773b7357317168f3b98f981461a98abf2a2"
+     "checked": "2026-11-06T17:35:17Z",
+     "etag": "0x8DF3C2B5A42A23C",
+     "last_modified": "Fri, 06 Nov 2026 17:28:20 GMT",
+     "sha256": "ad99543e895e0e8fd18801f4ea07ea0ee63e73036dbdf7226d213be02dbe0c07"
     },
     "https://results.voteidaho.gov/results/public/api/elections/id/nov2026": {
-     "checked": "2026-11-05T20:43:57Z",
+     "checked": "2026-11-06T17:35:17Z",
      "etag": null,
      "last_modified": null,
-     "sha256": "55eecd9c8d7c20b43cf0e17d44e8cc0a78ccdd93cbbf21cf9d090ca412fff768"
+     "sha256": "bffaa1df8dfb1745f1b48342dd1eb5ba4632209679077845b48e0b785ea0d495"
     }
    },
-   "version": "dd78dbb0-f2dd-4ef8-9c34-44f07c7d395c|2026-11-05T18:37:30.2274596Z|2026-11-05T19:44:35.8803144Z"
+   "version": "07ff6fa9-cddf-4769-a582-9aef90cadfff|2026-11-06T16:06:22.1614283Z|2026-11-06T17:28:18.5885535Z"
   },
   "ky-2026-11-03-absentee": {
    "consecutive_failures": 0,
    "error": null,
-   "last_ok": "2026-11-05T20:43:56Z",
-   "last_run": "2026-11-05T20:43:56Z",
+   "last_ok": "2026-11-06T17:35:15Z",
+   "last_run": "2026-11-06T17:35:15Z",
    "result": "ok",
    "urls": {
     "https://elect.ky.gov/Documents/Absentee_Public_100126.xlsx": {
-     "checked": "2026-11-05T20:44:06Z",
+     "checked": "2026-11-06T17:35:25Z",
      "etag": "W/\"{5A45C56A-5CEB-436C-9708-39AF7FCFFB66},2\"",
      "last_modified": "Fri, 02 Oct 2026 13:45:00 GMT",
      "sha256": "c5c7ad217fe8711b200abae342f1271a91f25d369635c3f8512a964667eaba25"
     },
     "https://elect.ky.gov/Documents/Absentee_Public_100226.xlsx": {
-     "checked": "2026-11-05T20:44:07Z",
+     "checked": "2026-11-06T17:35:26Z",
      "etag": "W/\"{BC4F8264-7A77-4273-977C-D1E2C614A9F9},2\"",
      "last_modified": "Sat, 03 Oct 2026 13:42:02 GMT",
      "sha256": "8979686af8809c3abd5c7e84b06e8107930b7d33652a57e7a2101e57cd612c69"
     },
     "https://elect.ky.gov/Documents/Absentee_Public_100326.xlsx": {
-     "checked": "2026-11-05T20:44:07Z",
+     "checked": "2026-11-06T17:35:26Z",
      "etag": "W/\"{B7E61D7A-C53D-417A-9C1E-90BD92F6694D},2\"",
      "last_modified": "Sun, 04 Oct 2026 14:48:50 GMT",
      "sha256": "54e5308f9bbfda0e4764059dbdae06a501865aceca9b50a2dbfba2b53e56ca17"
     },
     "https://elect.ky.gov/Documents/Absentee_Public_100426.xlsx": {
-     "checked": "2026-11-05T20:44:08Z",
+     "checked": "2026-11-06T17:35:27Z",
      "etag": "W/\"{305D1672-2F00-4955-B90A-13802015BAE1},2\"",
      "last_modified": "Mon, 05 Oct 2026 16:04:33 GMT",
      "sha256": "b4d53a712fc28086e7c61bdbfee8403fad102100c3a166731a58d1c6160b26ec"
     },
     "https://elect.ky.gov/Documents/Absentee_Public_100526.xlsx": {
-     "checked": "2026-11-05T20:44:09Z",
+     "checked": "2026-11-06T17:35:28Z",
      "etag": "W/\"{095B1708-C2F9-42A8-BB39-E94FF400F580},2\"",
      "last_modified": "Tue, 06 Oct 2026 13:45:39 GMT",
      "sha256": "6eeee16554db026f1d5e728cc2bca9b3379c3f8e7abf0471f76748cbbadf9d96"
     },
     "https://elect.ky.gov/Documents/Absentee_Public_100626.xlsx": {
-     "checked": "2026-11-05T20:44:10Z",
+     "checked": "2026-11-06T17:35:29Z",
      "etag": "W/\"{C346666E-7173-435E-B9B3-1B58042A6090},2\"",
      "last_modified": "Wed, 07 Oct 2026 13:01:20 GMT",
      "sha256": "3770c90ed696bde433a85c315494e04fec6bd2bb1a1d4e743950b836a699d875"
     },
     "https://elect.ky.gov/Documents/Absentee_Public_100726.xlsx": {
-     "checked": "2026-11-05T20:44:11Z",
+     "checked": "2026-11-06T17:35:30Z",
      "etag": "W/\"{75C50DC7-5D3F-4506-87B0-1B7FA16F4F20},2\"",
      "last_modified": "Thu, 08 Oct 2026 16:23:28 GMT",
      "sha256": "7eb2982f2b7bee57eed3800562fb30ac92327ab7fb02031283a011cad7807a73"
     },
     "https://elect.ky.gov/Documents/Absentee_Public_100826.xlsx": {
-     "checked": "2026-11-05T20:44:12Z",
+     "checked": "2026-11-06T17:35:31Z",
      "etag": "W/\"{B7B81514-0D95-478E-8688-E8CE9720D928},2\"",
      "last_modified": "Fri, 09 Oct 2026 13:51:43 GMT",
      "sha256": "e34b6e3a04eea766591c1bb740b3588c9ea5f7e5e2f879d4d9283124da52cd36"
     },
     "https://elect.ky.gov/Documents/Absentee_Public_100926.xlsx": {
-     "checked": "2026-11-05T20:44:13Z",
+     "checked": "2026-11-06T17:35:32Z",
      "etag": "W/\"{39E5DFC2-BAEB-442A-90AE-11F6C346ADBA},2\"",
      "last_modified": "Sat, 10 Oct 2026 13:56:22 GMT",
      "sha256": "a1ad7ec4453f30df09a9fff5280365eaccee0a0082430d53f8c5107bccfdfbed"
     },
     "https://elect.ky.gov/Documents/Absentee_Public_101126.xlsx": {
-     "checked": "2026-11-05T20:44:15Z",
+     "checked": "2026-11-06T17:35:34Z",
      "etag": "W/\"{5BDAC963-220D-4BF1-A747-F4502B9119D3},2\"",
      "last_modified": "Mon, 12 Oct 2026 14:35:59 GMT",
      "sha256": "4e193fb127a5e34bcd3c42c0fc42c220438ca9d998452071e42436f14a6ff3a5"
     },
     "https://elect.ky.gov/Documents/Absentee_Public_101226.xlsx": {
-     "checked": "2026-11-05T20:44:16Z",
+     "checked": "2026-11-06T17:35:35Z",
      "etag": "W/\"{32334E4A-5511-4AD4-9675-1FFEB3A30A03},2\"",
      "last_modified": "Tue, 13 Oct 2026 13:08:19 GMT",
      "sha256": "1055e107114906ca3bef5e0dfec813eaf864cfcb7f7c6fab28655d0b14f84732"
     },
     "https://elect.ky.gov/Documents/Absentee_Public_101326.xlsx": {
-     "checked": "2026-11-05T20:44:17Z",
+     "checked": "2026-11-06T17:35:36Z",
      "etag": "W/\"{6497840D-2EA2-4805-A087-48E9FD3FC2FC},2\"",
      "last_modified": "Wed, 14 Oct 2026 13:57:13 GMT",
      "sha256": "043ef0f209faf3af382cd29cb81539d30f86292bc125aa61fb3b30d6a03a4ff8"
     },
     "https://elect.ky.gov/Documents/Absentee_Public_101426.xlsx": {
-     "checked": "2026-11-05T20:44:18Z",
+     "checked": "2026-11-06T17:35:37Z",
      "etag": "W/\"{AEBC5EA4-985D-461C-A58B-71BF060D6184},2\"",
      "last_modified": "Thu, 15 Oct 2026 14:32:05 GMT",
      "sha256": "a60b31d31fff42d0ee99f5686212fdb9a072ee6773526824a9956d104c73e1e4"
     },
     "https://elect.ky.gov/Documents/Absentee_Public_101526.xlsx": {
-     "checked": "2026-11-05T20:44:19Z",
+     "checked": "2026-11-06T17:35:38Z",
      "etag": "W/\"{0BA40B6A-B87F-426B-A360-90934A6BA772},2\"",
      "last_modified": "Fri, 16 Oct 2026 13:26:36 GMT",
      "sha256": "848314f947f317ce61eb27dc35ae9650dfcb19e25cef4246cae2d2b50cd5b836"
     },
     "https://elect.ky.gov/Documents/Absentee_Public_101626.xlsx": {
-     "checked": "2026-11-05T20:44:20Z",
+     "checked": "2026-11-06T17:35:39Z",
      "etag": "W/\"{9741D9A9-8E61-4317-9741-09028B8AF23D},2\"",
      "last_modified": "Sat, 17 Oct 2026 14:35:46 GMT",
      "sha256": "e18885bb3eb65eff60aa8abd8f0d7f732af6470141ae48051700dc6420501aa2"
     },
     "https://elect.ky.gov/Documents/Absentee_Public_101726.xlsx": {
-     "checked": "2026-11-05T20:44:21Z",
+     "checked": "2026-11-06T17:35:40Z",
      "etag": "W/\"{8CFEE438-A83B-4F94-99ED-0F556CFFCB94},2\"",
      "last_modified": "Sun, 18 Oct 2026 14:48:00 GMT",
      "sha256": "217dadc4d0a3243634f815cccb409fe820c6f27879e108795fb5b04764dbe02e"
     },
     "https://elect.ky.gov/Documents/Absentee_Public_101826.xlsx": {
-     "checked": "2026-11-05T20:44:22Z",
+     "checked": "2026-11-06T17:35:41Z",
      "etag": "W/\"{830CE733-4044-4DB4-87E7-746F03F6341E},2\"",
      "last_modified": "Mon, 19 Oct 2026 13:47:59 GMT",
      "sha256": "10151f27bd40776a74aef9a3d2f7ea94bc96de4c3a2ec1a3ea7d2a6f15162735"
     },
     "https://elect.ky.gov/Documents/Absentee_Public_101926.xlsx": {
-     "checked": "2026-11-05T20:44:24Z",
+     "checked": "2026-11-06T17:35:42Z",
      "etag": "W/\"{DAFDFC94-5663-4743-9498-30358C7F5DC6},2\"",
      "last_modified": "Tue, 20 Oct 2026 13:41:31 GMT",
      "sha256": "34a3fb46c10411f8af307456dc1eb4498532c3f39c680237e6c95d6c15f6c818"
     },
     "https://elect.ky.gov/Documents/Absentee_Public_102026.xlsx": {
-     "checked": "2026-11-05T20:44:24Z",
+     "checked": "2026-11-06T17:35:43Z",
      "etag": "W/\"{350CF968-E673-4A8B-92D6-22CFB1DC922A},2\"",
      "last_modified": "Wed, 21 Oct 2026 13:15:10 GMT",
      "sha256": "33faeda317620e3f45fef2fcc4801b8bf0893b04eb9ccb2a3703639f8e20c990"
     },
     "https://elect.ky.gov/Documents/Absentee_Public_102126.xlsx": {
-     "checked": "2026-11-05T20:44:25Z",
+     "checked": "2026-11-06T17:35:44Z",
      "etag": "W/\"{4A885332-3C3D-4306-91E1-FCE108735EA5},2\"",
      "last_modified": "Thu, 22 Oct 2026 13:02:28 GMT",
      "sha256": "742f171890d5c8b67964113eac23e1298a6245d99dc5b77fb092a3f64f1b6cee"
     },
     "https://elect.ky.gov/Documents/Absentee_Public_102226.xlsx": {
-     "checked": "2026-11-05T20:44:26Z",
+     "checked": "2026-11-06T17:35:45Z",
      "etag": "W/\"{9A2E5CE0-2F4C-4B66-A5A0-9E4F7D0EAB3A},2\"",
      "last_modified": "Fri, 23 Oct 2026 13:47:57 GMT",
      "sha256": "6caf3a7ece3f70543f10eaa168626ae63674931a552a667beb7f54e7b4a98013"
     },
     "https://elect.ky.gov/Documents/Absentee_Public_102326.xlsx": {
-     "checked": "2026-11-05T20:44:27Z",
+     "checked": "2026-11-06T17:35:46Z",
      "etag": "W/\"{92D392D4-30DE-493D-B3B6-9B80C86617B5},2\"",
      "last_modified": "Sat, 24 Oct 2026 13:27:29 GMT",
      "sha256": "c22f2101ce1479cd1ed2f42b7b7d493d3c7966fbe77a1261d3b1b242859642ca"
     },
     "https://elect.ky.gov/Documents/Absentee_Public_102426.xlsx": {
-     "checked": "2026-11-05T20:44:28Z",
+     "checked": "2026-11-06T17:35:47Z",
      "etag": "W/\"{B1A03860-7A20-4FB8-99B3-43F4DE30C0DB},2\"",
      "last_modified": "Sun, 25 Oct 2026 18:22:30 GMT",
      "sha256": "8041629822b78f6e2fc24cc252c9c4aed9b3fae1d9b86bd0e6984ad54f506f20"
     },
     "https://elect.ky.gov/Documents/Absentee_Public_102526.xlsx": {
-     "checked": "2026-11-05T20:44:29Z",
+     "checked": "2026-11-06T17:35:49Z",
      "etag": "W/\"{57CD5459-AB62-4602-AEB7-99A7D02C2C0F},2\"",
      "last_modified": "Mon, 26 Oct 2026 13:37:36 GMT",
      "sha256": "4d5c4d759886d418e54705e3b42e217b0eb61111035ae6a89f1466f003af2255"
     },
     "https://elect.ky.gov/Documents/Absentee_Public_102626.xlsx": {
-     "checked": "2026-11-05T20:44:30Z",
+     "checked": "2026-11-06T17:35:49Z",
      "etag": "W/\"{DBFCBA9F-4038-4D2E-BCCB-898AA532CF8C},2\"",
      "last_modified": "Tue, 27 Oct 2026 13:09:45 GMT",
      "sha256": "b1e5b65192200c9dee916f4dcb743134247d70140b37acba581c5cb684c02dad"
     },
     "https://elect.ky.gov/Documents/Absentee_Public_102726.xlsx": {
-     "checked": "2026-11-05T20:44:31Z",
+     "checked": "2026-11-06T17:35:50Z",
      "etag": "W/\"{E840F951-F088-4EF9-92CF-3D086309CAF9},2\"",
      "last_modified": "Wed, 28 Oct 2026 14:13:38 GMT",
      "sha256": "8b664b7dcd274c8774c4f13e227cb973c9679a9424629aa11846605effc52b79"
     },
     "https://elect.ky.gov/Documents/Absentee_Public_102826.xlsx": {
-     "checked": "2026-11-05T20:44:32Z",
+     "checked": "2026-11-06T17:35:51Z",
      "etag": "W/\"{9EAD441B-DFB9-4C31-9080-4C5BAA519571},2\"",
      "last_modified": "Thu, 29 Oct 2026 13:03:03 GMT",
      "sha256": "6c29e2b56263a442ea674aa419b52e79d8589aa0eab0b677992f7360256605e7"
     },
     "https://elect.ky.gov/Documents/Absentee_Public_102926.xlsx": {
-     "checked": "2026-11-05T20:44:33Z",
+     "checked": "2026-11-06T17:35:52Z",
      "etag": "W/\"{EF953CB1-3F5C-472C-AEED-ED26D89C0D96},2\"",
      "last_modified": "Fri, 30 Oct 2026 12:36:33 GMT",
      "sha256": "5cad4c99d3d91ccd8ae2d9acc8fbbfdac9bc6e95dbb0f4fa129e763000e90a6e"
     },
     "https://elect.ky.gov/Documents/Absentee_Public_103026.xlsx": {
-     "checked": "2026-11-05T20:44:34Z",
+     "checked": "2026-11-06T17:35:53Z",
      "etag": "W/\"{8E672848-FCD3-4493-9A4C-04EADFA7B34C},2\"",
      "last_modified": "Sat, 31 Oct 2026 13:07:44 GMT",
      "sha256": "581919a058d5ca9c64e05b35cdf7d29e65473e80d68786a1543b7ea51138e138"
     },
     "https://elect.ky.gov/Documents/Absentee_Public_103126.xlsx": {
-     "checked": "2026-11-05T20:44:35Z",
+     "checked": "2026-11-06T17:35:54Z",
      "etag": "W/\"{AC6EFAFB-6D4D-4BB1-AE58-1C30BD807B53},2\"",
      "last_modified": "Sun, 01 Nov 2026 18:07:58 GMT",
      "sha256": "30e9ed4ace253929a205832d4d856b764cf7dedd3dfad3d4bd4473dd1bbebb24"
@@ -422,18 +422,18 @@
   "la-2026-11-03-ev": {
    "consecutive_failures": 0,
    "error": null,
-   "last_ok": "2026-11-06T09:32:26Z",
-   "last_run": "2026-11-06T09:32:26Z",
+   "last_ok": "2026-11-06T17:35:15Z",
+   "last_run": "2026-11-06T17:35:15Z",
    "result": "ok",
    "urls": {
     "https://electionstatistics.sos.la.gov/Data/Early_Voting_Statistics/parish/2026_1103_ParishStats.xlsx": {
-     "checked": "2026-11-06T09:32:26Z",
+     "checked": "2026-11-06T17:35:22Z",
      "etag": "\"8e3ffe17cf6ddd1:0\"",
      "last_modified": "Fri, 06 Nov 2026 09:13:31 GMT",
      "sha256": "33c05dd6ad15da325da8779b9c8a89a0a016a668ff0622401d8de931fd259aa4"
     },
     "https://electionstatistics.sos.la.gov/Data/Early_Voting_Statistics/statewide/2026_1103_StatewideStats.xlsx": {
-     "checked": "2026-11-06T09:32:26Z",
+     "checked": "2026-11-06T17:35:23Z",
      "etag": "\"57d19de1ce6ddd1:0\"",
      "last_modified": "Fri, 06 Nov 2026 09:12:00 GMT",
      "sha256": "e159850c25984d8a03e1f61372e01ef7da2538e337f260e3e69f528ea94b5ece"
@@ -444,90 +444,90 @@
   "md-2026-11-03-ev": {
    "consecutive_failures": 0,
    "error": null,
-   "last_ok": "2026-11-05T20:43:56Z",
-   "last_run": "2026-11-05T20:43:56Z",
+   "last_ok": "2026-11-06T17:35:15Z",
+   "last_run": "2026-11-06T17:35:15Z",
    "result": "ok",
    "urls": {
     "https://elections.maryland.gov/press_room/2026_stats/GG26/Absentees_Ballots_Left_To_Count_by_Congressional.xlsx": {
-     "checked": "2026-11-05T20:44:03Z",
-     "etag": "\"055bc92a6ddd1:0\"",
-     "last_modified": "Thu, 05 Nov 2026 13:37:22 GMT",
-     "sha256": "e3929425c291c7cba16e3be850a531b649d02f1d6988004f76cc7525535e2f1a"
+     "checked": "2026-11-06T17:35:22Z",
+     "etag": "\"80373ad9f16ddd1:0\"",
+     "last_modified": "Fri, 06 Nov 2026 13:22:19 GMT",
+     "sha256": "4735efc86ddcc9fefb315bb45a10b82ca82215fe7d4550826859e29f2b1efe2d"
     },
     "https://elections.maryland.gov/press_room/2026_stats/GG26/Absentees_Ballots_Left_To_Count_by_County.xlsx": {
-     "checked": "2026-11-05T20:44:04Z",
-     "etag": "\"80b04bc12a6ddd1:0\"",
-     "last_modified": "Thu, 05 Nov 2026 13:37:09 GMT",
-     "sha256": "3f0e9750b2c6fc1668d4100759c2e7a930fb929f0aab694fe46bafd974f14467"
+     "checked": "2026-11-06T17:35:22Z",
+     "etag": "\"803c6df26ddd1:0\"",
+     "last_modified": "Fri, 06 Nov 2026 13:26:27 GMT",
+     "sha256": "d0769ca0e6fe2c3d6767072120d81756c37cf5ccac4bcf3d2f7af220459e4a83"
     },
     "https://elections.maryland.gov/press_room/2026_stats/GG26/Absentees_Ballots_Left_To_Count_by_Legislative.xlsx": {
-     "checked": "2026-11-05T20:44:05Z",
-     "etag": "\"0df5ab82a6ddd1:0\"",
-     "last_modified": "Thu, 05 Nov 2026 13:36:54 GMT",
-     "sha256": "08b02d694cb9fbf92abc452ea824c405736ece7ddf47fd26eaba2e829189e197"
+     "checked": "2026-11-06T17:35:23Z",
+     "etag": "\"06932edf26ddd1:0\"",
+     "last_modified": "Fri, 06 Nov 2026 13:30:02 GMT",
+     "sha256": "3a49a525e72fb66682f80c0c53e0a2b87cc9d40266e4c1ad5c30731bb4f014cb"
     },
     "https://elections.maryland.gov/press_room/2026_stats/GG26/Absentees_Sent_and_Returned_by_Congressional.xlsx": {
-     "checked": "2026-11-05T20:44:06Z",
-     "etag": "\"801519df2a6ddd1:0\"",
-     "last_modified": "Thu, 05 Nov 2026 13:37:59 GMT",
-     "sha256": "b0b8b17548188b9ec0b7869f623bf9b062c21d4cd0691a621b66da4bac81efc8"
+     "checked": "2026-11-06T17:35:25Z",
+     "etag": "\"0cd7a77f36ddd1:0\"",
+     "last_modified": "Fri, 06 Nov 2026 13:33:54 GMT",
+     "sha256": "e83c05ee31b364b9e21a9dd387c8f1ef6f793fde2c626f4d92a7797e94c3f134"
     },
     "https://elections.maryland.gov/press_room/2026_stats/GG26/Absentees_Sent_and_Returned_by_County.xlsx": {
-     "checked": "2026-11-05T20:44:07Z",
-     "etag": "\"80dac0d62a6ddd1:0\"",
-     "last_modified": "Thu, 05 Nov 2026 13:37:45 GMT",
-     "sha256": "54415c543a878e0aad0f2824d784d11d5973c2d2ed5c245340c8352e44a8b418"
+     "checked": "2026-11-06T17:35:25Z",
+     "etag": "\"0f926e5f36ddd1:0\"",
+     "last_modified": "Fri, 06 Nov 2026 13:36:58 GMT",
+     "sha256": "8cf11097f297fe7492d7946f43bf82ad8b7c9606dcf48a3177ea2fe256279a1a"
     },
     "https://elections.maryland.gov/press_room/2026_stats/GG26/Absentees_Sent_and_Returned_by_Legislative.xlsx": {
-     "checked": "2026-11-05T20:44:08Z",
-     "etag": "\"80cc99cf2a6ddd1:0\"",
-     "last_modified": "Thu, 05 Nov 2026 13:37:33 GMT",
-     "sha256": "7185e5874b00f222d9ac227e8655c214998c6b177efb1d46da913e94a6d1d78e"
+     "checked": "2026-11-06T17:35:26Z",
+     "etag": "\"0d99757f46ddd1:0\"",
+     "last_modified": "Fri, 06 Nov 2026 13:40:10 GMT",
+     "sha256": "cff072f126b2a20aa8ab111e8b3b388fa4a04a38e75f60916f167e52d7661b4a"
     },
     "https://elections.maryland.gov/press_room/2026_stats/GG26/EarlyVoting_RAW_data.csv": {
-     "checked": "2026-11-05T20:44:09Z",
+     "checked": "2026-11-06T17:35:27Z",
      "etag": "\"80fa33625768dd1:0\"",
      "last_modified": "Fri, 30 Oct 2026 10:14:01 GMT",
      "sha256": "b2c13cc6435bd6e299305de5b226efc3a8877404ab453d9af1ee2ce9fb429f6b"
     },
     "https://elections.maryland.gov/press_room/2026_stats/GG26/Eligible Active Voters by Congressional - GG26.xlsx": {
-     "checked": "2026-11-05T20:44:10Z",
+     "checked": "2026-11-06T17:35:28Z",
      "etag": "\"8053cbd2db5fdd1:0\"",
      "last_modified": "Mon, 19 Oct 2026 15:09:23 GMT",
      "sha256": "b0016c60dafacab23b7dd5b9a2428378e9b6bcf72a1406b76c53cd988d0ab63d"
     },
     "https://elections.maryland.gov/press_room/2026_stats/GG26/Eligible Active Voters by Councilmanic - GG26.xlsx": {
-     "checked": "2026-11-05T20:44:11Z",
+     "checked": "2026-11-06T17:35:29Z",
      "etag": "\"091eeede45fdd1:0\"",
      "last_modified": "Mon, 19 Oct 2026 16:14:34 GMT",
      "sha256": "91e8e8486b62396f23352abc9d821d8e4fc8f445b10ba308d0b7b986b6d66019"
     },
     "https://elections.maryland.gov/press_room/2026_stats/GG26/Eligible Active Voters by County - GG26.xlsx": {
-     "checked": "2026-11-05T20:44:12Z",
+     "checked": "2026-11-06T17:35:30Z",
      "etag": "\"809a7b13e55fdd1:0\"",
      "last_modified": "Mon, 19 Oct 2026 16:15:37 GMT",
      "sha256": "dbfff2b394a662495677de461ae6abe7954e2077085a2e53ac9791ac8bbd2685"
     },
     "https://elections.maryland.gov/press_room/2026_stats/GG26/Eligible Active Voters by Legislative - GG26.xlsx": {
-     "checked": "2026-11-05T20:44:13Z",
+     "checked": "2026-11-06T17:35:31Z",
      "etag": "\"80c1343de55fdd1:0\"",
      "last_modified": "Mon, 19 Oct 2026 16:16:47 GMT",
      "sha256": "79e61432c1ff2a4d88d6b41f6950f09d5f42fb64d2e4c10370730bd7aee8839c"
     },
     "https://elections.maryland.gov/press_room/2026_stats/GG26/Eligible Inactive Voters - GG26.xlsx": {
-     "checked": "2026-11-05T20:44:14Z",
+     "checked": "2026-11-06T17:35:32Z",
      "etag": "\"0824253e55fdd1:0\"",
      "last_modified": "Mon, 19 Oct 2026 16:17:24 GMT",
      "sha256": "49ca88279c3090cede0f08f2f80baba850842241210c76d4f6f02c1edb675106"
     },
     "https://elections.maryland.gov/press_room/2026_stats/GG26/Mail-in_Ballot_Request_Counts_with_Chart.xlsx": {
-     "checked": "2026-11-05T20:44:15Z",
+     "checked": "2026-11-06T17:35:33Z",
      "etag": "\"06657433469dd1:0\"",
      "last_modified": "Sat, 31 Oct 2026 12:35:08 GMT",
      "sha256": "6968d05777e214d60c0f67eb4a9a584a83d07c10217256b4d8177bf6b21076ec"
     },
     "https://elections.maryland.gov/press_room/2026_stats/GG26/SameDayRegistration_RAW_data.csv": {
-     "checked": "2026-11-05T20:44:20Z",
+     "checked": "2026-11-06T17:35:38Z",
      "etag": "\"808c36769b6cdd1:0\"",
      "last_modified": "Wed, 04 Nov 2026 20:31:25 GMT",
      "sha256": "8187e9f108ee1bb3276364fc2e60b42e5c7e243570ea3598502e1480f3cc4502"
@@ -538,24 +538,24 @@
   "nc-2026-11-03-absentee-counts": {
    "consecutive_failures": 0,
    "error": null,
-   "last_ok": "2026-11-06T09:32:26Z",
-   "last_run": "2026-11-06T09:32:26Z",
+   "last_ok": "2026-11-06T17:35:15Z",
+   "last_run": "2026-11-06T17:35:15Z",
    "result": "ok",
    "urls": {
     "https://dl.ncsbe.gov/ENRS/2026_11_03/absentee_counts_county_20261103.csv": {
-     "checked": "2026-11-06T09:32:26Z",
-     "etag": "\"62c00e4d5c1206a32f557a0fa721eb9f-3\"",
-     "last_modified": "Thu, 05 Nov 2026 09:41:52 GMT",
-     "sha256": "7dd00539370a2e98489308dc987ae05f2b30304b66bb4f7ed43a46b09897e74e"
+     "checked": "2026-11-06T17:35:19Z",
+     "etag": "\"44e78b36a49f65aa56389b371cb3ccf0-3\"",
+     "last_modified": "Fri, 06 Nov 2026 09:41:53 GMT",
+     "sha256": "c8abd181d37a0895812397458be7f7ad2f663f3eabba5f38d144e85115e3e043"
     },
     "https://dl.ncsbe.gov/ENRS/2026_11_03/absentee_counts_state_20261103.csv": {
-     "checked": "2026-11-06T09:32:27Z",
-     "etag": "\"41853b7193f8654bcda041bdcd71614f\"",
-     "last_modified": "Thu, 05 Nov 2026 09:41:58 GMT",
-     "sha256": "14c38bf37e7a05f064e5913ca3d9994f864b8c82b551a8db8acb37a46e1bc7e9"
+     "checked": "2026-11-06T17:35:21Z",
+     "etag": "\"b8d845ebaa6052cc4016dbd7ac2f6a3f\"",
+     "last_modified": "Fri, 06 Nov 2026 09:41:58 GMT",
+     "sha256": "70d50962ab4db4c3c9bf2b23f0270561af0cc495d47b49c98fe7fcb6cbed2f40"
     },
     "https://dl.ncsbe.gov/ENRS/2026_11_03/absentee_demo_stats_20261103.csv": {
-     "checked": "2026-11-06T09:32:29Z",
+     "checked": "2026-11-06T17:35:22Z",
      "etag": "\"7aacad50662caeeedf071aa556b0b4f7\"",
      "last_modified": "Fri, 06 Nov 2026 09:20:25 GMT",
      "sha256": "2a3aa685813146ccecedb2ef292c6c7e27c0c55c04b329e1e95b84058989df92"
@@ -566,21 +566,21 @@
   "nc-2026-11-03-absentee-voters": {
    "consecutive_failures": 0,
    "error": null,
-   "last_ok": "2026-11-06T09:32:26Z",
-   "last_run": "2026-11-06T09:32:26Z",
+   "last_ok": "2026-11-06T17:35:15Z",
+   "last_run": "2026-11-06T17:35:15Z",
    "result": "ok",
    "urls": {
     "https://dl.ncsbe.gov/ENRS/2026_11_03/absentee_20261103.zip": {
-     "checked": "2026-11-06T09:32:26Z",
-     "etag": "\"749a6e437469dd9901081680eff24ae5-16\"",
-     "last_modified": "Thu, 05 Nov 2026 10:28:27 GMT",
-     "sha256": "e2fa4228eb1cfa54f365a4dac31d9437ef2a0e798470ceae37f6af79b10624db"
+     "checked": "2026-11-06T17:35:18Z",
+     "etag": "\"4f8acfb9fbafa2a741bd8cfdf75e2547-16\"",
+     "last_modified": "Fri, 06 Nov 2026 10:28:21 GMT",
+     "sha256": "048c09258bb539caf594e0d1ea31fa5ffb0f4a1e495f04f09160dbabc10e2879"
     },
     "https://dl.ncsbe.gov/ENRS/2026_11_03/provisional_20261103.txt": {
-     "checked": "2026-11-06T09:32:26Z",
-     "etag": "W/\"cdd73d2850232e8248f83829404a4e8f-2\"",
-     "last_modified": "Thu, 05 Nov 2026 16:00:19 GMT",
-     "sha256": "b9d777e470dcfa0f01c99fcb4fb56643d6ad219638af2c895c155c53ee088dbc"
+     "checked": "2026-11-06T17:35:22Z",
+     "etag": "W/\"f3d129ceed89e0b155c5e0e4e03f3aef-2\"",
+     "last_modified": "Fri, 06 Nov 2026 16:00:19 GMT",
+     "sha256": "ead0e5a91d8d0baf85e5b4d5de095e93d7cf1b8dfcec73e5e14bd348f143ee49"
     }
    },
    "version": null
@@ -588,12 +588,12 @@
   "nc-2026-11-03-polling-places": {
    "consecutive_failures": 0,
    "error": null,
-   "last_ok": "2026-11-05T20:43:56Z",
-   "last_run": "2026-11-05T20:43:56Z",
+   "last_ok": "2026-11-06T17:35:15Z",
+   "last_run": "2026-11-06T17:35:15Z",
    "result": "ok",
    "urls": {
     "https://dl.ncsbe.gov/ENRS/2026_11_03/polling_place_20261103.csv": {
-     "checked": "2026-11-05T20:44:01Z",
+     "checked": "2026-11-06T17:35:20Z",
      "etag": "\"f80632e16f701282d24106990a1e07b8\"",
      "last_modified": "Sun, 01 Nov 2026 10:25:05 GMT",
      "sha256": "9b843796315620cdd44b98f6db16ede74fad747fde9b6800111ef34427402cc8"
@@ -604,15 +604,15 @@
   "nc-2026-11-03-results": {
    "consecutive_failures": 0,
    "error": null,
-   "last_ok": "2026-11-05T20:43:56Z",
-   "last_run": "2026-11-05T20:43:56Z",
+   "last_ok": "2026-11-06T17:35:15Z",
+   "last_run": "2026-11-06T17:35:15Z",
    "result": "ok",
    "urls": {
     "https://dl.ncsbe.gov/ENRS/2026_11_03/results_pct_20261103.zip": {
-     "checked": "2026-11-05T20:43:56Z",
-     "etag": "\"9e5832d543f1476bf3b72435e2d35cb1\"",
-     "last_modified": "Thu, 05 Nov 2026 19:25:55 GMT",
-     "sha256": "45c9fc11b3eb380d6cf6da2d21870179ba79e199e6503219a0ddeaff1c0aa46b"
+     "checked": "2026-11-06T17:35:15Z",
+     "etag": "\"c75e973e4f624c691dbc1fc91329bb58\"",
+     "last_modified": "Thu, 05 Nov 2026 21:45:49 GMT",
+     "sha256": "9206921a5d86ef9ddf97c9604ab7152e679c61b3f21f012328447d0c0c64a284"
     }
    },
    "version": null
@@ -620,15 +620,15 @@
   "ne-2026-11-03-results": {
    "consecutive_failures": 0,
    "error": null,
-   "last_ok": "2026-11-05T20:43:56Z",
-   "last_run": "2026-11-05T20:43:56Z",
+   "last_ok": "2026-11-06T17:35:15Z",
+   "last_run": "2026-11-06T17:35:15Z",
    "result": "ok",
    "urls": {
     "https://electionresults.nebraska.gov/resultsCSV.aspx?text=All&type=All&map=CTY": {
-     "checked": "2026-11-05T20:43:57Z",
+     "checked": "2026-11-06T17:35:16Z",
      "etag": null,
      "last_modified": null,
-     "sha256": "dc69e5717e45e2f1f458f4fa60defed6875521dced50faf9d4c7081dbac38272"
+     "sha256": "d52c2dfc5d00fe7aec8cac4c84439e91dda79978031ba668fc208436218aa9a8"
     }
    },
    "version": null
@@ -636,90 +636,90 @@
   "nv-2026-11-03-clark-ev-voters": {
    "consecutive_failures": 0,
    "error": null,
-   "last_ok": "2026-11-05T20:43:56Z",
-   "last_run": "2026-11-05T20:43:56Z",
+   "last_ok": "2026-11-06T17:35:15Z",
+   "last_run": "2026-11-06T17:35:15Z",
    "result": "ok",
    "urls": {
     "https://elections.clarkcountynv.gov/VoterRequestsTV/EVMB/ev_20261017.zip": {
-     "checked": "2026-11-05T20:44:10Z",
+     "checked": "2026-11-06T17:35:30Z",
      "etag": "\"82a8fcffc75edd1:0\"",
      "last_modified": "Sun, 18 Oct 2026 06:14:57 GMT",
      "sha256": "6d47948a477c7a757afdcbea0493357ab674a6a8cfc5282fb6e36b865f09e7fb"
     },
     "https://elections.clarkcountynv.gov/VoterRequestsTV/EVMB/ev_20261018.zip": {
-     "checked": "2026-11-05T20:44:10Z",
+     "checked": "2026-11-06T17:35:30Z",
      "etag": "\"1064ebcb865fdd1:0\"",
      "last_modified": "Mon, 19 Oct 2026 05:00:44 GMT",
      "sha256": "f8cee9d0b87b346618323741caa7aac5fbc5e28b9a6797978b46bf3b4bd15ff8"
     },
     "https://elections.clarkcountynv.gov/VoterRequestsTV/EVMB/ev_20261019.zip": {
-     "checked": "2026-11-05T20:44:11Z",
+     "checked": "2026-11-06T17:35:31Z",
      "etag": "\"eaa32855060dd1:0\"",
      "last_modified": "Tue, 20 Oct 2026 05:01:09 GMT",
      "sha256": "d7a633313801d30a26abf1974bc2e7d85c874f56457fd166e3cb948a2716c004"
     },
     "https://elections.clarkcountynv.gov/VoterRequestsTV/EVMB/ev_20261020.zip": {
-     "checked": "2026-11-05T20:44:12Z",
+     "checked": "2026-11-06T17:35:32Z",
      "etag": "\"90ac802f1961dd1:0\"",
      "last_modified": "Wed, 21 Oct 2026 05:01:09 GMT",
      "sha256": "7825eb17480404d9f9780248b37b5d6a7c765a012f6d89a77a2bc4412099b90b"
     },
     "https://elections.clarkcountynv.gov/VoterRequestsTV/EVMB/ev_20261021.zip": {
-     "checked": "2026-11-05T20:44:14Z",
+     "checked": "2026-11-06T17:35:33Z",
      "etag": "\"82d6d459e261dd1:0\"",
      "last_modified": "Thu, 22 Oct 2026 05:01:08 GMT",
      "sha256": "8c0b7226a8b7bda92a4b62bbee42ed3c9dcc224200493b52ad99e7611c3ebee9"
     },
     "https://elections.clarkcountynv.gov/VoterRequestsTV/EVMB/ev_20261022.zip": {
-     "checked": "2026-11-05T20:44:15Z",
+     "checked": "2026-11-06T17:35:34Z",
      "etag": "\"3e8bdf7dab62dd1:0\"",
      "last_modified": "Fri, 23 Oct 2026 05:00:58 GMT",
      "sha256": "c8f256aace61e2becbf908214487bd5ead072c2626917837f53a197a0c4dbd6c"
     },
     "https://elections.clarkcountynv.gov/VoterRequestsTV/EVMB/ev_20261023.zip": {
-     "checked": "2026-11-05T20:44:16Z",
+     "checked": "2026-11-06T17:35:35Z",
      "etag": "\"5e4af7b27463dd1:0\"",
      "last_modified": "Sat, 24 Oct 2026 05:01:16 GMT",
      "sha256": "1542a7f91a0bf6670b4d9eac3124bdaf1f3e8ad476fe4eae74a435d5cb2ac798"
     },
     "https://elections.clarkcountynv.gov/VoterRequestsTV/EVMB/ev_20261024.zip": {
-     "checked": "2026-11-05T20:44:17Z",
+     "checked": "2026-11-06T17:35:36Z",
      "etag": "\"0b326d73d64dd1:0\"",
      "last_modified": "Sun, 25 Oct 2026 05:01:05 GMT",
      "sha256": "f081a4af289b7a35acaa7c1c6e4abc7a4a5b4b71482d5487395a0e4455a07ce0"
     },
     "https://elections.clarkcountynv.gov/VoterRequestsTV/EVMB/ev_20261025.zip": {
-     "checked": "2026-11-05T20:44:18Z",
+     "checked": "2026-11-06T17:35:37Z",
      "etag": "\"483ad1f7665dd1:0\"",
      "last_modified": "Mon, 26 Oct 2026 05:00:49 GMT",
      "sha256": "154ae8bb1ab891239e87b9d0f2574fe78b533eae5d7f47b14ef4b5933ad6821c"
     },
     "https://elections.clarkcountynv.gov/VoterRequestsTV/EVMB/ev_20261026.zip": {
-     "checked": "2026-11-05T20:44:19Z",
+     "checked": "2026-11-06T17:35:38Z",
      "etag": "\"544bbb35d065dd1:0\"",
      "last_modified": "Tue, 27 Oct 2026 05:01:22 GMT",
      "sha256": "3721d19efd923b368e51d2a4a8ab8c844cf6b76e90edc1580ca4d31262b45a4a"
     },
     "https://elections.clarkcountynv.gov/VoterRequestsTV/EVMB/ev_20261027.zip": {
-     "checked": "2026-11-05T20:44:20Z",
+     "checked": "2026-11-06T17:35:39Z",
      "etag": "\"4a3787639966dd1:0\"",
      "last_modified": "Wed, 28 Oct 2026 05:01:27 GMT",
      "sha256": "f870396bded2985ff9c0f441ba34efc578946748d7b2326b8d21ff78a777224d"
     },
     "https://elections.clarkcountynv.gov/VoterRequestsTV/EVMB/ev_20261028.zip": {
-     "checked": "2026-11-05T20:44:21Z",
+     "checked": "2026-11-06T17:35:40Z",
      "etag": "\"1825d3916267dd1:0\"",
      "last_modified": "Thu, 29 Oct 2026 05:01:34 GMT",
      "sha256": "69ff0c7cb76374bf27d26da9d63ea29a69285259e4c5d3db3e65c7e6c021db82"
     },
     "https://elections.clarkcountynv.gov/VoterRequestsTV/EVMB/ev_20261029.zip": {
-     "checked": "2026-11-05T20:44:22Z",
+     "checked": "2026-11-06T17:35:42Z",
      "etag": "\"38b5dfc42b68dd1:0\"",
      "last_modified": "Fri, 30 Oct 2026 05:01:48 GMT",
      "sha256": "d8ba5274cddfcfcee4550223bb37cef9bf07af4f3a41450b9f3d3b2750b9008f"
     },
     "https://elections.clarkcountynv.gov/VoterRequestsTV/EVMB/ev_20261030.zip": {
-     "checked": "2026-11-05T20:44:23Z",
+     "checked": "2026-11-06T17:35:43Z",
      "etag": "\"acfe1ef4f468dd1:0\"",
      "last_modified": "Sat, 31 Oct 2026 05:01:56 GMT",
      "sha256": "8d4c6c7d90cfcba2c15f4113fbecef9d2869aef955f98386a0f9a02f8c18b71a"
@@ -730,12 +730,12 @@
   "nv-2026-11-03-clark-ev-voters-cumulative": {
    "consecutive_failures": 0,
    "error": null,
-   "last_ok": "2026-11-05T20:43:56Z",
-   "last_run": "2026-11-05T20:43:56Z",
+   "last_ok": "2026-11-06T17:35:15Z",
+   "last_run": "2026-11-06T17:35:15Z",
    "result": "ok",
    "urls": {
     "https://elections.clarkcountynv.gov/VoterRequestsTV/EVMB/ev_26GE.zip": {
-     "checked": "2026-11-05T20:44:12Z",
+     "checked": "2026-11-06T17:35:39Z",
      "etag": "\"281094505969dd1:0\"",
      "last_modified": "Sat, 31 Oct 2026 17:00:21 GMT",
      "sha256": "4bd1d743de087bff32d1ce2aa6c39e540928d421242b498cbbdf4c7e8fa119cb"
@@ -746,15 +746,15 @@
   "pa-2026-11-03-mail-voters": {
    "consecutive_failures": 0,
    "error": null,
-   "last_ok": "2026-11-05T20:43:56Z",
-   "last_run": "2026-11-05T20:43:56Z",
+   "last_ok": "2026-11-06T17:35:15Z",
+   "last_run": "2026-11-06T17:35:15Z",
    "result": "ok",
    "urls": {
     "https://data.pa.gov/api/views/nbwd-pfn4/rows.csv?accessType=DOWNLOAD": {
-     "checked": "2026-11-05T20:44:24Z",
-     "etag": "\"anVsaWV0dC4yMjc0NzFfMV8zMzM5Um10M0lWNzdQSEFOTTlja1pkd3FoY2ttbkpB---gzipjT8hhsIJfFEO-I0v1ytG4dVhy8o--gzip--gzip\"",
-     "last_modified": "Thu, 05 Nov 2026 14:55:37 GMT",
-     "sha256": "b3e2e2d6377a2be82eb575cd4cdb0c9fa0536f689e7951893cdfec59ba545e9f"
+     "checked": "2026-11-06T17:35:47Z",
+     "etag": "\"anVsaWV0dC4yMjc0NzFfMV8zMzkwUm10M0lWNzdQSEFOTTlja1pkd3FoY2ttbkpB---gzipjT8hhsIJfFEO-I0v1ytG4dVhy8o--gzip--gzip\"",
+     "last_modified": "Fri, 06 Nov 2026 14:07:55 GMT",
+     "sha256": "ad1d825d768086d7b334e28234d5b5368af52ad75f5ff594c72c88fe0ced1915"
     }
    },
    "version": null
@@ -762,30 +762,30 @@
   "sc-2026-11-03-ev": {
    "consecutive_failures": 0,
    "error": null,
-   "last_ok": "2026-11-05T20:43:56Z",
-   "last_run": "2026-11-05T20:43:56Z",
+   "last_ok": "2026-11-06T17:35:15Z",
+   "last_run": "2026-11-06T17:35:15Z",
    "result": "ok",
    "urls": {
     "https://scvotes.gov/wp-content/uploads/2026/06/2026-06-10-Absentee-Statistics-by-Race-for-Primary-1.xlsx": {
-     "checked": "2026-11-05T20:44:04Z",
+     "checked": "2026-11-06T17:35:24Z",
      "etag": "\"1fff2-6550049ca2f20\"",
      "last_modified": "Wed, 24 Jun 2026 13:59:46 GMT",
      "sha256": "6f26652e92e3dd650daf0d97caee6b293b85a649416eb5485675c4264efde759"
     },
     "https://scvotes.gov/wp-content/uploads/2026/06/2026-06-24-Absentee-Statistics-by-Race-for-Primary-1.xlsx": {
-     "checked": "2026-11-05T20:44:05Z",
+     "checked": "2026-11-06T17:35:24Z",
      "etag": "\"1f825-6550038a4f680\"",
      "last_modified": "Wed, 24 Jun 2026 13:54:58 GMT",
      "sha256": "74f659149108d41774d0768062335a96707823aaeeca1d85144caa9e7cea1495"
     },
     "https://scvotes.gov/wp-content/uploads/2026/08/2026-08-24-Absentee-Statistics-by-Race-for-Primary.xlsx": {
-     "checked": "2026-11-05T20:44:06Z",
+     "checked": "2026-11-06T17:35:25Z",
      "etag": "\"10edc-659cab2be6928\"",
      "last_modified": "Mon, 24 Aug 2026 13:09:37 GMT",
      "sha256": "f62866d15bb0aaec992fd7d18da2b4d7c6c89eb768e33a403ccb786026017683"
     },
     "https://scvotes.gov/wp-content/uploads/2026/08/2026-8-10-Absentee-Statistics-by-Race-for-Primary.xlsx": {
-     "checked": "2026-11-05T20:44:07Z",
+     "checked": "2026-11-06T17:35:26Z",
      "etag": "\"1103c-658b1143306c0\"",
      "last_modified": "Mon, 10 Aug 2026 13:10:31 GMT",
      "sha256": "0c11f7d8ff7daa8bbdb3cc67e806ff475da6dc75f7ef8bee4b69834c6fa151d5"
@@ -809,13 +809,13 @@
      "sha256": "e0a1c26c6838ce034a9556e2876d5d000046d0d5eccc6fa6f531c484eec7584b"
     },
     "https://scvotes.gov/wp-content/uploads/2026/11/2026-11-4-Absentee-Statistics-by-Race-for-Election.xlsx": {
-     "checked": "2026-11-05T20:44:08Z",
+     "checked": "2026-11-06T17:35:27Z",
      "etag": "\"11b71-65f742e279518\"",
      "last_modified": "Wed, 04 Nov 2026 14:27:35 GMT",
      "sha256": "0fcec6dfc74f363617d48d61c59a7305e0010b7896a1e46b920a7c441ac4e1c5"
     },
     "https://scvotes.gov/wp-content/uploads/2026/11/EV-Totals-10-31-26.csv": {
-     "checked": "2026-11-05T20:44:09Z",
+     "checked": "2026-11-06T17:35:28Z",
      "etag": "\"1303ba1-65f4b858c5380\"",
      "last_modified": "Mon, 02 Nov 2026 13:57:08 GMT",
      "sha256": "96b2c58b32cafd3a25ccaf6d45bae9d15381e148c219649010e20ee800bac221"
@@ -824,185 +824,185 @@
    "version": null
   },
   "sc-2026-11-03-results": {
-   "consecutive_failures": 13,
+   "consecutive_failures": 14,
    "error": "https://www.enr-scvotes.org/SC/127300/current_ver.txt",
    "last_ok": null,
-   "last_run": "2026-11-05T20:43:56Z",
+   "last_run": "2026-11-06T17:35:15Z",
    "result": "blocked",
    "urls": {},
    "version": null
   },
   "tn-2026-11-03-ev": {
-   "consecutive_failures": 2,
-   "error": "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/20261103Day7Turnout.xlsx",
-   "last_ok": "2026-11-03T14:30:17Z",
-   "last_run": "2026-11-05T20:43:56Z",
-   "result": "blocked",
+   "consecutive_failures": 0,
+   "error": null,
+   "last_ok": "2026-11-06T17:35:15Z",
+   "last_run": "2026-11-06T17:35:15Z",
+   "result": "ok",
    "urls": {
     "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/20261103Day10Comparison.pdf": {
-     "checked": "2026-11-03T14:30:39Z",
+     "checked": "2026-11-06T17:35:47Z",
      "etag": "W/\"72f398ee64e1358d2764644ff9c1a6a5\"",
      "last_modified": "Mon, 26 Oct 2026 14:50:07 GMT",
      "sha256": "55d1e0d3bf3a3d593486598633528815150a588e6f80d23d7f79bb0b6b8ec9e0"
     },
     "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/20261103Day10Turnout.xlsx": {
-     "checked": "2026-11-03T14:30:25Z",
+     "checked": "2026-11-06T17:35:33Z",
      "etag": "\"b00ceb3a89400474b2dde294577e41d6\"",
      "last_modified": "Mon, 26 Oct 2026 14:50:35 GMT",
      "sha256": "916abf2610212a84d408496806ddf16856caff3a1507cff4e08c816a7887a697"
     },
     "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/20261103Day11Comparison.pdf": {
-     "checked": "2026-11-03T14:30:40Z",
+     "checked": "2026-11-06T17:35:48Z",
      "etag": "W/\"74c3b0d92a872a5b1b74a03fd0015d0d\"",
      "last_modified": "Tue, 27 Oct 2026 15:38:09 GMT",
      "sha256": "5e627e0ea7687a1de883de77ec8850c82285d6820409b1495cf14b0e43b46cca"
     },
     "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/20261103Day11Turnout.xlsx": {
-     "checked": "2026-11-03T14:30:26Z",
+     "checked": "2026-11-06T17:35:34Z",
      "etag": "\"6c979f786a905eb7faac1a8da4454563\"",
      "last_modified": "Tue, 27 Oct 2026 15:38:25 GMT",
      "sha256": "c9e8ac99d1644e2788380b7534a4444b466ade8e7df697f35da0a5516bf47876"
     },
     "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/20261103Day12Comparison.pdf": {
-     "checked": "2026-11-03T14:30:41Z",
+     "checked": "2026-11-06T17:35:49Z",
      "etag": "W/\"a0e2eee6c871081d0c1e633b2250ffd6\"",
      "last_modified": "Wed, 28 Oct 2026 15:41:19 GMT",
      "sha256": "a711d9b2cbdb1e260394b17ef82306b05a1b2280985898b8dd12b39a066abbaf"
     },
     "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/20261103Day12Turnout.xlsx": {
-     "checked": "2026-11-03T14:30:27Z",
+     "checked": "2026-11-06T17:35:35Z",
      "etag": "\"cd29b1e106344c6ad6022751b1f2402b\"",
      "last_modified": "Wed, 28 Oct 2026 15:41:38 GMT",
      "sha256": "58bb1ef39442dcf5ccf9a185f599165ae1d67b4394a19eeea681948834837340"
     },
     "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/20261103Day13Comparison.pdf": {
-     "checked": "2026-11-03T14:30:42Z",
+     "checked": "2026-11-06T17:35:50Z",
      "etag": "W/\"bfcccd88feb65a38530b52617bce3f7b\"",
      "last_modified": "Thu, 29 Oct 2026 16:37:42 GMT",
      "sha256": "ae100aeeba981ab51597ce2a01da08450e62d88041c9cdcbab3f0bb4f7d2f039"
     },
     "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/20261103Day13Turnout.xlsx": {
-     "checked": "2026-11-03T14:30:28Z",
+     "checked": "2026-11-06T17:35:36Z",
      "etag": "\"7dc8236c37cba22d75849adcf118c85d\"",
      "last_modified": "Thu, 29 Oct 2026 16:34:25 GMT",
      "sha256": "c829d31c917cd48e7501816d65ebb1d7af3939d77c6f9a513b1f94b916f54207"
     },
     "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/20261103Day14Comparison.pdf": {
-     "checked": "2026-11-03T14:30:43Z",
+     "checked": "2026-11-06T17:35:51Z",
      "etag": "W/\"e25b7e006ba666ff437739db5a0a1f44\"",
      "last_modified": "Fri, 30 Oct 2026 15:44:36 GMT",
      "sha256": "6c127f3f6e191191a6d445b92cc37ace8d4de7a6a1e3d7d659ee3f17a5d70d4c"
     },
     "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/20261103Day14Turnout.xlsx": {
-     "checked": "2026-11-03T14:30:29Z",
+     "checked": "2026-11-06T17:35:37Z",
      "etag": "\"afdaca28190907603f2f0b76ebdb3b93\"",
      "last_modified": "Fri, 30 Oct 2026 15:42:34 GMT",
      "sha256": "db341de86b608a7dc1a6b2022c1d6ee51a99ff5e243f402ad81041a432381cf7"
     },
     "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/20261103Day1Comparison.pdf": {
-     "checked": "2026-11-03T14:30:30Z",
+     "checked": "2026-11-06T17:35:38Z",
      "etag": "W/\"13dc84d8b2627da3eabceb749d7fa088\"",
      "last_modified": "Thu, 15 Oct 2026 16:19:26 GMT",
      "sha256": "1709f3df57743dbde9833f33115813d2b07a535e68834965cb615e6f554fd6bb"
     },
     "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/20261103Day1Turnout.xlsx": {
-     "checked": "2026-11-05T20:44:05Z",
+     "checked": "2026-11-06T17:35:25Z",
      "etag": "\"89ddbcf350eabc99ba14c19fdc949eaf\"",
      "last_modified": "Thu, 15 Oct 2026 15:16:31 GMT",
      "sha256": "7961de025384b4075c1eb357085b7b0d0778ea6b7d02b269560f1e895dc4a915"
     },
     "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/20261103Day2Comparison.pdf": {
-     "checked": "2026-11-03T14:30:31Z",
+     "checked": "2026-11-06T17:35:39Z",
      "etag": "W/\"5af358192330233f3407e7d2b2235d3c\"",
      "last_modified": "Fri, 16 Oct 2026 14:45:47 GMT",
      "sha256": "2fb6f80ec8cd3798bd19137a24d52c2de7f2896719ae504fae5fa93d53d7925c"
     },
     "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/20261103Day2Turnout.xlsx": {
-     "checked": "2026-11-05T20:44:05Z",
+     "checked": "2026-11-06T17:35:25Z",
      "etag": "\"b531def9dec81d8331f181d976ab80fc\"",
      "last_modified": "Fri, 16 Oct 2026 14:46:09 GMT",
      "sha256": "92fb4398341c000af78ee869effaf4205f196134ddbc3d195ebea92d25cb4dcb"
     },
     "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/20261103Day3Comparison.pdf": {
-     "checked": "2026-11-03T14:30:32Z",
+     "checked": "2026-11-06T17:35:40Z",
      "etag": "W/\"1acab562a353cd2c1b91fc57a69cc024\"",
      "last_modified": "Sat, 17 Oct 2026 15:01:44 GMT",
      "sha256": "d3f54907b7d1fff3adcf44aec967c41dab27bb678f6022e9d70033096a102ef9"
     },
     "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/20261103Day3Turnout.xlsx": {
-     "checked": "2026-11-05T20:44:06Z",
+     "checked": "2026-11-06T17:35:26Z",
      "etag": "\"611d0056163e8fa14397877d82cf8a85\"",
      "last_modified": "Sat, 17 Oct 2026 15:02:37 GMT",
      "sha256": "1fb473d9c07c3fd144b8bebd249b2957b92965fb4c2039c9bce1902650bd560a"
     },
     "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/20261103Day4Comparison.pdf": {
-     "checked": "2026-11-03T14:30:33Z",
+     "checked": "2026-11-06T17:35:41Z",
      "etag": "W/\"41f9790e987cf07feaff719d117fc30b\"",
      "last_modified": "Mon, 19 Oct 2026 13:23:20 GMT",
      "sha256": "3f47903c87a9e6e51d9722dda9ffc45336c699c39e419dc0ab81373c1803a098"
     },
     "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/20261103Day4Turnout.xlsx": {
-     "checked": "2026-11-05T20:44:07Z",
+     "checked": "2026-11-06T17:35:27Z",
      "etag": "\"9b927047e5b472f5fdfe77880d8512ac\"",
      "last_modified": "Mon, 19 Oct 2026 13:23:51 GMT",
      "sha256": "38bf03513aaef8134e887df2d94ea8acd3829c0b283e440483b5359cfa66c07d"
     },
     "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/20261103Day5Comparison.pdf": {
-     "checked": "2026-11-03T14:30:34Z",
+     "checked": "2026-11-06T17:35:42Z",
      "etag": "W/\"635fc96754d507daa5771064b3e74fb9\"",
      "last_modified": "Tue, 20 Oct 2026 15:07:06 GMT",
      "sha256": "daf129ce1adf45788fe36bf9dfeb844bef9708cf748701968de2f7fd1add71a5"
     },
     "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/20261103Day5Turnout.xlsx": {
-     "checked": "2026-11-05T20:44:08Z",
+     "checked": "2026-11-06T17:35:28Z",
      "etag": "\"718ee3a027f589d8fe7769a8c8c2243d\"",
      "last_modified": "Tue, 20 Oct 2026 14:42:19 GMT",
      "sha256": "833513190116dac2369f6c841bae7dad654c922ca32a70f946e43578b2235838"
     },
     "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/20261103Day6Comparison.pdf": {
-     "checked": "2026-11-03T14:30:35Z",
+     "checked": "2026-11-06T17:35:43Z",
      "etag": "W/\"ac4b25052d18ad320bb077332bf8d293\"",
      "last_modified": "Wed, 21 Oct 2026 14:49:50 GMT",
      "sha256": "d13bcfa9746e49a5f2b30ddfe78925c7a6b483123f268b3204c856f5a77a93db"
     },
     "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/20261103Day6Turnout.xlsx": {
-     "checked": "2026-11-05T20:44:09Z",
+     "checked": "2026-11-06T17:35:29Z",
      "etag": "\"0c1cdc1912a0270f9164f1cc73a7f0b3\"",
      "last_modified": "Wed, 21 Oct 2026 14:49:35 GMT",
      "sha256": "29d33cc636454b5dd3b8cdf9e4f1a20da639e30d7c4307b8b265dd88c32b47eb"
     },
     "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/20261103Day7Comparison.pdf": {
-     "checked": "2026-11-03T14:30:36Z",
+     "checked": "2026-11-06T17:35:44Z",
      "etag": "W/\"4804923f200979cb03f75e3583cae842\"",
      "last_modified": "Thu, 22 Oct 2026 14:04:58 GMT",
      "sha256": "2642c6c193393d41ed8196ed0a2a5954859639ff4a27d80ba22f5c320ad0b25e"
     },
     "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/20261103Day7Turnout.xlsx": {
-     "checked": "2026-11-03T14:30:22Z",
+     "checked": "2026-11-06T17:35:30Z",
      "etag": "\"ff68f537ffbe0b25d01c40d1d8811025\"",
      "last_modified": "Thu, 22 Oct 2026 14:03:08 GMT",
      "sha256": "1b98b950f9da9c1df51691571e540610dcf761ab24c4f99734ea3a58f33362e0"
     },
     "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/20261103Day8Comparison.pdf": {
-     "checked": "2026-11-03T14:30:37Z",
+     "checked": "2026-11-06T17:35:45Z",
      "etag": "W/\"2eec292294994eff46dff3d37afbb33d\"",
      "last_modified": "Fri, 23 Oct 2026 15:08:25 GMT",
      "sha256": "7a3fb7354f744b463aa976599742a7738db3259e6507bd194a4394db7ab81641"
     },
     "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/20261103Day8Turnout.xlsx": {
-     "checked": "2026-11-03T14:30:23Z",
+     "checked": "2026-11-06T17:35:31Z",
      "etag": "\"09893aa98a81d11d8f9598d5c575c342\"",
      "last_modified": "Fri, 23 Oct 2026 15:08:42 GMT",
      "sha256": "c5b0220eac9318e3bdc4c488e9fde1b309bcf72afd701ecaff0d0ee70d0f8a69"
     },
     "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/20261103Day9Comparison.pdf": {
-     "checked": "2026-11-03T14:30:38Z",
+     "checked": "2026-11-06T17:35:46Z",
      "etag": "W/\"e5fd467ea9714ba0a792fc24d54e0f64\"",
      "last_modified": "Sat, 24 Oct 2026 14:33:12 GMT",
      "sha256": "779807d5877a4c17a9ccf588d2198deeb75baeb4b71ff205569c0699dcc46b86"
     },
     "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/20261103Day9Turnout.xlsx": {
-     "checked": "2026-11-03T14:30:24Z",
+     "checked": "2026-11-06T17:35:32Z",
      "etag": "\"409d51a9f728d40d961f0ec27ff057bf\"",
      "last_modified": "Sat, 24 Oct 2026 14:34:21 GMT",
      "sha256": "86a2f5452491ce118d382770e984340b956e851839659569ae41a5a24e6e4dcc"
@@ -1013,21 +1013,21 @@
   "tx-2026-11-03-election-day": {
    "consecutive_failures": 0,
    "error": null,
-   "last_ok": "2026-11-05T20:43:56Z",
-   "last_run": "2026-11-05T20:43:56Z",
+   "last_ok": "2026-11-06T17:35:15Z",
+   "last_run": "2026-11-06T17:35:15Z",
    "result": "ok",
    "urls": {
     "https://goelect.txelections.civixapps.com/api-ivis-system/api/v1/getFile?type=EVR_ELECTION": {
-     "checked": "2026-11-05T20:44:22Z",
+     "checked": "2026-11-06T17:35:44Z",
      "etag": null,
      "last_modified": null,
-     "sha256": "ae05aaebffe91bbe7e7fa1d3e54717893cdbdaa2f220fecbe225e43024882d1f"
+     "sha256": "48ba779154ca94de27b3279693dd224b8d6308adcc7d81a8c1f67088f3ab062c"
     },
     "https://goelect.txelections.civixapps.com/api-ivis-system/api/v1/getFile?type=EVR_ELECTIONDAYTURNOUT&electionId=53815&electionDate=11/03/2026": {
-     "checked": "2026-11-05T20:44:24Z",
+     "checked": "2026-11-06T17:35:45Z",
      "etag": null,
      "last_modified": null,
-     "sha256": "eb4d23c114f3706b4bd5d27166c6c58330dacf55e549e847fdfcf77720b9c3f1"
+     "sha256": "fd7d0e213261d02908946849da12073fbc8a42b1891c10e324c62dcba6457872"
     }
    },
    "version": null
@@ -1035,111 +1035,111 @@
   "tx-2026-11-03-ev": {
    "consecutive_failures": 0,
    "error": null,
-   "last_ok": "2026-11-05T20:43:56Z",
-   "last_run": "2026-11-05T20:43:56Z",
+   "last_ok": "2026-11-06T17:35:15Z",
+   "last_run": "2026-11-06T17:35:15Z",
    "result": "ok",
    "urls": {
     "https://goelect.txelections.civixapps.com/api-ivis-system/api/v1/getFile?type=EVR_EARLYVOTING&electionId=53815&electionDate=10/14/2026": {
-     "checked": "2026-11-05T20:44:13Z",
+     "checked": "2026-11-06T17:35:41Z",
      "etag": null,
      "last_modified": null,
-     "sha256": "c200fd3081b2c3ca50113a15e176300985186a0a2b8f1fafd0d82ce68928938e"
+     "sha256": "a955e124e2bfe27951ed228e7bb9eb576fd3b4ae8b3a89aa0bad17a722a84172"
     },
     "https://goelect.txelections.civixapps.com/api-ivis-system/api/v1/getFile?type=EVR_EARLYVOTING&electionId=53815&electionDate=10/15/2026": {
-     "checked": "2026-11-05T20:44:13Z",
+     "checked": "2026-11-06T17:35:41Z",
      "etag": null,
      "last_modified": null,
-     "sha256": "85e2ac812aa0bc50c162d24e500bfbca3cee316eb967a19bbb843f9e53600314"
+     "sha256": "2388a9884f8fb84238216bad0219b4131cf5fc7bb0e3292bd36b0df752606977"
     },
     "https://goelect.txelections.civixapps.com/api-ivis-system/api/v1/getFile?type=EVR_EARLYVOTING&electionId=53815&electionDate=10/16/2026": {
-     "checked": "2026-11-05T20:44:14Z",
+     "checked": "2026-11-06T17:35:42Z",
      "etag": null,
      "last_modified": null,
-     "sha256": "7a42a8822980df77f21bc263b1d325af21497ec88909b120292777cd3886bdea"
+     "sha256": "54615496459e1b433a68cb2e69c97e133c8580168e2e5c1baf5202ce580f1d11"
     },
     "https://goelect.txelections.civixapps.com/api-ivis-system/api/v1/getFile?type=EVR_EARLYVOTING&electionId=53815&electionDate=10/17/2026": {
-     "checked": "2026-11-05T20:44:15Z",
+     "checked": "2026-11-06T17:35:43Z",
      "etag": null,
      "last_modified": null,
-     "sha256": "ea672884de024c948305f995e3d3b7a1a972ba5a1c7e26f591565959a13dc5a4"
+     "sha256": "f8b9100b2656d8d83dff04e390645ca2973c7712d6bd9566719d829da1ea9338"
     },
     "https://goelect.txelections.civixapps.com/api-ivis-system/api/v1/getFile?type=EVR_EARLYVOTING&electionId=53815&electionDate=10/18/2026": {
-     "checked": "2026-11-05T20:44:16Z",
+     "checked": "2026-11-06T17:35:44Z",
      "etag": null,
      "last_modified": null,
-     "sha256": "34081d156ef4da1ec8e94297dbe1bfcadad896579dabf3bb2801f2371602f19d"
+     "sha256": "dca8220ee4ffa79778a025df52b27ebcc6620c60e09601e190766b52114432ed"
     },
     "https://goelect.txelections.civixapps.com/api-ivis-system/api/v1/getFile?type=EVR_EARLYVOTING&electionId=53815&electionDate=10/19/2026": {
-     "checked": "2026-11-05T20:44:17Z",
+     "checked": "2026-11-06T17:35:46Z",
      "etag": null,
      "last_modified": null,
-     "sha256": "e1558e4ea533a820cc4ce0aacbef7231d3b4acce02ea3aa3a9779ac9908d40a5"
+     "sha256": "7271d9444674ff7124cd9ac813c0dbd2de335c575c970081683d746f96ab65ee"
     },
     "https://goelect.txelections.civixapps.com/api-ivis-system/api/v1/getFile?type=EVR_EARLYVOTING&electionId=53815&electionDate=10/20/2026": {
-     "checked": "2026-11-05T20:44:18Z",
+     "checked": "2026-11-06T17:35:48Z",
      "etag": null,
      "last_modified": null,
-     "sha256": "44c73533330c6f839eec63f0f7a019c6b04460b9ee4b2c291e47027da45321d5"
+     "sha256": "d6b5b9f10d1b6701ef413762d5802c34415f173c63aa551f8fcddc65c93c7e2a"
     },
     "https://goelect.txelections.civixapps.com/api-ivis-system/api/v1/getFile?type=EVR_EARLYVOTING&electionId=53815&electionDate=10/21/2026": {
-     "checked": "2026-11-05T20:44:19Z",
+     "checked": "2026-11-06T17:35:49Z",
      "etag": null,
      "last_modified": null,
-     "sha256": "06eca6f866ca596a91b857093fb8c0ad7586d1f79ed68cd4e60981e438d4500c"
+     "sha256": "f507540e539c2308621aa30d77131267d47bd398d56ab43432c0c62810e4d0f2"
     },
     "https://goelect.txelections.civixapps.com/api-ivis-system/api/v1/getFile?type=EVR_EARLYVOTING&electionId=53815&electionDate=10/22/2026": {
-     "checked": "2026-11-05T20:44:20Z",
+     "checked": "2026-11-06T17:35:50Z",
      "etag": null,
      "last_modified": null,
-     "sha256": "c29e6bcd49a87f78b1904b8a852fb724075ef3327fdacfeb4d10a562d6211699"
+     "sha256": "307a9f0b96f183a198bfeb6b97b2f05050db6cd01a5413893a948f3ea5a26e74"
     },
     "https://goelect.txelections.civixapps.com/api-ivis-system/api/v1/getFile?type=EVR_EARLYVOTING&electionId=53815&electionDate=10/23/2026": {
-     "checked": "2026-11-05T20:44:21Z",
+     "checked": "2026-11-06T17:35:51Z",
      "etag": null,
      "last_modified": null,
-     "sha256": "c2390157280cbdd012d15f98639e3ad4c871f63f5068a50d16289404ae26c68f"
+     "sha256": "e8c14b15c959b0cc7e6c4d006f0e43537574aca9edc808d9ddc98325d5c08df2"
     },
     "https://goelect.txelections.civixapps.com/api-ivis-system/api/v1/getFile?type=EVR_EARLYVOTING&electionId=53815&electionDate=10/24/2026": {
-     "checked": "2026-11-05T20:44:22Z",
+     "checked": "2026-11-06T17:35:52Z",
      "etag": null,
      "last_modified": null,
-     "sha256": "c3c569f4d0f450575c7ffbad547967ea03f0443ddeba2101f3b46903f1e03b4c"
+     "sha256": "0d55b898614363b7b810a16c354059ab118df7c36fbc776c53e5c31d38607917"
     },
     "https://goelect.txelections.civixapps.com/api-ivis-system/api/v1/getFile?type=EVR_EARLYVOTING&electionId=53815&electionDate=10/25/2026": {
-     "checked": "2026-11-05T20:44:23Z",
+     "checked": "2026-11-06T17:35:53Z",
      "etag": null,
      "last_modified": null,
-     "sha256": "a0af5851b03a8873dc3e78a1a057d67a776901497be74d6282f0f0bd80998f36"
+     "sha256": "03e93ac70802eb480489d581ac4e5f526ccbd57b788b234e2f3bf3bca8752c1d"
     },
     "https://goelect.txelections.civixapps.com/api-ivis-system/api/v1/getFile?type=EVR_EARLYVOTING&electionId=53815&electionDate=10/26/2026": {
-     "checked": "2026-11-05T20:44:25Z",
+     "checked": "2026-11-06T17:35:54Z",
      "etag": null,
      "last_modified": null,
-     "sha256": "8e89ddf995f1282c178f1ae62d833d49b478b6d48d8c5a946c65b64e0da77b08"
+     "sha256": "8099ddd8f6695c1e88ad9cd6b89773ff9a0f1b72c19d2626a56b49bd0414adbc"
     },
     "https://goelect.txelections.civixapps.com/api-ivis-system/api/v1/getFile?type=EVR_EARLYVOTING&electionId=53815&electionDate=10/27/2026": {
-     "checked": "2026-11-05T20:44:27Z",
+     "checked": "2026-11-06T17:35:55Z",
      "etag": null,
      "last_modified": null,
-     "sha256": "ff409aa56ada8a37caadf8b81aa43b5d9803fb25a1a022f9b130ab77ccdddcea"
+     "sha256": "f738f1ea2664f6380a8b3ef7babd8d1b00b0f0292c3b8a62689ae0de52475b7d"
     },
     "https://goelect.txelections.civixapps.com/api-ivis-system/api/v1/getFile?type=EVR_EARLYVOTING&electionId=53815&electionDate=10/28/2026": {
-     "checked": "2026-11-05T20:44:28Z",
+     "checked": "2026-11-06T17:35:56Z",
      "etag": null,
      "last_modified": null,
-     "sha256": "9ae0e09e7f45dbcfb57158841df1f0d3285a50c93f0482ef90d48920c139bb38"
+     "sha256": "68adaaf9f5ec45cf14f8f38f2aeb8a156dfb6be6fb4b6ebfe25aec0a4a853ab0"
     },
     "https://goelect.txelections.civixapps.com/api-ivis-system/api/v1/getFile?type=EVR_EARLYVOTING&electionId=53815&electionDate=10/29/2026": {
-     "checked": "2026-11-05T20:44:29Z",
+     "checked": "2026-11-06T17:35:57Z",
      "etag": null,
      "last_modified": null,
-     "sha256": "8e2e9b24aca21eb8dd2c7af85266b4fad3126e1b2df990d1c07ee53f56e22916"
+     "sha256": "3dc957d12bdfb943489a8a099da82f6ef43c54201c9cc28100d27ed03f8fda23"
     },
     "https://goelect.txelections.civixapps.com/api-ivis-system/api/v1/getFile?type=EVR_EARLYVOTING&electionId=53815&electionDate=10/30/2026": {
-     "checked": "2026-11-05T20:44:30Z",
+     "checked": "2026-11-06T17:35:58Z",
      "etag": null,
      "last_modified": null,
-     "sha256": "7153b45f11f3ceab8fa376a2028c9f22cea84c60186466b6ab146444aaf6621b"
+     "sha256": "3e3d6524ac758b7a5b64efb1bdaa98fc211bcac6ceca2aac0545bdb4040f0a31"
     }
    },
    "version": null
@@ -1147,74 +1147,74 @@
   "ut-2026-11-03-results": {
    "consecutive_failures": 0,
    "error": null,
-   "last_ok": "2026-11-05T20:43:56Z",
-   "last_run": "2026-11-05T20:43:56Z",
+   "last_ok": "2026-11-06T17:35:15Z",
+   "last_run": "2026-11-06T17:35:15Z",
    "result": "ok",
    "urls": {
     "https://electionresults.utah.gov/cdn/results/Utah/export-General11032026.json": {
-     "checked": "2026-11-05T20:43:58Z",
-     "etag": "0x8DF3B76953E7853",
-     "last_modified": "Thu, 05 Nov 2026 19:54:20 GMT",
-     "sha256": "0feabd60e4861d9c97cb9cb7549103df8b9c4bc8a22dc4fc92f7bef2d475028c"
+     "checked": "2026-11-06T17:35:17Z",
+     "etag": "0x8DF3C208292FEDC",
+     "last_modified": "Fri, 06 Nov 2026 16:10:43 GMT",
+     "sha256": "8569cc52fdf33522e7399278b7337226a49e1e25bea62badceacf1b0e1143489"
     },
     "https://electionresults.utah.gov/results/public/api/elections/Utah/General11032026": {
-     "checked": "2026-11-05T20:43:57Z",
+     "checked": "2026-11-06T17:35:17Z",
      "etag": null,
      "last_modified": null,
-     "sha256": "84f8d07d9d9810914054aefd99f6da7a41d3fcf7e10c05eefd9f3326d2ec6936"
+     "sha256": "47049a67acadde29f3fe773622e40289025e28801faad55d4f4665e50327810c"
     }
    },
-   "version": "5096eec7-97ed-4594-b8b5-6910680fdbc0|2026-11-05T19:17:59.2795634Z|2026-11-05T19:53:55.5598054Z"
+   "version": "5feb72d6-73ac-494a-b495-c776dd3ad0b1|2026-11-06T05:01:30.3316963Z|2026-11-06T16:10:32.6597562Z"
   },
   "va-2026-11-03-results": {
    "consecutive_failures": 0,
    "error": null,
-   "last_ok": "2026-11-05T20:43:56Z",
-   "last_run": "2026-11-05T20:43:56Z",
+   "last_ok": "2026-11-06T17:35:15Z",
+   "last_run": "2026-11-06T17:35:15Z",
    "result": "ok",
    "urls": {
     "https://enr.elections.virginia.gov/cdn/results/virginia/export-2026-November-General.json": {
-     "checked": "2026-11-05T20:43:58Z",
-     "etag": "0x8DF3B7D59741EAB",
-     "last_modified": "Thu, 05 Nov 2026 20:42:46 GMT",
-     "sha256": "149698d6276610cfc5e3dd624a750b715e3e56f6f147fc8d81f8ee16572cf958"
+     "checked": "2026-11-06T17:35:17Z",
+     "etag": "0x8DF3C2C0651ABC0",
+     "last_modified": "Fri, 06 Nov 2026 17:33:09 GMT",
+     "sha256": "41ea806ac12f715c372e02f4a0ad0de738ea785557b8d9286485d3ce31c6f128"
     },
     "https://enr.elections.virginia.gov/results/public/api/elections/Virginia/2026-November-General": {
-     "checked": "2026-11-05T20:43:57Z",
+     "checked": "2026-11-06T17:35:16Z",
      "etag": null,
      "last_modified": null,
-     "sha256": "4ddabfda6011401f9e4e77afa6d012838b574f2a6a913573f733d214c18d0c35"
+     "sha256": "d39d7f36e5cdf0c623b8c187f1fe91826a204d6688e6da3a829ae127b9f53aa4"
     }
    },
-   "version": "d75575cc-e8f1-41e4-b143-e69ed5d883f6|2026-11-05T20:42:06.4152724Z|2026-11-05T20:42:31.5370019Z"
+   "version": "23f63d8f-6040-4c58-8735-b418bfd2ee5b|2026-11-06T17:32:53.2415986Z|2026-11-06T17:33:02.0335058Z"
   },
   "wa-2026-11-03-results": {
    "consecutive_failures": 0,
    "error": null,
-   "last_ok": "2026-11-05T20:43:56Z",
-   "last_run": "2026-11-05T20:43:56Z",
+   "last_ok": "2026-11-06T17:35:15Z",
+   "last_run": "2026-11-06T17:35:15Z",
    "result": "ok",
    "urls": {
     "https://results.votewa.gov/cdn/results/washington/export-20261103.json": {
-     "checked": "2026-11-05T20:43:58Z",
-     "etag": "0x8DF3B7D16D13B29",
-     "last_modified": "Thu, 05 Nov 2026 20:40:54 GMT",
-     "sha256": "7c51f153564b26d46fbe4f392f9a3374085a42f69237b286a6699a912148ea9f"
+     "checked": "2026-11-06T17:35:18Z",
+     "etag": "0x8DF3C22196BF310",
+     "last_modified": "Fri, 06 Nov 2026 16:22:06 GMT",
+     "sha256": "651aa7eed5a7feb01b73bd8c2633958519cb276edb5b727b3f7a6df28083560c"
     },
     "https://results.votewa.gov/results/public/api/elections/washington/20261103": {
-     "checked": "2026-11-05T20:43:57Z",
+     "checked": "2026-11-06T17:35:16Z",
      "etag": null,
      "last_modified": null,
-     "sha256": "685912b4d29434a11f486a19817a09b23d161d00982a1893ef64290ce6bf1c7b"
+     "sha256": "4829315b51c24eabf91dd7ea3c7b2744b8dd576988f390cbd9fc53fdf7579630"
     }
    },
-   "version": "7b5b72ed-bc01-4198-86fb-e3e87b7ea53b|2026-11-05T03:57:41.6823065Z|2026-11-05T19:06:42.0681719Z"
+   "version": "4e2d4bba-b9c9-43f1-8dce-4c08c3842f47|2026-11-06T02:35:05.0785579Z|2026-11-06T03:50:14.4491696Z"
   },
   "wv-2026-11-03-results": {
-   "consecutive_failures": 13,
+   "consecutive_failures": 14,
    "error": "https://results.enr.clarityelections.com/WV/elections.json",
    "last_ok": null,
-   "last_run": "2026-11-05T20:43:56Z",
+   "last_run": "2026-11-06T17:35:15Z",
    "result": "blocked",
    "urls": {},
    "version": null
