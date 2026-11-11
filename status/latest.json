@@ -1,18 +1,7 @@
 {
- "capture_id": "2026-11-11T1527Z",
- "generated_at": "2026-11-11T15:27:55Z",
- "rerouted": [
-  {
-   "member": "md-2026-11-03-ev/20261111T152759Z__Absentees_Ballots_Left_To_Count_by_Congressional.xlsx",
-   "reason": "unreadable zip",
-   "source": "md-2026-11-03-ev"
-  },
-  {
-   "member": "md-2026-11-03-ev/20261111T152802Z__Absentees_Sent_and_Returned_by_Congressional.xlsx",
-   "reason": "unreadable zip",
-   "source": "md-2026-11-03-ev"
-  }
- ],
+ "capture_id": "2026-11-11T2251Z",
+ "generated_at": "2026-11-11T22:51:26Z",
+ "rerouted": [],
  "sources": {
   "ca-2026-11-03-ballots": {
    "consecutive_failures": 0,
@@ -154,10 +143,10 @@
    "version": null
   },
   "fl-2026-11-03-results": {
-   "consecutive_failures": 33,
+   "consecutive_failures": 34,
    "error": "1 of 1 URLs failed: https://results.elections.myflorida.com/downloadresults.asp?ElectionDate=11/3/2026&DATAMODE= 500",
    "last_ok": null,
-   "last_run": "2026-11-11T15:27:55Z",
+   "last_run": "2026-11-11T22:51:26Z",
    "result": "failed",
    "urls": {},
    "version": null
