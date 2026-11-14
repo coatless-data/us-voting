@@ -1,6 +1,6 @@
 {
- "capture_id": "2026-11-13T2343Z",
- "generated_at": "2026-11-13T23:43:02Z",
+ "capture_id": "2026-11-14T0645Z",
+ "generated_at": "2026-11-14T06:45:49Z",
  "rerouted": [],
  "sources": {
   "ca-2026-11-03-ballots": {
@@ -143,10 +143,10 @@
    "version": null
   },
   "fl-2026-11-03-results": {
-   "consecutive_failures": 41,
+   "consecutive_failures": 42,
    "error": "1 of 1 URLs failed: https://results.elections.myflorida.com/downloadresults.asp?ElectionDate=11/3/2026&DATAMODE= 500",
    "last_ok": null,
-   "last_run": "2026-11-13T23:43:02Z",
+   "last_run": "2026-11-14T06:45:49Z",
    "result": "failed",
    "urls": {},
    "version": null
