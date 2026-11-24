@@ -1,6 +1,6 @@
 {
- "capture_id": "2026-11-24T0223Z",
- "generated_at": "2026-11-24T02:23:31Z",
+ "capture_id": "2026-11-24T1358Z",
+ "generated_at": "2026-11-24T13:58:48Z",
  "rerouted": [],
  "sources": {
   "ca-2026-11-03-ballots": {
@@ -168,10 +168,10 @@
    "version": null
   },
   "fl-2026-11-03-results": {
-   "consecutive_failures": 74,
+   "consecutive_failures": 75,
    "error": "1 of 1 URLs failed: https://results.elections.myflorida.com/downloadresults.asp?ElectionDate=11/3/2026&DATAMODE= 500",
    "last_ok": null,
-   "last_run": "2026-11-24T02:23:31Z",
+   "last_run": "2026-11-24T13:58:48Z",
    "result": "failed",
    "urls": {},
    "version": null
@@ -208,11 +208,11 @@
    "version": null
   },
   "ia-2026-11-03-results": {
-   "consecutive_failures": 32,
-   "error": "1 of 2 URLs failed: https://electionresults.iowa.gov/IA/127077/387397/reports/detailxml.zip 404",
+   "consecutive_failures": 33,
+   "error": "https://electionresults.iowa.gov/IA/127077/current_ver.txt",
    "last_ok": null,
-   "last_run": "2026-11-24T02:23:31Z",
-   "result": "failed",
+   "last_run": "2026-11-24T13:58:48Z",
+   "result": "blocked",
    "urls": {
     "https://electionresults.iowa.gov/IA/127077/387368/json/en/summary.json": {
      "checked": "2026-11-21T19:30:51Z",
