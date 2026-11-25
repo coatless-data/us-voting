@@ -1,6 +1,6 @@
 {
- "capture_id": "2026-11-24T2332Z",
- "generated_at": "2026-11-24T23:32:08Z",
+ "capture_id": "2026-11-25T0852Z",
+ "generated_at": "2026-11-25T08:52:36Z",
  "rerouted": [],
  "sources": {
   "ca-2026-11-03-ballots": {
@@ -168,10 +168,10 @@
    "version": null
   },
   "fl-2026-11-03-results": {
-   "consecutive_failures": 76,
+   "consecutive_failures": 77,
    "error": "1 of 1 URLs failed: https://results.elections.myflorida.com/downloadresults.asp?ElectionDate=11/3/2026&DATAMODE= 500",
    "last_ok": null,
-   "last_run": "2026-11-24T23:32:08Z",
+   "last_run": "2026-11-25T08:52:36Z",
    "result": "failed",
    "urls": {},
    "version": null
@@ -1218,26 +1218,26 @@
    "version": "7c7502e4-62fe-45b2-8062-cd35ce310316|2026-11-19T23:20:00.9362814Z|2026-11-20T23:36:27.9526377Z"
   },
   "va-2026-11-03-results": {
-   "consecutive_failures": 1,
-   "error": "1 of 1 URLs failed: https://enr.elections.virginia.gov/results/public/api/jurisdictions/Virginia 400",
-   "last_ok": "2026-11-24T02:23:31Z",
-   "last_run": "2026-11-24T23:32:08Z",
-   "result": "failed",
+   "consecutive_failures": 0,
+   "error": null,
+   "last_ok": "2026-11-25T08:52:36Z",
+   "last_run": "2026-11-25T08:52:36Z",
+   "result": "ok",
    "urls": {
     "https://enr.elections.virginia.gov/cdn/results/virginia/export-2026-November-General.json": {
-     "checked": "2026-11-24T02:23:33Z",
-     "etag": "0x8DF49C5BA69E1A7",
-     "last_modified": "Tue, 24 Nov 2026 00:56:09 GMT",
-     "sha256": "462ccdde4507b15e5ddff0aa030b7130e9b7ffefa8d8170a58ad184251e5fd88"
+     "checked": "2026-11-25T08:52:38Z",
+     "etag": "0x8DF4A7C696E7E32",
+     "last_modified": "Tue, 24 Nov 2026 22:43:51 GMT",
+     "sha256": "08bd85df005f7669bef8ab4443e336b389c877813e8bd9ab6ffceb9ded2a4c9f"
     },
     "https://enr.elections.virginia.gov/results/public/api/elections/Virginia/2026-November-General": {
-     "checked": "2026-11-24T02:23:32Z",
+     "checked": "2026-11-25T08:52:37Z",
      "etag": null,
      "last_modified": null,
-     "sha256": "bf77dc6cba7d316cdfa58d90ac18d5c094563b6c3983166058c265507db88ee8"
+     "sha256": "c35c4f3895efe1730a8f7675b05e24d2d643f4535b7a8481dec42d97b28ca66e"
     }
    },
-   "version": "40cd4dfe-3cb2-4fcf-8618-71430b59bf5d|2026-11-24T00:55:49.2484746Z|2026-11-24T00:55:59.8916544Z"
+   "version": "30a6379f-d997-4ec5-b34a-4452e85a919a|2026-11-24T20:14:20.2814116Z|2026-11-24T22:43:36.5156154Z"
   },
   "wa-2026-11-03-results": {
    "consecutive_failures": 0,
